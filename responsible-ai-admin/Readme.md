@@ -166,6 +166,4 @@ NOTE : To use the following API endpoints:
 
 The source code for the project is licensed under the MIT license, which you can find in the [License.md](License.md) file.
 
-## Contact
-
-If you have more questions or need further insights, feel free to Connect with us @infosysraitoolkit@infosys.com   
+  
