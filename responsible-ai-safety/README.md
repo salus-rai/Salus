@@ -86,6 +86,4 @@ The source code for the project is licensed under the MIT license, which you can
 ## Open Source tools Used:
 1. Detoxify model for Unstructured text
 2. NFSW model for image
-## Contact
-If you have more questions or need further insights please feel free to connect with us @
-Infosysraitoolkit@infosys.com
+
