@@ -143,5 +143,4 @@ Note:- To address the issue where the Passport Number is not recognized in Priva
 ## License
 The source code for the project is licensed under the MIT license, which you can find in the [LICENSE.txt](LICENSE.txt) file.
 
-## Contact
-If you have more questions or need further insights please feel free to connect with us @ Infosysraitoolkit@infosys.com
+
