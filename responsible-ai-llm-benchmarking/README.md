@@ -86,7 +86,5 @@ Offline Generation and evaluation required GPU to run. To install cuda, execute 
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
 
 
-## Contact
-If you have more questions or need further insights, feel free to Connect with us @ infosysraitoolkit@infosys.com
 
 For more details refer our [User Guide](https://github.com/Infosys-AI-Cloud-MMS/responsible-ai-trustllm/blob/main/trustllm/docs/Steps%20to%20generate%20Benchmark%20scores.pdf) for more details.
