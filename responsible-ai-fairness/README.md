@@ -236,5 +236,4 @@ The source code for the project is licensed under the MIT license, which you can
 1. Unstructured text training data validation for Bias.
 2. REST call support for text validationt to support ollama or similar model hosting.
 
-## Contact
-If you have more questions or need further insights, feel free to Connect with us @ infosysraitoolkit@infosys.com
+
