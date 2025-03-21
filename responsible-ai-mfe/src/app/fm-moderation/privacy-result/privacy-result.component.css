@@ -1,0 +1,168 @@
+/*  MIT license https://opensource.org/licenses/MIT
+”Copyright 2024-2025 Infosys Ltd.”
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+.mainLabel {
+    color: #7E7E7E;
+    padding: 0px;
+    font-weight: 500;
+    font-size: 13px;
+    font-family: 'Segoe UI';
+}
+
+.mainLabel2 {
+    color: #212529;
+    padding: 0px;
+    font-weight: 400;
+    font-size: 13px;
+    font-family: 'Segoe UI';
+}
+
+.mainLabelSM {
+    font-size: 12px;
+}
+
+.mainLabelLight {
+    font-weight: 400;
+}
+
+.fixed-height-card {
+    height: 150px;
+    overflow-y: auto;
+}
+
+.mainBtn {
+    font-family: 'Segoe UI';
+    font-weight: semi-bold;
+    font-size: 11px;
+    height: 24px;
+    width: max-content;
+    padding: 0 8px 0 8px !important;
+}
+
+.DecryptButton {
+    /* width: 100px; */
+}
+
+.mat-DecryptBtnClr {
+    color: #8626C3;
+    background-color: #ffffff;
+}
+
+.custom-paddingx {
+    padding-top: 2px;
+}
+
+.overflow-unset {
+    overflow: unset !important;
+}
+
+.entity-box {
+    display: block;
+    /* Ensures each box starts on a new line */
+    margin-top: 10px;
+    /* Adds space between the boxes */
+    padding: 10px;
+    /* Adds some padding inside each box */
+    background-color: #f0f0f0;
+    /* Light grey background */
+    border-radius: 5px;
+    /* Rounded corners for the boxes */
+}
+
+
+/* .borderedTable {
+    width: 700px; 
+    border-collapse: collapse; 
+}
+.borderedTable, .borderedTable th, .borderedTable td {
+    margin-top: 20px;
+    border: 1px solid #dcdcdc;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: 'Segoe UI';
+}
+.borderedTable th {
+    background-color: #e7e7e7;
+} */
+
+.processed-prompt span {
+    font-size: 12px;
+    font-family: 'Segoe UI';
+}
+
+.upper-case {
+    text-transform: uppercase;
+}
+
+.padding-right {
+    padding-right: 10px;
+    /* Adjust the value as needed */
+}
+
+.styled-table td {
+    padding-top: .3rem !important;
+    padding-bottom: .3rem !important;
+    font-size: 0.70rem;
+    font-family: 'Segoe UI';
+    font-weight: 500;
+    color: #061838;
+    opacity: 70%;
+}
+
+.styled-table tr {
+    border-bottom: .5px solid rgba(0, 0, 0, 0.2);
+}
+
+.styled-table {
+    /* margin-left: 1rem; */
+    width: 95%;
+    border-collapse: collapse;
+}
+
+.styled-table th.header {
+    /* Segoe UI, Semibold .75rem */
+    font-size: 0.70rem;
+    font-family: 'Segoe UI';
+    font-weight: 600;
+    /* padding-top: 10px; */
+    padding-bottom: 10px;
+    padding-right: 10px;
+    /* background-color: #4CAF50; */
+    color: #382261;
+    opacity: 70%;
+    text-transform: uppercase;
+}
+
+.styled-table th {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.ngx-pagination .current {
+    background: #963596 !important;
+}
+
+.ngx-pagination a {
+    text-decoration: none;
+}
+
+.pagination-label {
+    font-family: 'Segoe UI';
+    font-weight: 500 !important;
+    font-size: .60rem;
+}
+
+:host ::ng-deep .ngx-pagination .current {
+    background: #963596;
+}
+
+ :host ::ng-deep .ngx-pagination a {
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.card {
+    padding: 10px;
+}

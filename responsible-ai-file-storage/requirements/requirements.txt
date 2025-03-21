@@ -1,0 +1,12 @@
+fastapi==0.110.1
+cvxpy
+uvicorn 
+pyyaml
+python-multipart
+BlackBoxAuditing
+python-dotenv
+joblib
+pyarrow
+azure-storage-blob 
+azure-identity
+lib/aicloudlibs-0.1.0-py3-none-any.whl

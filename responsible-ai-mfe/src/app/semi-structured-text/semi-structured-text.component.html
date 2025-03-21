@@ -1,0 +1,109 @@
+<!-- MIT license https://opensource.org/licenses/MIT
+”Copyright 2024-2025 Infosys Ltd.”
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<label class="topHeading">DOCUMENTS</label>
+<div style="display: flex;" class="mt-2">
+    <div>
+        <h3 class="HeadingCheckBoxLabel pl-0">Select Type</h3>
+        <div class="checkbox-container ml-1">
+            <div class="d-flex align-items-center">
+                <input type="radio" id="Privacy" name="Privacy" value="Privacy" [(ngModel)]="selectType" (ngModelChange)="resetAll(); handleSelectTypeChange()">
+                <label for="Privacy" class="HeadingCheckBoxLabel fw-medium m-0 pl-2">Privacy</label>
+            </div>
+            <!-- <div class="d-flex align-items-center">
+                <input type="radio" id="Safety" name="Safety"
+                    value="Safety" [(ngModel)]="selectType" (ngModelChange)="resetAll(); handleSelectTypeChange()">
+                <label for="Safety" class="HeadingCheckBoxLabel fw-medium m-0 pl-2" >Safety</label>
+            </div>
+            <div class="d-flex align-items-center">
+                <input type="radio" id="Explainability" name="Explainability"
+                    value="Explainability" [(ngModel)]="selectType" (ngModelChange)="resetAll(); handleSelectTypeChange()">
+                <label for="Explainability" class="HeadingCheckBoxLabel fw-medium m-0 pl-2" >Explainability</label>
+            </div>
+            <div class="d-flex align-items-center">
+                <input type="radio" id="Security" name="Security"
+                    value="Security" [(ngModel)]="selectType" (ngModelChange)="resetAll(); handleSelectTypeChange()">
+                <label for="Security" class="HeadingCheckBoxLabel fw-medium m-0 pl-2" >Security</label>
+            </div> -->
+        </div>
+    </div>
+    <div>
+        <div class="drop-zone mt-2 ml-3">
+            <mat-icon class="material-icons browse-logo ">cloud_upload</mat-icon>
+            <p class="paragraph_dnd">Drag and drop files here <br>or<span class="high-light"> browse</span></p>
+            <input type="file" (change)="onFileChange($event)" (change)="fileBrowseHandler($event)" multiple accept="application/pdf">
+            <p class="dnd-lable">
+                .pdf files upto 20 MB are supported</p>
+        </div>
+        <div style="display: flex;">
+            <div class="mt-1 ml-2">
+                <img src={{sampleImg}} matTooltip="Health Care Application" class="custom_image" (click)="uploadSampleFile('sampleFile')">
+            </div>
+            <div class="mt-1 ml-2">
+                <img src={{sampleImg}} matTooltip="Life Insurance" class="custom_image" (click)="uploadSampleFile('sampleFile2')">
+            </div>
+        </div>
+        <div class="fileContainer mt-1 ml-3">
+            <p class="HeadingLabelSM mb-0" *ngIf="files[0]">File</p>
+            <div class="file-upload" *ngIf="files[0]">
+                <p style="margin: 0px; font-size: x-small;">{{ files[0].name }}</p>
+                <div class="d-flex align-items-center mt-1">
+                    <mat-progress-bar class="mr-1" mode="determinate" [value]="files[0]?.progress"></mat-progress-bar>
+                    <button class="cancel-button mr-2" (click)="removeFile()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+                <p class="mainLabel2 mainLabelSM2 mt-2 cursor" style="text-decoration: underline; font-size: 0.6rem;" (click)="openDialog(filePreview)">
+                    (Preview)</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ml-4">
+        <label class="HeadingLabel mb-3">Select Options</label>
+        <div>
+            <form [formGroup]="form">
+                <input type="hidden" name="csrfToken" value="nonceService.getNonce()">
+                <select formControlName="languageModel" (change)="selectOptionOcr($event.target)" class="form-select shadow-none" aria-label="Default select example" [(ngModel)]="ocrvalue">
+                    <ng-container *ngIf="files == [] || files[0]?.name != 'PII_handwritten.jpg'">
+                        <option *ngFor="let option of ocr_options" [value]="option">{{option}}</option>
+                    </ng-container>
+                    <ng-container *ngIf="files && files[0]?.name == 'PII_handwritten.jpg'">
+                        <option selected [value]="'ComputerVision'">ComputerVision</option>
+                    </ng-container>
+                    <!-- <option *ngFor="let option of ocr_options" [value]="option">{{option}}</option>
+                    <option *ngFor="let option of ['ComputerVision']" [value]="option"><span *ngIf="files[0].name == 'PII_handwritten.jpg'">{{option}}</span></option> -->
+                </select>
+            </form>
+
+            <!--  -->
+            <ng-container *ngIf="selectType == 'Privacy' || selectType === 'Safety'">
+                <!-- <input type="text" [(ngModel)]="portfolioName_value" class="form-control shadow-none"
+                    placeholder="Portfolio Name" aria-label="Portfolio Name">
+                <input type="text" [(ngModel)]="accountName_value" class="form-control shadow-none"
+                    placeholder="Account Name" aria-label="Account Name"> -->
+                <input [hidden]="selectType === 'Safety'" type="text" [(ngModel)]="exclusionList_value" class="form-control shadow-none" placeholder="Exclusion List" aria-label="Exclusion List">
+            </ng-container>
+        </div>
+        <div class="button-container">
+            <button mat-raised-button class="mainBtn resetButton" (click)="resetAll()" color="reset">Reset</button>
+            <button mat-raised-button (click)="submit()" class="mainBtn" style="margin-left: .5rem;" color="black">Submit</button>
+        </div>
+    </div>
+    <div class="ml-5" *ngIf="spinner==true">
+        <ngx-skeleton-loader count="1" appearance="line" [theme]="{ 'border-radius': '10px', height: '450px', width:'800px'}" />
+    </div>
+    <div class="ml-5" *ngIf="output">
+        <iframe [src]="pdfSrc" width="800px" height="450px"></iframe>
+    </div>
+    <!-- <div class="ml-5" *ngIf="pdfSrc">
+        <embed [src]="pdfSrc" width="800px" height="400px" type="application/pdf">
+    </div> -->
+    <!-- <div class="ml-5" *ngIf="pdfSrc">
+        <object [data]="pdfSrc" type="application/pdf" width="800px" height="400px">
+            <p>Your browser does not support PDFs. <a [href]="pdfSrc">Download the PDF</a>.</p>
+        </object>
+    </div> -->
+</div>

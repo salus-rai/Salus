@@ -1,0 +1,41 @@
+<!-- MIT license https://opensource.org/licenses/MIT
+”Copyright 2024-2025 Infosys Ltd.”
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<div class="p-3 px-4 h-100">
+    <div class="d-flex justify-content-between align-items-center pb-4">
+        <p class="headingTop">Item List</p>
+        <button class="close pb-2" aria-label="Close" (click)="closeDialog()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <!-- modal body -->
+    <div>
+        <table class="styled-table">
+            <tr>
+                <th class="header">Entities Id</th>
+                <th class="header">Entities Name</th>
+                <th class="header">Action</th>
+            </tr>
+            <tr *ngFor="let element of dataSource1| paginate : pagingConfig; let i = index">
+                <td> {{element.EntityId}}</td>
+                <td> {{element.EntityName}}</td>
+                <td class="upper-case  ">
+
+                    <!-- <button class="mr-2" mat-icon-button color="primary4"><mat-icon> edit </mat-icon></button> -->
+                    <button mat-icon-button color="primary3" (click)="deleteListEntity(element.EntityId)"><mat-icon> delete </mat-icon>
+                </button>
+                </td>
+            </tr>
+        </table>
+        <!-- pagination -->
+        <div class="d-flex justify-content-between mt-3">
+            <div class="pagination-info">
+                Showing {{ pagingConfig.totalItems
+                < pagingConfig.itemsPerPage ? pagingConfig.totalItems : pagingConfig.itemsPerPage }} of {{ pagingConfig.totalItems }} </div>
+                    <pagination-controls class="pagination-label" previousLabel="Prev" nextLabel="Next" (pageChange)="onTableDataChange($event)">
+                    </pagination-controls>
+            </div>
+        </div>
+    </div>

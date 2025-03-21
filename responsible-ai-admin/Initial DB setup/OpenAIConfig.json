@@ -1,0 +1,115 @@
+[{
+  "_id": 1698899197.8078823,
+  "CreatedDateTime": {
+    "$date": {
+      "$numberLong": "1698899197807"
+    }
+  },
+  "LastUpdatedDateTime": {
+    "$date": {
+      "$numberLong": "1698899197807"
+    }
+  },
+  "goalPriority": true,
+  "isNemo": false,
+  "isOpenAI": true,
+  "role": "ROLE_ADMIN",
+  "selfReminder": true
+},{
+  "_id": 1698899197.8114643,
+  "CreatedDateTime": {
+    "$date": {
+      "$numberLong": "1698899197811"
+    }
+  },
+  "LastUpdatedDateTime": {
+    "$date": {
+      "$numberLong": "1698899197811"
+    }
+  },
+  "goalPriority": true,
+  "isNemo": false,
+  "isOpenAI": true,
+  "role": "ROLE_USER",
+  "selfReminder": true
+},{
+  "_id": 1701844510.7532637,
+  "CreatedDateTime": {
+    "$date": {
+      "$numberLong": "1701844510753"
+    }
+  },
+  "LastUpdatedDateTime": {
+    "$date": {
+      "$numberLong": "1701844510753"
+    }
+  },
+  "goalPriority": true,
+  "isOpenAI": false,
+  "role": "ROLE_ML",
+  "selfReminder": true
+},{
+  "_id": 1717603655.7750728,
+  "CreatedDateTime": {
+    "$date": {
+      "$numberLong": "1717603655775"
+    }
+  },
+  "LastUpdatedDateTime": {
+    "$date": {
+      "$numberLong": "1717603655775"
+    }
+  },
+  "goalPriority": false,
+  "isOpenAI": false,
+  "role": "ROLE_EXCEL",
+  "selfReminder": false
+},{
+  "_id": 1719384972.206866,
+  "CreatedDateTime": {
+    "$date": {
+      "$numberLong": "1719384972206"
+    }
+  },
+  "LastUpdatedDateTime": {
+    "$date": {
+      "$numberLong": "1719384972206"
+    }
+  },
+  "goalPriority": false,
+  "isOpenAI": false,
+  "role": "ROLE_EMPTY",
+  "selfReminder": false
+},{
+  "_id": 1722251159.6457949,
+  "CreatedDateTime": {
+    "$date": {
+      "$numberLong": "1722251159645"
+    }
+  },
+  "LastUpdatedDateTime": {
+    "$date": {
+      "$numberLong": "1722251159645"
+    }
+  },
+  "goalPriority": false,
+  "isOpenAI": false,
+  "role": "ROLE_TEST_1",
+  "selfReminder": false
+},{
+  "_id": 1723012532.3861814,
+  "CreatedDateTime": {
+    "$date": {
+      "$numberLong": "1723012532386"
+    }
+  },
+  "LastUpdatedDateTime": {
+    "$date": {
+      "$numberLong": "1723012532386"
+    }
+  },
+  "goalPriority": false,
+  "isOpenAI": false,
+  "role": "ROLETEST2",
+  "selfReminder": false
+}]

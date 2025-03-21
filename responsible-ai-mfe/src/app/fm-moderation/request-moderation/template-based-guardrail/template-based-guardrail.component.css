@@ -1,0 +1,118 @@
+/*  MIT license https://opensource.org/licenses/MIT
+”Copyright 2024-2025 Infosys Ltd.”
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+ */
+
+.cursor {
+    cursor: pointer;
+}
+
+.sbmtButton {
+    width: 73px;
+    height: 27px;
+    background-color: #8626C3;
+    color: #FFFFFF;
+    letter-spacing: 0px;
+    border-radius: 3px;
+    border: none;
+    font-family: 'Segoe UI';
+    font-size: 12px;
+    cursor: pointer;
+    text-align: center;
+    align-content: center;
+    font-weight: 400;
+}
+
+.sendIcon {
+    background: none;
+    color: #8626C3;
+    bottom: 0;
+    right: 0;
+    i {
+        font-size: 22px;
+    }
+}
+
+.txtAreaContext {
+    font-size: 12px;
+    font-family: 'Segoe UI';
+    resize: none;
+    height: 70px;
+    padding-right: 30px;
+}
+
+.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.panel-title {
+    position: relative;
+}
+
+.panel-title::after {
+    content: "\f107";
+    color: #333;
+    top: -2px;
+    right: 0px;
+    position: absolute;
+    font-family: "FontAwesome"
+}
+
+.panel-title[aria-expanded="true"]::after {
+    content: "\f106";
+}
+
+.cardContainerTemp {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.custom-badge {
+    color: rgb(31, 31, 31);
+    font-size: 0.68rem;
+    background-color: rgb(219, 219, 219);
+    display: flex;
+    align-items: center;
+    padding: 0px 7px;
+    border-radius: 4px;
+    font-weight: 500;
+    height: 20px;
+}
+
+.custom-badge-passed {
+    color: rgb(20 83 45);
+    background-color: rgb(220 252 231);
+}
+
+.custom-badge-failed {
+    color: rgb(255 0 78);
+    background-color: rgb(255 228 230);
+}
+
+.mainLabel {
+    color: #2e2e2e;
+    padding: 0px;
+    font-weight: 500;
+    font-size: 13px;
+    font-family: 'Segoe UI';
+}
+
+.mainLabelSM {
+    font-size: 12px;
+}
+
+.mainLabelLight {
+    font-weight: 400;
+}
+
+.custom-badge-yellow {
+    background-color: #fff3d6;
+    color: #f9a701;
+}

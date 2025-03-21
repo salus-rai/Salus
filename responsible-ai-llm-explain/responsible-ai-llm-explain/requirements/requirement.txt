@@ -1,0 +1,16 @@
+fastapi
+pydantic
+uvicorn
+python-dotenv
+pyyaml
+scikit-learn
+tenacity
+tiktoken
+openai
+backoff
+numpy==1.26.4
+beautifulsoup4
+rouge_score
+pip-system-certs
+aiohttp
+pandas

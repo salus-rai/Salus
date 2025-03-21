@@ -1,0 +1,16 @@
+fastapi
+pydantic 
+uvicorn 
+pandas
+pyyaml
+numpy
+python-multipart
+BlackBoxAuditing
+python-dotenv
+pymongo
+gradio-client
+grpcio
+torch==2.5.0
+lib/aicloudlibs-0.1.0-py3-none-any.whl
+lib/trustllm-0.3.3-py2.py3-none-any.whl
+
