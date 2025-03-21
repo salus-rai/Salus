@@ -30,7 +30,6 @@ The Responsible AI toolkit provides a user-friendly interface for seamless exper
 | 5 | File Storage | Python module that provides versatile APIs for seamless integration across multiple microservices, enabling efficient file management with Azure Blob Storage. It supports key operations such as file upload, retrieval, and updates, offering a robust solution for handling files in Azure Blob Storage.| [responsible-ai-file-storage](https://github.com/salus-rai/Salus/tree/main/responsible-ai-file-storage) |
 | 6 | Benchmarking | Displays stats related to benchmarking large language models (LLMs) across various categories such as fairness, privacy, truthfulness and ethics. It helps evaluate and compare LLM performance in these critical areas.| [responsible-ai-llm-benchmarking](https://github.com/salus-rai/Salus/tree/main/responsible-ai-llm-benchmarking)|
 
-For technical details and usage instructions on the salus's features, please refer to the [documentation](https://infosys.github.io/Infosys-Responsible-AI-Toolkit/).
 
 ## Toolkit features at a glance
 ### Generative AI Models
