@@ -31,7 +31,7 @@ This application is built using the Flask web framework.Leveraging the flexibili
 ## Prerequisites
 
 1. Before installing the repo for Moderation Layer, first you need to install the repo for Moderation Models.
-Please find the link for **Moderation Model** repo : [moderationmodel](https://github.com/Infosys/Infosys-Responsible-AI-Toolkit/tree/master/responsible-ai-moderationmodel).
+Please find the link for **Moderation Model** repo : [moderationmodel](https://github.com/salus-rai/Salus/tree/main/responsible-ai-moderationmodel).
 
 2. **Installation of Python** : To run the application, first we need to install Python and the necessary packages. Install Python **(version >= 3.9)** from the [official website](https://www.python.org/downloads/) and ensure it is added to your system PATH.
 
