@@ -167,6 +167,3 @@ For API calls, please refer to the [API Document](Rag/docs/RAG_endpoints_Instruc
 
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
 
-## Contact
-
-If you have more questions or need further insights, feel free to Connect with us @ infosysraitoolkit@infosys.com
