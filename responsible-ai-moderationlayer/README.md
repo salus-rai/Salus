@@ -629,7 +629,4 @@ which can be added as below :
 ## License
 The source code for the project is licensed under the MIT license, which you can find in the [LICENSE.txt](LICENSE.txt) file.
 
-## Contact
-If you have more questions or need further insights please feel free to connect with us at
-DL : Infosys Responsible AI
-Mailid: Infosysraitoolkit@infosys.com
+
