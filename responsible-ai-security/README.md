@@ -116,5 +116,4 @@ The source code for the project is licensed under MIT license, which you can fin
 adversarial-robustness-toolbox : https://github.com/Trusted-AI/adversarial-robustness-toolbox
 
 
-## Contact
-If you have more questions or need further insights, feel free to Connect with us @ Infosysraitoolkit@infosys.com
+
