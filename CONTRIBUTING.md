@@ -103,12 +103,12 @@ git push origin <new-branch-name>
 
 ### 9. Contribution:
  - Ensure that your contribution license is compatible with the MIT license and that there are no copyleft licenses present, such as GPL, AGPL, LGPL 2.1, MPL 1.0, etc. 
-   If you wish to contribute, please review the [contribution license agreement](https://github.com/Infosys/Infosys-Responsible-AI-Toolkit/blob/master/Contribution%20License%20Agreement.docx) and email a signed PDF of this agreement to infosysraitoolkit@infosys.com. Additionally, 
-   refer to the [release notice](https://github.com/Infosys/Infosys-Responsible-AI-Toolkit/blob/master/Release%20Notice.docx) for the permissive licenses used in this project.
+   If you wish to contribute, please review the [contribution license agreement](https://github.com/salus-rai/Salus/blob/main/Contribution%20License%20Agreement.docx) and email a signed PDF of this agreement to infosysraitoolkit@infosys.com. Additionally, 
+   refer to the [release notice](https://github.com/salus-rai/Salus/blob/main/Release%20Notice.docx) for the permissive licenses used in this project.
   
 ### 10. Celebrate 🎉
 - Congratulations! You've contributed to an open-source project! 🎉
 
 ## 📜 License
 
-By contributing to this project, you agree that your contributions will be licensed under the project’s [LICENSE](https://github.com/Infosys/Infosys-Responsible-AI-Toolkit/blob/Release-2.1.0/LICENSE.md) file.
+By contributing to this project, you agree that your contributions will be licensed under the project’s [LICENSE](https://github.com/salus-rai/Salus/blob/main/LICENSE) file.
