@@ -51,7 +51,7 @@ The Responsible AI toolkit provides a user-friendly interface for seamless exper
 
 Note: These API-based guardrails are optimized for Azure OpenAI. Users employing alternative LLMs should make the necessary client configuration adjustments. For Azure OpenAI api subscription, follow instructions provided in the [Microsoft Azure website](https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account?icid=ai-services&azure-portal=true).
 
-Please check out the [contribution](https://github.com/salus-rai/Salus/blob/main/Contribution%20License%20Agreement.docx) page to share your feedback or suggest improvements. 
+
 
 
 
