@@ -6,7 +6,6 @@
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
 - [License](#license)
-- [Contact](#contact)
 
 
 
@@ -91,7 +90,7 @@ Once we have completed all the aforementioned steps, we can start the service.
     ```
 
 2. Open the following URL in your browser:
-    [http://localhost:80/v1/report/docs](http://localhost:80/v1/report/docs)
+    `http://localhost:80/v1/report/docs`
 
     User can also change the port which mentioned in main.py file
 
@@ -100,6 +99,4 @@ Once we have completed all the aforementioned steps, we can start the service.
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
 
 
-## Contact
-If you have more questions or need further insights, feel free to Connect with us @ Infosysraitoolkit@infosys.com
  
