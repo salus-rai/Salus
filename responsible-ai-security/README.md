@@ -1,3 +1,5 @@
+# responsible-ai-security-api
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Features](#features)
@@ -47,9 +49,9 @@ To run the application, first we need to install Python and the necessary packag
         source venv/bin/activate
         ```
 
-7. Navigate to the `responsible-ai-security` directory:
+7. Navigate to the `Responsible-AI-Security-API` directory:
     ```sh
-    cd responsible-ai-security
+    cd Responsible-AI-Security-API
     ```
 
 8. Navigate to `src` directory:
@@ -106,14 +108,15 @@ Once we have completed all the aforementioned steps, we can start the service.
     python main.py
     ```
 
-2. Use the Port No that is mentioned in main.py file. Open the swagger URL in browser once server is running: 
-    `http://localhost:<portno>/rai/v1/security_workbench/docs`
+2. Open the following URL in your browser:
+    [http://localhost:80/rai/v1/security_workbench/docs](http://localhost:80/rai/v1/security_workbench/docs)
 
 ## License
-The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](License.md) file.
+The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
 
 ## Open Source tools Used:
 adversarial-robustness-toolbox : https://github.com/Trusted-AI/adversarial-robustness-toolbox
 
 
-
+## Contact
+If you have more questions or need further insights, feel free to Connect with us @ Infosysraitoolkit@infosys.com
