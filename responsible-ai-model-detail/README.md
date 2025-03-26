@@ -7,7 +7,7 @@
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
 - [License](#license)
-- [Contact](#contact)
+
 
 ## Introduction
 The `responsible-ai-model-detail` provides us the workbench to add, update or delete dataset files, tenets, preprocessor and model files.This repository is used for uploading model and data files, after successful uploading of files, we will get IDs generated, which are needed for generating a batch ID based on our tenant, used for performing our tenant's work.
