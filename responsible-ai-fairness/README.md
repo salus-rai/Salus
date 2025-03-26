@@ -17,7 +17,6 @@
     - [Bug Fixes](#bug-fixes)
     - [Changes:](#changes)
   - [Limitations](#limitations)
-  - [Known Issues](#known-issues)
   - [Telemetry](#telemetry)
   - [Roadmap](#roadmap)
   - [Contact](#contact)
@@ -25,7 +24,7 @@
 ## Introduction
 Responsible-ai-fairness offers solutions for Traditional AI and LLM's fairness and bias evaluations. For traditional classification problems, the training datasets and model's predictions can be analyzed and mitigated for Group Fairness. Individual Fairness analysis is also supported to get a comprehensive analysis. For Large Language Models, given text is evaluated for bias context and highlights the affected groups and bias types using GPT-4.
 
-## Requirements
+## Prerequisites
 1. Python 3.9 and Python 3.10
 2. pip
 3. Mongo DB
@@ -69,8 +68,6 @@ Steps to Download BART-large-mnli:
    
    4. once all the files are downloaded, move them to **responsible-ai-fairness/responsible-ai-fairness/models**
 
-
-
 ## Installation
 1.	Clone the repository
 2.	Create a virtual environment using the command 
@@ -99,7 +96,7 @@ and activate it by going to
       ```bash 
          python main_api.py 
       ```
-7. Use the Port No that is mentioned in main.py file. Open the swagger URL in browser once server is running: `http://localhost:<portno>/api/v1/fairness/docs#/`
+7. Once server is running successfully, go to [http://localhost:8000/api/v1/fairness/docs](http://localhost:8000/api/v1/fairness/docs#/)
    
 ## Configurations
  1. Add required environment variables.
@@ -188,44 +185,18 @@ The source code for the project is licensed under the MIT license, which you can
 | Facebook BART model    | https://huggingface.co/facebook/bart-large-mnli |
 
 ## Changelog
-### Bug Fixes
-- **NumPy Version Compatibility**: 
-  - Resolved compatibility issues with NumPy versions affecting Posttrain_analyze and in-processing modules
- 
-- **Import Error Resolution**: 
-  - Fixed critical import error in pretrainMitigate module
-  - Improved module import handling to prevent runtime exceptions
+1. Added support for Llama: Introduced Llama as a tool for analyzing bias in text, allowing for more in-depth examination and understanding of content biases.
 
-- **OpenAI Configuration Flexibility**: 
-  - Made OpenAI engine_name configurable via environment variables
+2. Bias Analysis Improvements: Included an average bias score graph that visually represents the bias levels in the analyzed text, with a threshold indicator to help users easily identify and address potential bias concerns.
 
-### Changes:
-- **DB Dependency**:
-  - Removed DB Dependency for bias analysis for unstructured text. 
 
-  
 ## Limitations
 1. As of now analysing bias for classification models for traditional AI.
 2. Data mitigation for preprocessing: 
    1. Reweighting can lead to overfitting on minority groups, potentially reducing overall model performance on the dataset.
    2. Adjusting weights can distort the original data distribution, leading to a loss of valuable information and potential misrepresentation of the data.
 3. As of now mitigating bias for preprocessing dataset.
-
-## Known Issues
-**MongoDB Report Download Issue When Connected to UI**
-**Impact**: Users who are using UI may experience problems downloading reports for analyze and audit functions when connected to MongoDB.
-
-**Current Status**: This is a known issue requiring code changes in `src\fairness\dao\workbench\FileStoreDb.py`.
-
-**Workarounds**:
-1. Azure Services Alternative:
-   - Use Azure Cosmos DB as your database
-   - Configure Azure Blob Storage for file storage
-   - This combination provides full report download functionality
-2. Manual Fix:
-   - If you need to maintain MongoDB connectivity, you can modify `FileStoreDb.py` 
-   - Refer to [API Documentation](responsible-ai-fairness/README.md#workbench-apis####BugFix)
-
+4. As of now, we are generating token from an endpoint which is not open-sourced.
 
 ## Telemetry
 1. Make tel_Falg as True.
@@ -237,3 +208,32 @@ The source code for the project is licensed under the MIT license, which you can
 2. REST call support for text validationt to support ollama or similar model hosting.
 
 
+## Building and Distributing the Python Package as a Wheel (WHL) File
+
+This section outlines the steps to create a distributable Wheel (WHL) file for the `infosys_responsible_ai_python_package` and integrate it into the `responsible_ai_fairness/lib` directory.
+
+**Steps:**
+
+1.  **Install `wheel` and `setuptools`:**
+    ```bash
+    pip install wheel setuptools
+    ```
+2.  **Navigate to the Package Directory:**
+    ```bash
+    cd infosys_responsible_ai_python_package
+    ```
+3.  **Build the Wheel File:**
+    ```bash
+    python setup.py bdist_wheel --universal
+    ```
+4.  **Locate and Copy the Wheel File:**
+    Navigate to `dist` and copy the `.whl` file.
+5.  **Paste the Wheel File into the `lib` Directory:**
+    Navigate to `responsible_ai_fairness/lib` and paste.
+6.  **Update `requirements.txt`:**
+    Replace the package entry with the `.whl` filename.
+
+**Note:**
+* Ensure `setup.py` version is correct.
+* `--universal` is optional.
+* Update `requirements.txt` with the `.whl` filename.
