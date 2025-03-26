@@ -7,7 +7,7 @@
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
 - [License](#license)
-- [Contact](#contact)
+
 
 ## Introduction
 **ML Security** provides the report for Traditional ML Model using different categories of attacks such as Evasion, poisioning as well as inference. It evaluates the Models with different attacks and provide a mechanishm to stregthen the model if model is found vulnerable.
@@ -109,7 +109,7 @@ Once we have completed all the aforementioned steps, we can start the service.
     ```
 
 2. Open the following URL in your browser:
-    [http://localhost:80/rai/v1/security_workbench/docs](http://localhost:80/rai/v1/security_workbench/docs)
+   `http://localhost:80/rai/v1/security_workbench/docs`
 
 ## License
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
@@ -117,6 +117,3 @@ The source code for the project is licensed under MIT license, which you can fin
 ## Open Source tools Used:
 adversarial-robustness-toolbox : https://github.com/Trusted-AI/adversarial-robustness-toolbox
 
-
-## Contact
-If you have more questions or need further insights, feel free to Connect with us @ Infosysraitoolkit@infosys.com
