@@ -112,7 +112,7 @@ Once we have completed all the aforementioned steps, we can start the service.
    `http://localhost:80/rai/v1/security_workbench/docs`
 
 ## License
-The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
+The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](License.md) file.
 
 ## Open Source tools Used:
 adversarial-robustness-toolbox : https://github.com/Trusted-AI/adversarial-robustness-toolbox
