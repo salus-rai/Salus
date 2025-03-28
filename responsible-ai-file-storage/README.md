@@ -7,7 +7,7 @@
 - [Installation](#installation)
 - [Configurations](#configurations)
 - [License](#license)
-- [Contact](#contact)
+
 
 ## Introduction
 API's to access and consume Azure Blob storage services.
