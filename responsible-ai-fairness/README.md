@@ -19,7 +19,7 @@
   - [Limitations](#limitations)
   - [Telemetry](#telemetry)
   - [Roadmap](#roadmap)
-  - [Contact](#contact)
+  
 
 ## Introduction
 Responsible-ai-fairness offers solutions for Traditional AI and LLM's fairness and bias evaluations. For traditional classification problems, the training datasets and model's predictions can be analyzed and mitigated for Group Fairness. Individual Fairness analysis is also supported to get a comprehensive analysis. For Large Language Models, given text is evaluated for bias context and highlights the affected groups and bias types using GPT-4.
