@@ -6,7 +6,7 @@
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
 - [License](#license)
-- [Contact](#contact)
+
 
 
 ## Introduction
@@ -108,7 +108,7 @@ Once we have completed all the aforementioned steps, we can start the service.
     python main.py
      ```
 
-3. Open the following URL in your browser: http://localhost:<port_no>/v1/rai/backend/docs
+3. Open the following URL in your browser: `http://localhost:<port_no>/v1/rai/backend/docs`
 
     User can also change the port which mentioned in main.py file
 
