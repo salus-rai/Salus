@@ -1,239 +1,205 @@
-# Responsible-AI-Fairness
+# API Documentation
 
 ## Table of contents
-- [Responsible-AI-Fairness](#responsible-ai-fairness)
+- [API Documentation](#api-documentation)
   - [Table of contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Requirements](#requirements)
-  - [Installation](#installation)
-  - [Configurations](#configurations)
-      - [Database Configurations](#database-configurations)
-      - [Header Configurations](#header-configurations)
-      - [Blob Containers and API Configurations](#blob-containers-and-api-configurations)
-  - [Features](#features)
-  - [License](#license)
-  - [Open Source Tools used](#open-source-tools-used)
-  - [Changelog](#changelog)
-    - [Bug Fixes](#bug-fixes)
-    - [Changes:](#changes)
-  - [Limitations](#limitations)
-  - [Telemetry](#telemetry)
-  - [Roadmap](#roadmap)
-  
+  - [Fairness Analysis in Unstructured Text and Images](#fairness-analysis-in-unstructured-text-and-images)
+    - [Unstructured Text:](#unstructured-text)
+    - [Images:](#images)
+  - [Fairness Analysis and Mitigation in Structured Data](#fairness-analysis-and-mitigation-in-structured-data)
+    - [Fairness Analysis:](#fairness-analysis)
+    - [Fairness Mitigation:](#fairness-mitigation)
+    - [Individual Fairness:](#individual-fairness)
+  - [Fairness Audit and Monitoring](#fairness-audit-and-monitoring)
+    - [Decisive Audit:](#decisive-audit)
+    - [Generic Audit:](#generic-audit)
+  - [Workbench APIs](#workbench-apis)
+      - [Bug Fix](#bug-fix)
 
-## Introduction
-Responsible-ai-fairness offers solutions for Traditional AI and LLM's fairness and bias evaluations. For traditional classification problems, the training datasets and model's predictions can be analyzed and mitigated for Group Fairness. Individual Fairness analysis is also supported to get a comprehensive analysis. For Large Language Models, given text is evaluated for bias context and highlights the affected groups and bias types using GPT-4.
+## Fairness Analysis in Unstructured Text and Images
 
-## Prerequisites
-1. Python 3.9 and Python 3.10
-2. pip
-3. Mongo DB
-4. VSCode
-5. infosys_responsible_ai_fairness-1.1.5-py2.py3-none-any.whl file having code to calculate metrics scores for bias analysis using [aif360](https://aif360.readthedocs.io/en/stable/), [Holistic AI](https://github.com/holistic-ai/holisticai), [Fairlearn](https://github.com/fairlearn/fairlearn)
-6. BART-large-mnli is a variant of the BART model specifically fine-tuned for multi-label natural language inference (MNLI) tasks. It features 406 million parameters, a maximum token size of 1024, 24 transformer layers, and a hidden size of 1024.  
-Steps to Download BART-large-mnli:
-   1.	Identify the Model URL: Navigate to the BART model page on the Hugging Face Model Hub. For example, for facebook/bart-large, the URL is:
-      https://huggingface.co/facebook/bart-large-mnli
-   2.	Find the Model Files: On the model page, you can see the available model files and can directly download from the huggingface.
-      
-       •	pytorch_model.bin (the model weights)
-      	
-       •	config.json (model configuration)
- 
-       •	tokenizer.json or other tokenizer file.
+### Unstructured Text:
+**Description:** Assess the fairness of unstructured text that evaluates bias levels (High/Medium/Low/Neutral). It also identifies the affected group and the type of bias (e.g., Historical, Confirmation Bias).
 
-       •	tokenizer_config.json .
+**Endpoint:** /api/v1/fairness/analysis/llm <br>
 
-       •	vocab.json.
+**Payload:**  
+1. response: Text
+2. evaluator: GPT_4O (Currently supporting only GPT_4O)<br>
 
-       •	merges.txt.
+**Response:** Bias analysis of Text with Bias Type and Bias Score.
+![Logo](./docs/images/llm_analysis.png)
+![Logo](./docs/images/llm_analysis_response.png)
 
-       •	model.safetensors
+### Images:
+**Description:** Assess the fairness of images given the context of the image that evaluates bias levels (High/Medium/Low/Neutral). It also identifies the affected group and the type of bias. A context is necessary as it will guide the evaluation process, ensuring that the image is analyzed in relation to the specific situation or message it is meant to convey.
 
-   3.	or alternatively, you can download the Files using curl or wget to download the files directly from the command line.
-     	
-       curl -L -o pytorch_model.bin https://huggingface.co/facebook/bart-large/resolve/main/pytorch_model.bin
- 
-       curl -L -o config.json https://huggingface.co/facebook/bart-large/resolve/main/config.json
- 
-       curl -L -o tokenizer.json https://huggingface.co/facebook/bart-large/resolve/main/tokenizer.json
+**Endpoint:** /api/v1/fairness/analysis/image<br>
 
-       curl -L -o tokenizer_config.json https://huggingface.co/facebook/bart-large/resolve/main/tokenizer_config.json
-
-       curl -L -o merges.txt https://huggingface.co/facebook/bart-large/resolve/main/merges.txt
-
-       curl -L -o model.safetensors https://huggingface.co/facebook/bart-large/resolve/main/model.safetensors
-
-       curl -L -o vocab.json https://huggingface.co/facebook/bart-large/resolve/main/vocab.json
+**Payload:**  
+1. prompt: Description of an image.
+2. Image: Image for which bias needs to be analyzed
+3. evaluator: GPT_4O (Currently supporting only GPT_4O) <br>
    
-   4. once all the files are downloaded, move them to **responsible-ai-fairness/responsible-ai-fairness/models**
+**Response:** Bias analysis of image with the bias score and bias type.<br>
 
-## Installation
-1.	Clone the repository
-2.	Create a virtual environment using the command 
-```bash
-python -m venv .venv
-```
-and activate it by going to
-```bash
-.venv\Scripts\activate
-```
-3.	Setup the DB
-      1. Create database in mongodb and add the db name in .env file
-4.	Install dependencies. 
-      1. Go to **responsible-ai-fairness\responsible-ai-fairness\requirements** and run following commands 
-      ```bash 
-         pip install -r requirements.txt.
-      ```
-      ```bash
-         pip install matplotlib==3.9.4
-      ```
-      2. if you are on windows, please add **../** in front to .whl file in requirements.txt to install without any errors.
-5. Add required configurations provided below in .env file.
-6. Run the application using below steps:
-      1. Go to responsible-ai-fairness/responsible-ai-fairness/src 
-      2. Run 
-      ```bash 
-         python main_api.py 
-      ```
-7. Once server is running successfully, go to `http://localhost:8000/api/v1/fairness/docs#/`
+![Logo](./docs/images/llm_analysis_images.png)
+![Logo](./docs/images/llm_analysis_images_response.png)
+
+
+## Fairness Analysis and Mitigation in Structured Data
+
+### Fairness Analysis:
+**Description:**
+To analyze a bias in a binary classification dataset both in pretrain and posttrain scenario.<br>
+
+**Endpoint:** /api/v1/fairness/Analyse <br>
+
+**Payload:**  
+1. biasType: PRETRAIN/POSTTRAIN (Provide the bias type based on your requirements. 'Pretrain' refers to bias analysis conducted before training the model, and it does not include predicted labels. 'Posttrain' refers to bias analysis performed after training the model, which includes the model's predicted labels.)
+2. methodType: ALL (Provide the method types for metric scores, such as disparate impact, statistical parity difference, base rate, and others. For more information about metrics, visit [AIF360](https://aif360.readthedocs.io/en/stable/modules/generated/aif360.metrics.BinaryLabelDatasetMetric.html#aif360.metrics.BinaryLabelDatasetMetric), [HolisticAI](https://holisticai.readthedocs.io/en/latest/reference/bias/metrics.html))
+3. taskType: CLASSIFICATION (Currently supporting only classification)
+4. Label: Mention the target column name to predict. 
+5. predLabel: Add prediction label. Default is “labels_pred”. This is required for POSTTRAIN. 
+6. FavourableOutcome: A result that benefits a group or individual, such as approval or selection, in a decision-making process.
+7. ProtectedAttribute: A characteristic (e.g., race, gender, age) legally protected from discrimination in decision-making.
+8. Privileged:  A group that typically receives more favorable outcomes or treatment due to certain attributes.
+9. File: Upload the dataset. <br>
+    
+**Response:** Response: Response are the various metrics like Statistical parity, Disparate Impact which can help us identify the bias in the dataset.<br>
+
+![Logo](./docs/images/structured_analysis_pretrain_request.png)
+![Logo](./docs/images/structured_analysis_pretrain_response.png)
+
+### Fairness Mitigation:
+**Description:**
+Mitigation in bias analysis refers to strategies or techniques aimed at reducing or eliminating bias in machine learning models, ensuring that decisions are fair and equitable across different groups using technique reweighing. Reweighing is a specific mitigation technique where the training data is adjusted by altering the weights of instances, typically by giving more weight to underrepresented or disadvantaged groups, to balance the influence of the data on the model's predictions. <br>
+
+**Endpoint:** /api/v1/fairness/pretrainMitigate <br>
+
+**Payload:**  
+1. MitigationType: PREPROCESSING (Curretnly supporting only preprocessing i.e before training the model.)
+2. MitigationTechinque: REWEIGHING (Currently supporting only reweighing. To read more about reweighing, visit [AIF360](https://aif360.readthedocs.io/en/stable/modules/generated/aif360.algorithms.preprocessing.Reweighing.html#aif360.algorithms.preprocessing.Reweighing))
+3. taskType: CLASSIFICATION (Currently supporting only classification)
+4. Label: Mention the column name of ground truth. 
+5. FavourableOutcome: A result that benefits a group or individual, such as approval or selection, in a decision-making process.  
+6. ProtectedAttribute: A characteristic (e.g., race, gender, age) legally protected from discrimination in decision-making.
+7. Privileged:  A group that typically receives more favorable outcomes or treatment due to certain attributes.
+8. File: Upload the dataset. 
+**Response:** You will get a mitigated data which can be downloaded using the api **/api/v1/fairness/download/mitigatedData/{fileName}**.
+Replace the file name with the mitigated_data_file_name from the response.
+
+![Logo](./docs/images/pretrain_mitigation.png)
+
+### Individual Fairness:
+**Description:**
+Individual fairness ensures that similar individuals are treated similarly by a model. The metric used to measure this is consistency, which evaluates how similarly a model predicts outcomes for similar individuals or cases. <br>
+
+**Endpoint:**  /api/v1/fairness/individualMetrics <br>
+
+**Payload:**  
+1. label: ground truth or prediction label
+2. k: number of neighbors. <br>
    
-## Configurations
- 1. Add required environment variables.
- 2. Below are the list of env one needs to add, to run the application, add required ones only and for the rest one can keep it as it is. .env template is there in the src folder.
+**Response:** Consistency score which indicates how simlar the instances are.
 
-#### Database Configurations
-| Key         | Placeholder Value | sample Value     | Required |
-|-------------|-------------------|------------------|----------|
-| DB_NAME     | "${dbname}"       | "rai_repository"   |  yes     |
-| DB_NAME_WB  | "${dbname_wb}"    | "rai_repository"   |  yes     |
-| DB_USERNAME | "${username}"     | "user"           |  optional|
-| DB_PWD      | "${password}"     |                  |  optional|
-| DB_IP       | "${ipaddress}"    |                  |  optional|
-| DB_PORT     | "${port}"         |                  | optional |
-| MONGO_PATH  | "mongodb://${DB_USERNAME}:${DB_PWD}@${DB_IP}:${DB_PORT}/" | "mongodb://localhost:27017/" | yes |
-| COSMOS_PATH | "${cosmos_path}"  |      | optional |
-| DB_TYPE     | "${dbtype}"       | "mongo"          | yes |
+![Logo](./docs/images/individual_metrics_request.png)
+![Logo](./docs/images/individual_metrics_response.png)
 
+## Fairness Audit and Monitoring
 
-#### Header Configurations
-| Key                     | Placeholder Value       | Sample Value     |Required |
-|-------------------------|-------------------------|------------------|----------|
-| allow_methods           | "${allow_methods}"      |       '["GET", "POST"]'           | Optional |
-| allow_origin            | "${allow_origin}"       |       ["*"]            | optional |
-| content_security_policy | "${content_security_policy}"|  "default-src 'self';img-src data: https:;object-src 'none'; script-srchttps://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui-bundle.js'self' 'unsafe-inline';style-srchttps://cdn.jsdelivr.net/npm/swagger-ui-dist@5.9.0/swagger-ui.css'self' 'unsafe-inline'; upgrade-insecure-requests;"    | optional |
-| cache_control           | "${cache_control}"      |      no-cache; no-store; must-revalidate            | Optional |
-| XSS_header              | "${xss_header}"         |    1; mode=block               | Optional |
-| Vary_header             | "${vary_header}"        |         Origin         | Optional |
-| X-Frame-Options         | "${X-Frame-Options}"    |            SAMEORIGIN       | Optional |
-| X-Content-Type-Options  | "${X-Content-Type-Options}" |     nosniff         | Optional |
-| Pragma                  | "${Pragma}"             |     no-cache             | Optional |
+**Background**
+Generative AI generates unstructured data. With capabilities like RAG, its now being used for making decisions in binary classification tasks as well. Based on the wide nature of the use-case, we have solution on two types of approaches. 
+1. Decisive usecase
+2. Generic usecase
+
+**Decisive usecase:**
+Decisive solutions or classification solutions where there is a decision . Decisive solutions or classification solutions where there is a decision is made like loan approvals etc., based on set of features and rules involved. In these cases, features importance scores are to be calculated for each decision and stored. Also, the distribution of success rates, population of sub-groups involved vs categories are also recorded. Using periodic audits or live dashboards, the success rate distribution is cross-checked to ensure fairness in the system. When there are indicators of bias like system is mostly favoring a single or few groups, the audit team would cross check the results with the explanations recorded and verify if they are false alarms or an actual bias in system which would trigger further investigation. <br>
+
+![Logo](./docs/images/decisive_usecase_2.png)
+
+**Generic usecase:**
+If the AI model is not involved in any decision making instead it generates some text or image or any content, like summarization tasks etc., we will be monitoring the outputs using our prompt classification tool. This would convert the unstructured out put to structured output which can be used for fairness analysis. This will contain the bias analysis, indicators, affected groups, type of bias and more details can also be added based on use case requirements. Now the bias distribution of the generated content can be monitored and audited to keep check of the generated content. As the bias analysis using the prompt template is the key, we additionally recommend to use  chain-of-thoughts and chain-of-verification to ensure that the analysis done is as accurate as possible.
+
+![Logo](./docs/images/generic_usecase_2.png)
+
+**Generic Monitoring Implementation**
+![Logo](./docs/images/generic_usecase_3.png)
+
+In the above flow diagram, our API (represented by the green box) will collect the responses over time, perform a bias analysis, and generate a comprehensive report with various visualizations and insights
 
 
-#### Blob Containers and API Configurations
+### Decisive Audit:
+**Description:**
+The API will calculate the success rate based on the collected data and generate a detailed report that includes insights, and visual representations.
 
-| Key                                | Placeholder Value                     | Sample Value     | Required |
-|------------------------------------|---------------------------------------|------------------|----------|
-| Dt_containerName                   | "${dt_containerName}"                 |                  | Optional |
-| Model_CONTAINER_NAME               | "${model_containerName}"              |                  | Optional |
-| HTML_CONTAINER_NAME                | "${html_containerName}"               |                  | Optional |
-| PDF_CONTAINER_NAME                | "${rai-pdf-reports}"               |                  | Optional |
-| CSV_CONTAINER_NAME                | "${rai-datasets}"               |                  | Optional |
-| ZIP_CONTAINER_NAME                | "${rai-zip-files}"               |                  | Optional |
-| AZURE_UPLOAD_API                   | "${azure_upload_api}"                 |                  | Optional |
-| AZURE_GET_API                      | "${azure_get_api}"                    |                  | Optional |
-| tel_Falg                           | "${tel_Falg}"                         |                  | Optional |
-| MIXTRAL_URL                        | "${mixtral_url}"                      |                  | Optional |
-| MIXTRAL_ACCESS_TOKEN               | "${mixtral_access_token}"             |                  | Optional |
-| FAIRNESS_TELEMETRY_URL             | "${fairness_telemetry_url}"           |                  | Optional |
-| REPORT_URL                         | "${reporturl}"                        |                  | Optional |
-| GEMINI_API_KEY                     | "${gemini_api_key}"                   |                  | Optional |
-| OPENAI_API_KEY                     | "${openai_api_key}"                   |      open_ai_key            | Yes |
-| OPENAI_API_BASE                     | "${openai_api_base}"                   |      open_ai_base/endpoint            | Yes |
-| OPENAI_API_TYPE                     | "${openai_api_type}"                   |      open_ai_type            | Yes |
-| OPENAI_API_VERSION                     | "${openai_api_version}"                   |      open_ai_version            | Yes |
-| OPENAI_ENGINE_NAME                     | "${openai_engine_name}"                   |      open_ai_engine_name           | Yes |
-| AUTH_TYPE                          | "${authtype}"                         | "none"           | Yes      |
-| SECRET_KEY                         | "${secretkey}"                        |                  | Optional |
-| AZURE_CLIENT_ID                    | "${azureclientid}"                    |                  | Optional |
-| AZURE_TENANT_ID                    | "${azuretenantid}"                    |                  | Optional |
-| AZURE_AD_JWKS_URL                  | "${azuread_jwks_url}"                 |                  | Optional |
-| Analyse_url                        | "${analyse_url}"                      |                  | Optional |
-| Mitigate_url                       | "${mitigate_url}"                     |                  | Optional |
-| Analyse_dowl_url                   | "${analyse_dowl_url}"                 |                  | Optional |
+**Endpoint:** /api/v1/fairness/analyse/success_rate <br>
 
-## Features
-For more details refer our [API Documentation](responsible-ai-fairness/README.md)
+**Payload:**  
+1. label: ground truth or prediction column.
+2. favourableOutcome: Mention favorable outcome for the selected label.
+3. Categorical_attribute: Name of the categorical attribute for which success_rate needs to be calculated.
+4. File: Structured data that needs to be monitored for the bias. <br>
+   
+**Response:** The API will calculate the success rate score for each combination of categorical attributes and generate a comprehensive report. The report can be downloaded through the provided endpoint. **/api/v1/fairness/analyse/success_rate/download/{filename}**
 
-| Model Type                      | Phase         | Function  | Description                                                                 |
-|---------------------------------|---------------|-----------|-----------------------------------------------------------------------------|
-| Traditional Binary classification | Pretrain      | Analyze   | Analyze for bias in structured dataset based on ground truth                |
-| Traditional Binary classification | Posttrain     | Analyze   | Analyze for bias in structured dataset based on model's predictions         |
-| Traditional Binary classification | Pretrain      | Mitigation | Mitigate the bias in the pretrain dataset                                   |
-| Traditional Binary classification | Individual Metric | Analyze   | Analyze for bias in structured dataset based on individuals in the dataset   |
-| Large Language Model            | NA            | Analyze   | Analyze bias in given unstructured text and images using Open AI GPT model.(For this please add required openai credentials in env)|
+![Logo](./docs/images/success_rate_request.png)
+![Logo](./docs/images/success_rate_response.png)
 
-## License
-The source code for the project is licensed under the MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
+### Generic Audit:
+**Description:**
+The API will analyze the bias in the collected responses over time and generate a comprehensive report.
 
-## Open Source Tools used
-| Open Source Tools Used | Link |
-|------------------------|------|
-| IBM AiF360             | https://github.com/Trusted-AI/AIF360 |
-| Holistic AI            | https://github.com/holistic-ai/holisticai |
-| Microsoft Fairlearn    | https://github.com/fairlearn/fairlearn |
-| Facebook BART model    | https://huggingface.co/facebook/bart-large-mnli |
+**Endpoint:** /api/v1/fairness/audit/fairness_classifier <br>
 
-## Changelog
-1. Added support for Llama: Introduced Llama as a tool for analyzing bias in text, allowing for more in-depth examination and understanding of content biases.
+**Payload:**  
+1. prompt: Name of the column which contains the text
+2. File: file containing all the text in a single column for which bias needs to be analyzed.<br>
+   
+**Response:** Bias analysis of each record which gives bias_score, bias_type in csv format, also it returns pdf report containing visual representation. To download the csv and pdf use the endpoint **/api/v1/fairness/audit/fairness_classifier/download/{filename}**, 
 
-2. Bias Analysis Improvements: Included an average bias score graph that visually represents the bias levels in the analyzed text, with a threshold indicator to help users easily identify and address potential bias concerns.
+![Logo](./docs/images/generic_audit.png)
 
+## Workbench APIs
+These APIs are required for the workbench (UI) and are universal, meaning a single API can perform various operations such as analysis on unstructured data, structured data, auditing, monitoring, and more. They provide all the core functionalities of the aforementioned APIs. There are two main APIs that need to be integrated into the workbench.
 
-## Limitations
-1. As of now analysing bias for classification models for traditional AI.
-2. Data mitigation for preprocessing: 
-   1. Reweighting can lead to overfitting on minority groups, potentially reducing overall model performance on the dataset.
-   2. Adjusting weights can distort the original data distribution, leading to a loss of valuable information and potential misrepresentation of the data.
-3. As of now mitigating bias for preprocessing dataset.
-4. As of now, we are generating token from an endpoint which is not open-sourced.
+**Endpoint 1:** /fairness/wrapper/batchId <br>
 
-## Telemetry
-1. Make tel_Falg as True.
-. Follow the steps given in `responsible-ai-telemetry` to setup telemetry.
-3. Pass the enpoint `/rai/v1/telemetry/errorloggingtelemetryapi` from above setup swagger ui to the varaible 'FAIRNESS_TELEMETRY_URL' in .env
+**Payload:**  
+1. BatchId: Entered BatchId which can be generated from workbench backend(model-detail-repo).<br>
+   
+**Response:** The api will perform the required operation on the basis of batchId like analysis, mitigation etc.
 
-## Roadmap
-1. Unstructured text training data validation for Bias.
-2. REST call support for text validationt to support ollama or similar model hosting.
+**Endpoint 2:** /fairness/wrapper/download <br>
+This api will download the report once the operation has completed successfully.
+
+**Payload:**  
+1. BatchId: Entered same BatchId which is used in /**fairness/wrapper/batchId** endpoint<br>
+   
+**Response:** Report for corresponding operations.
+
+#### Bug Fix
+- Users who are using UI may experience problems downloading reports for analyze and audit functions when connected to MongoDB.
+- Add the following code block in the `read_file` function within the MongoDB block, just before the return statement:
+
+```python
+if file_metadata.content_type == "application/pdf":
+    file_name = f"file_{str(unique_id)}.pdf"
+    extension = "pdf"
+    return {
+        "data": file_content,
+        "name": file_name,
+        "extension": extension,
+        "contentType": file_metadata.content_type
+    }
+  ```
 
 
-## Building and Distributing the Python Package as a Wheel (WHL) File
+**Note:** One required the following services to run the workbench apis 
+1. Reporting Tool: For report generation.
+2. File-Storage: For file management, if connected to Cosmos DB, a subscription to Azure Blob Storage is required. However, if MongoDB is used, this service is not necessary.
 
-This section outlines the steps to create a distributable Wheel (WHL) file for the `infosys_responsible_ai_python_package` and integrate it into the `responsible_ai_fairness/lib` directory.
 
-**Steps:**
 
-1.  **Install `wheel` and `setuptools`:**
-    ```bash
-    pip install wheel setuptools
-    ```
-2.  **Navigate to the Package Directory:**
-    ```bash
-    cd infosys_responsible_ai_python_package
-    ```
-3.  **Build the Wheel File:**
-    ```bash
-    python setup.py bdist_wheel --universal
-    ```
-4.  **Locate and Copy the Wheel File:**
-    Navigate to `dist` and copy the `.whl` file.
-5.  **Paste the Wheel File into the `lib` Directory:**
-    Navigate to `responsible_ai_fairness/lib` and paste.
-6.  **Update `requirements.txt`:**
-    Replace the package entry with the `.whl` filename.
 
-**Note:**
-* Ensure `setup.py` version is correct.
-* `--universal` is optional.
-* Update `requirements.txt` with the `.whl` filename.
+
