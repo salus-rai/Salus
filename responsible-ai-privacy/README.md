@@ -15,10 +15,9 @@
 ## Introduction
 Privacy is application which detects and masks any PII data present in Unstructured, Text, Image, DICOM, Video and returns the processed data.
  
-## Requirements
+## Prerequistes
 1. Python 3.9 - 3.11
 2. VSCode
-3. Mongo DB
 
 # Models
  1. En_core_wb_lg Model Download and place it lib folder:
@@ -27,6 +26,37 @@ Privacy is application which detects and masks any PII data present in Unstructu
  2. StarPII Model for code moderation: https://huggingface.co/bigcode/starpii
     Download the model files, paste the model creating folder named as nermodel inside, src\privacy\util\code_detect\ner\pii_inference\nermodel
 
+## Building and Distributing the Python Package as a Wheel (WHL) File For Moderation Model
+ 
+This section outlines the steps to create a distributable Wheel (WHL) file for the `infosys_responsible_ai_python_package` and integrate it into the `responsible-ai-privacy/lib` directory.
+ 
+**Steps:**
+ 
+1.  **Install `wheel` and `setuptools`:**
+    ```bash
+    pip install wheel setuptools
+    ```
+2.  **Navigate to the Package Directory:**
+    ```bash
+    cd infosys_responsible_ai_python_package
+    ```
+3.  **Build the Wheel File:**
+    ```bash
+    python setup.py bdist_wheel --universal
+    ```
+4.  **Locate and Copy the Wheel File:**
+    Navigate to `dist` and copy the `.whl` file.
+5.  **Paste the Wheel File into the `lib` Directory:**
+    Navigate to `responsible-ai-privacy/lib` and paste.
+6.  **Update `requirements.txt`:**
+    Replace the package entry with the `.whl` filename.
+ 
+**Note:**
+* Ensure `setup.py` version is correct.
+* `--universal` is optional.
+* Update `requirements.txt` with the `.whl` filename.
+* If any code changes are done in responsible AI privacy codebase then you have to make the same changes in RAI privacy packages when you are creating a new whl file.
+ 
 ## Installation
 To run the application, first we need to install Python and the necessary packages:
  
