@@ -5,9 +5,10 @@
 - [Requirements](#requirements)
 - [Features](#features)
 - [Installation](#installation)
+- [Open Source Tools used](#open-source-tools-used)
 - [Configurations](#configurations)
+- [API Endpoints](#api-endpoints)
 - [License](#license)
-
 
 ## Introduction
  [TrustLLM](https://github.com/HowieHwong/TrustLLM) is a tool used to benchmark text generating LLMs. Privacy, Fairness, Safety, Truthfulness, Ethics of the LLM are evaluated using the dataset provided. We have created a wrapper around this tool to ease the benchmarking process.
@@ -17,6 +18,7 @@
 2. pip
 3. Mongo DB
 4. VSCode
+5. 
 
 ## Features
 - Benchmarking of huggingface models using the dataset provided.
@@ -47,8 +49,12 @@ and activate it by going to
       ```bash 
          python main_api.py 
       ```
-7. Use the Port No that is mentioned in main.py file. Open the swagger URL in browser once server is running: `http://localhost:<portno>/api/v1/trustllm/docs#/`
+7. Once server is running successfully, go to [http://localhost:8000/api/v1/trustllm/docs](http://localhost:8000/api/v1/trustllm/docs#/)
 
+## Open Source Tools used
+| Open Source Tools Used | Link |
+|------------------------|------|
+| TrustLLM             | https://github.com/HowieHwong/TrustLLM.git |
 
 ## Configurations
  1. Add required environment variables.
@@ -81,10 +87,23 @@ Offline Generation and evaluation required GPU to run. To install cuda, execute 
    pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
 ```
 
+## API Endpoints
+# TrustLLM API Documentation
+
+| Endpoint | Purpose | Key Features |
+|----------|---------|--------------|
+| `/api/v1/trustllm/dataset` | Generate evaluation datasets | - Create datasets for model assessment<br>- Focus areas include:<br>  * Privacy<br>  * Fairness<br>  * Safety<br>  * Truthfulness<br>  * Ethics |
+| `/api/v1/trustllm/offline/generation/` | Generate responses from open-source models | - Use models from platforms like Hugging Face<br>- Benchmarking capabilities for:<br>  * Privacy<br>  * Fairness<br>  * Safety<br>  * Truthfulness<br>  * Ethics |
+| `/api/v1/trustllm/online/generation/` | Generate responses from internal models | - Utilize internally hosted models<br>- Evaluation focus on:<br>  * Privacy<br>  * Fairness<br>  * Safety<br>  * Truthfulness<br>  * Ethics |
+| `/api/v1/trustllm/evaluation` | Evaluate generated responses | - Assess responses from offline and online models<br>- Multiple evaluation metrics for:<br>  * Privacy<br>  * Fairness<br>  * Safety<br>  * Truthfulness<br>  * Ethics |
+| `/api/v1/trustllm/scores/getScores` | Retrieve leaderboard scores | - Access performance metrics<br>- Compare and rank models<br>- View evaluation results |
+| `/api/v1/trustllm/scores/addScore` | Add evaluation scores | - Update leaderboard database<br>- Track model performance<br>- Record new evaluation metrics |
+| `/api/v1/trustllm/scores/deleteScore` | Remove leaderboard scores | - Delete outdated or incorrect scores<br>- Maintain accurate leaderboard<br>- Manage performance records |
+
+## Additional Notes
+- Each endpoint is designed to support comprehensive model evaluation
+- Focuses on critical aspects of trustworthy AI development
+- Provides a systematic approach to assessing model performance
 
 ## License
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
-
-
-
-For more details refer our [User Guide](https://github.com/Infosys-AI-Cloud-MMS/responsible-ai-trustllm/blob/main/trustllm/docs/Steps%20to%20generate%20Benchmark%20scores.pdf) for more details.

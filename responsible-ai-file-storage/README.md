@@ -8,23 +8,24 @@
 - [Configurations](#configurations)
 - [License](#license)
 
-
 ## Introduction
-API's to access and consume Azure Blob storage services.
+This module provides a simplified, high-level interface for interacting with Azure Blob Storage. It encapsulates the complexities of the Azure Storage SDK, offering convenient functions for common operations such as uploading, downloading, listing, and deleting blobs.  This wrapper aims to make working with Azure Blob Storage more accessible and efficient by handling
+authentication, container management, and error handling internally, allowing users to focus on the core logic of their applications.  It abstracts away the need to directly
+interact with the Azure Storage SDK's client objects, providing a more streamlined and Pythonic experience.
 
-## Requirements
+## Prerequisites
 1. Python 3.9 and Python 3.10
 2. pip
-3. cosmos DB
+3. Azure Blob Storage
 4. VSCode
 
 ## Features
 
 - **Add File - /api/v1/azureBlob/addFile**
-The functionality is used to save a file in CosmosDB under a specified container.
+The functionality is used to save a file in Azure Blob Storage  under a specified container.
 
 - **Get File - /api/v1/azureBlob/getBlob**
-The functionality is used to retrieve a file from CosmosDB with in a specified container.
+The functionality is used to retrieve a file from Azure Blob Storage with in a specified container.
 
 - **Delete File - /api/v1/azureBlob/delete_blob**
 The functionality is used to delete a file from a specified container.
@@ -61,7 +62,7 @@ and activate it by going to
       ```bash 
          python main_api.py 
       ```
-6. Use the Port No that is mentioned in main.py file. Open the swagger URL in browser once server is running: `http://localhost:8000/api/v1/azureBlob/docs#/`
+6. Once server is running successfully, go to [http://localhost:8000/api/v1/azureBlob/docs](http://localhost:8000/api/v1/azureBlob/docs#/)
 
 
 ## Configurations
@@ -74,6 +75,3 @@ and activate it by going to
 ## License
 
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
-
-
-
