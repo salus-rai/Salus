@@ -8,7 +8,7 @@
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
 - [License](#license)
-- [Contact](#contact)
+
 
 ## Introduction
 
