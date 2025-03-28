@@ -6,7 +6,7 @@
 - [Requirements](#requirements)
 - [Installation](#installation)
 - [Running the Application](#running-the-application)
-- [Contact](#contact)
+
   
 ## Introduction
 The workbench repository is used for processing and generating report for Unstructured text and Risk Assessment Report for Questionnaire.
