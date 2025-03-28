@@ -9,7 +9,7 @@
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
 - [License](#license)
-- [Contact](#contact)
+
  
 ## Introduction
 The **Moderation Layer** module provides model-based and template-based guardrails to moderate inputs by passing them through various checks like check for toxicity, profanity, prompt injection, jailbreak, privacy etc. The module also provides additional features like chain of thoughts, chain of verifications, token importance and LLM explanation.
