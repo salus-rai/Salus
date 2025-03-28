@@ -7,7 +7,7 @@
 - [Installation](#installation)
 - [Configurations](#configurations)
 - [License](#license)
-- [Contact](#contact)
+
 
 ## Introduction
  [TrustLLM](https://github.com/HowieHwong/TrustLLM) is a tool used to benchmark text generating LLMs. Privacy, Fairness, Safety, Truthfulness, Ethics of the LLM are evaluated using the dataset provided. We have created a wrapper around this tool to ease the benchmarking process.
