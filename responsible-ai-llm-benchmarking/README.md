@@ -71,7 +71,7 @@ and activate it by going to
 | DB_TYPE | "${dbtype}" | "mongo" | yes |
 | allow_methods | "${allow_methods}"  | '["GET", "POST"]'  | yes |
 | allow_origin     | "${allow_origin}"       | ["*"]         | yes |
-| content_security_policy | "${content_security_policy}" | "default-src 'self' img-src data: https:; style-src 'self' 'unsafe-inline'https://cdn.jsdelivr.net;script-src 'self' 'unsafe-inline'https://cdn.jsdelivr.net" | yes |
+| content_security_policy | "${content_security_policy}" | "default-src 'self' img-src data: https:; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; script-src 'self' 'unsafe-inline'https://cdn.jsdelivr.net" | yes |
 | cache_control | "${cache_control}" | "private, no-store" | yes |
 | XSS_header | "${xss_header}" | "1; mode=block" | yes |
 | Vary_header | "${vary_header}" | 'Origin' | yes |
