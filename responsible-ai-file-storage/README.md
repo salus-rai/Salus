@@ -62,7 +62,7 @@ and activate it by going to
       ```bash 
          python main_api.py 
       ```
-6. Once server is running successfully, go to [http://localhost:8000/api/v1/azureBlob/docs](http://localhost:8000/api/v1/azureBlob/docs#/)
+6. Once server is running successfully, go to `http://localhost:8000/api/v1/azureBlob/docs#/`
 
 
 ## Configurations
