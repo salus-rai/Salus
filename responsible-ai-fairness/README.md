@@ -98,7 +98,7 @@ and activate it by going to
       ```bash 
          python main_api.py 
       ```
-7. Once server is running successfully, go to [http://localhost:8000/api/v1/fairness/docs](http://localhost:8000/api/v1/fairness/docs#/)
+7. Once server is running successfully, go to `http://localhost:8000/api/v1/fairness/docs#/`
    
 ## Configurations
  1. Add required environment variables.
