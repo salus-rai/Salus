@@ -28,7 +28,7 @@
 2. evaluator: GPT_4O (Currently supporting only GPT_4O)<br>
 
 **Response:** Bias analysis of Text with Bias Type and Bias Score.
-![Logo](./docs/images/llm_analysis.png)
+![Logo](https://github.com/salus-rai/Salus/tree/main/responsible-ai-fairness/responsible-ai-fairness/docs/images/llm_analysis.png)
 ![Logo](./docs/images/llm_analysis_response.png)
 
 ### Images:
