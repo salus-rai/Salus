@@ -4,6 +4,7 @@
 
 - [Introduction](#introduction)
 - [Features](#features)
+- [Pre-requisite](#pre-requisite)
 - [Installation](#installation)
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
@@ -34,6 +35,12 @@ Hallucination in LLMs refers to the generation of text or predictions that devia
 Install the file storage respository by adding all the necessary required environment variables. Below are the two dependencies which  must be present in the env file of the RAG to upload and get the document.
     AZUREADDFILE = `http://localhost:[PORT_NUMBER]/api/v1/azureBlob/addFile"`
     AZUREBLOBNAME = `http://localhost:[PORT_NUMBER]/api/v1/azureBlob/getBlob?"`
+
+Below are the packages along with their versions (if applicable) that are required to run the codebase:
+
+1. For Textual RAG (including COT, COV, THOT, GEval): openai==0.28.0, langchain==0.3.4, langchain-community==0.3.3, langchain-core==0.3.24, pypdf, sentence-transformers, tiktoken, faiss-cpu
+
+2. For Video/Image RAG: moviepy==1.0.3, opencv-python, SpeechRecognition, pydub
 
 ## Installation
 To run the application, first we need to install Python and the necessary packages:
@@ -166,4 +173,3 @@ For API calls, please refer to the [API Document](Rag/docs/RAG_endpoints_Instruc
 ## License
 
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
-

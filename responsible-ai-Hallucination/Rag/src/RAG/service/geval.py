@@ -1,4 +1,6 @@
 """
+SPDX-License-Identifier: MIT
+
 Copyright 2024 - 2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -228,6 +230,7 @@ The response should only contain the reasoning and the score in number seperated
 For example: "This is the reason, 0.1."
 DO not deviate from the format."""
 
+# Function to call the OpenAI model
 def call_openai_model(prompt):
     response = None
     strt_time = time.perf_counter()
@@ -275,6 +278,7 @@ def call_openai_model(prompt):
         log.error(f"Exception: {e,str(traceback.extract_tb(e.__traceback__)[0].lineno)}")
     return output 
 
+# Function to calculate geval score based on the given prompt, response and source
 def gEval(text,response,sourcetext):
     try:
         st=time.time()

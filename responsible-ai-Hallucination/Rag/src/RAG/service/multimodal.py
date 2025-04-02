@@ -1,4 +1,6 @@
 """
+SPDX-License-Identifier: MIT
+
 Copyright 2024 - 2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -38,7 +40,7 @@ class AttributeDict(dict):
     __delattr__ = dict.__delitem__
           
 class Multimodal:
-    
+    # Encodes image using Base64 encoding
     def encode_image(self,image):
         '''Encodes image using Base64 encoding'''
         try:
@@ -61,7 +63,7 @@ class Multimodal:
             log.info("Failed at encode_image")
             log.error(f"Exception: {str(traceback.extract_tb(e.__traceback__)[0].lineno),e}")
 
-    
+    # Calls the Azure Chat API to get the response
     def config(self,messages,modelName):
         if modelName == "gpt4O":
             AZURE_API_KEY = os.getenv('OPENAI_API_KEY_GPT4_O')
@@ -119,6 +121,7 @@ class Multimodal:
     #         log.info("Failed at image_rag")
     #         log.error(f"Exception: {str(traceback.extract_tb(e.__traceback__)[0].lineno),e}")
     
+    # Performs image RAG along with hallucination score and other explainability metrics
     def image_rag(self,payload):
         '''Implements image explainability using GPT-4o
         Args: Prompt, Image

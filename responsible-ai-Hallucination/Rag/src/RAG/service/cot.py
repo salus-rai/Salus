@@ -1,4 +1,6 @@
 """
+SPDX-License-Identifier: MIT
+
 Copyright 2024 - 2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -69,6 +71,7 @@ def get_token_cost(input_tokens: int, output_tokens: int, model: str):
         "total_cost": total_cost
     }
  
+# Calculate the token count of the text
 def calculate_token_count(text: str, model_name: str = "text-embedding-ada-002") -> int:
     # Load the appropriate tokenizer for the model
     tokenizer = tiktoken.encoding_for_model(model_name)
@@ -77,6 +80,7 @@ def calculate_token_count(text: str, model_name: str = "text-embedding-ada-002")
     # Return the token count
     return len(tokens)
 
+# Function to generate Chain Of Thought response
 def cot(text,fileupload,vectorestoreid=None):
     starttime = time.time()
     if fileupload==True:

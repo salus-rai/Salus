@@ -1,4 +1,6 @@
 """
+SPDX-License-Identifier: MIT
+
 Copyright 2024 - 2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -44,6 +46,7 @@ class AttributeDict(dict):
 import tempfile
 import shutil
 
+# Performs RAG on video using model and generate response
 def video_rag(payload):
     try:  
         payload = AttributeDict(payload) 
@@ -114,7 +117,8 @@ def video_rag(payload):
     except Exception as e:
         log.info("Failed at video_rag")
         log.error(f"Exception: {str(traceback.extract_tb(e.__traceback__)[0].lineno),e}")
-        
+  
+# Extracts frames from video and audio from video      
 def process_video(video_path, seconds_per_frame=2):
     try:
         id = uuid.uuid4().hex
@@ -169,6 +173,7 @@ def process_video(video_path, seconds_per_frame=2):
         log.info("Failed at process_video")
         log.error(f"Exception: {str(traceback.extract_tb(e.__traceback__)[0].lineno),e}")
         
+# Converts audio to text
 def convert_audio_to_text(audio_path):
     try:
         recognizer = sr.Recognizer()

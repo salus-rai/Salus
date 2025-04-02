@@ -26,6 +26,6 @@ pydub
 atlassian-python-api
 wheel==0.38.1
 #wheel==0.38.0
-jinja2==3.1.5
+jinja2==3.1.6
 setuptools==70.0.0
 #setuptools==65.5.1

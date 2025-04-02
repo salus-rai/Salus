@@ -1,4 +1,6 @@
 """
+SPDX-License-Identifier: MIT
+
 Copyright 2024 - 2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
@@ -29,6 +31,7 @@ request_id_var.set("Startup")
 
 llm = AzureChatOpenAI(deployment_name=os.getenv("OPENAI_MODEL"), temperature=1)
 
+# Loads data for different file formats
 def get_loader(file_path):
     if file_path.endswith('.pdf'):
         return PyPDFLoader(file_path)
@@ -49,6 +52,7 @@ def path_check(safe_path):
     else:
         raise ValueError(f"Invalid path: {safe_path}")
 
+# Generates  cache id for a given vectorstore
 def caching(blobname):
     try:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=0)  
@@ -102,6 +106,7 @@ def caching(blobname):
         log.error("Failed at Vectorestore Caching")
         log.error(f"Exception: {str(traceback.extract_tb(e.__traceback__)[0].lineno),e}")
 
+# Removes a cache
 def removeCache(id):
     try:
         if id in cache:
