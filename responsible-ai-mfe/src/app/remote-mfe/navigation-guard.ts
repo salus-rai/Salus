@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
@@ -21,6 +25,7 @@ export class UsecaseGuard implements CanActivate {
   userRole1:any;
   constructor(private router: Router,public https: HttpClient) { }
 
+  // Determines if a route can be activated based on user roles and use case availability.
   canActivate(
 
     route: ActivatedRouteSnapshot,
@@ -44,6 +49,7 @@ export class UsecaseGuard implements CanActivate {
     );
   }
 
+  // Checks if use cases are available for the logged-in user by making an API call.
   checkIfUsecasesAvailable(): Observable<Boolean> {
     const user = this.getLogedInUser();
 
@@ -67,7 +73,7 @@ export class UsecaseGuard implements CanActivate {
 
   }
 
-
+  // Retrieves the logged-in user ID from local storage.
   getLogedInUser() {
     if (localStorage.getItem("userid") != null) {
       const x = localStorage.getItem("userid")
@@ -82,6 +88,7 @@ export class UsecaseGuard implements CanActivate {
     }
   }
 
+  //  Retrieves the logged-in user's role from local storage.
   getLogedInUserRole() {
     if (localStorage.getItem("role") != null) {
       const x = localStorage.getItem("role")
@@ -96,7 +103,7 @@ export class UsecaseGuard implements CanActivate {
     }
   }
 
-// FOR URL
+// Retrieves API configuration details from local storage.
   getLocalStoreApi() {
     let ip_port
     if (localStorage.getItem("res") != null) {
@@ -108,6 +115,7 @@ export class UsecaseGuard implements CanActivate {
     }
   }
 
+  // seting up api list
   setApilist(ip_port: any) {
     // this.getFile = ip_port.result.DocProcess + ip_port.result.DocProcess_getFiles  // + environment.getFile
     // this.uploadFile = ip_port.result.DocProcess + ip_port.result.DocProcess_uploadFile   //+ environment.uploadFile

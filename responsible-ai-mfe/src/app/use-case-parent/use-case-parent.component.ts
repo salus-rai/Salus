@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { AfterViewInit, ChangeDetectorRef, Component, ViewChild,Input } from '@angular/core';
 import { UseCaseServiceService } from './use-case-service.service';
@@ -145,9 +149,8 @@ export class UseCaseParentComponent {
     this.useCaseService.setUseCaseName(this.useCaseName)
   }
 
+  // Collects and validates data from AI Canvas, RAI Canvas, and questionnaire, then triggers the creation process.
   submit() {
-
-
     this.useCaseService.getQuestionnaireResponse.subscribe((msg) => this.map = msg)
     console.log("map==========", this.map)
     this.useCaseService.getUsecaseName.subscribe((msg) => (this.useCaseName = msg));
@@ -226,22 +229,9 @@ export class UseCaseParentComponent {
 
       console.log("payload=====", payload["UserId"])
 
-
-
-
-
-
-
-
-
-
-
     }
 
-
-
     console.log("RaiCanvaspayload182===========", this.raiCanvasDatDetail)
-
 
     this.creatUsecsse(payload, aiCanvaspayload, raiCanvasPayload, this.questionPayload)
 
@@ -249,6 +239,7 @@ export class UseCaseParentComponent {
 
   }
 
+  // seting up api list
   setApilist(ip_port: any) {
     // this.getFile = ip_port.result.DocProcess + ip_port.result.DocProcess_getFiles  // + environment.getFile
     // this.uploadFile = ip_port.result.DocProcess + ip_port.result.DocProcess_uploadFile   //+ environment.uploadFile
@@ -260,6 +251,7 @@ export class UseCaseParentComponent {
     this.submit_Response = ip_port.result.Questionnaire + ip_port.result.submitResponse
   }
 
+  // Retrieves the logged-in user's ID from local storage.
   getLogedInUser() {
     if (localStorage.getItem("userid") != null) {
       const x = localStorage.getItem("userid")
@@ -284,7 +276,7 @@ export class UseCaseParentComponent {
   }
 
   parentPageValue: any;
-
+// Updates the parent component's value based on changes from the child component.
   onChildValueChange(newValue: any) {
     console.log("Inside value changes======")
     this.parentPageValue = newValue;
@@ -313,6 +305,7 @@ export class UseCaseParentComponent {
 
   }
 
+  // Creates a new use case and triggers subsequent submissions for AI Canvas, RAI Canvas, and questionnaire.
   creatUsecsse(payload: any, aiCanvaspayload: any, raiCanvasPayload: any, quesPayload: any) {
     this.https.post(this.createUseCase, payload).subscribe(
 
@@ -350,6 +343,7 @@ export class UseCaseParentComponent {
     )
   }
 
+  // Submits AI Canvas data to the server and triggers the RAI Canvas submission upon success.
   aiCanvasSubmit(aiCanvaspayload: any, raiCanvasPayload: any, quesPayload: any) {
     this.https.post(this.aiCanvasSubmitResponse, aiCanvaspayload).subscribe(
       (res: any) => {
@@ -403,6 +397,7 @@ export class UseCaseParentComponent {
     )
   }
 
+  // Submits RAI Canvas data to the server and triggers the questionnaire submission upon success.
   raiCanvasSubmit(raiCanvasPayload: any, quesPayload: any) {
     this.https.post(this.raiCanvasSubmitResponse, raiCanvasPayload).subscribe(
       (res: any) => {
@@ -453,6 +448,7 @@ export class UseCaseParentComponent {
     );
   }
 
+  // Submits questionnaire responses to the server and resets the state upon success.
   questionnaireSubmit(payload: any) {
     const payload1 = {
       // "data":this.questionPayload

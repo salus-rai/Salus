@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -47,6 +51,7 @@ export class AiContentDetectorComponent implements OnInit {
     this.textDetector = this.ip_port.result.textDetector + this.ip_port.result.textDetectorModel;
   }
 
+  // Logs and displays error messages in a snackbar for API failures.
   handleError(error: any) {
     console.log(error)
     console.log(error.status);
@@ -77,6 +82,8 @@ export class AiContentDetectorComponent implements OnInit {
   resetTable(): void {
     this.response = {};
   }
+
+  // Updates the selected checkbox state and sets the corresponding prompt text.
   onCheckboxChange(checkboxId: string): void {
     if (checkboxId === 'ai') {
       this.isAIChecked = true;
@@ -88,6 +95,8 @@ export class AiContentDetectorComponent implements OnInit {
       this.Prompt = this.Prompt2;
     }
   }
+
+  // Updates the selected button state and sets the corresponding prompt text.
   onButtonClick(buttonId: string): void {
     if (buttonId === 'ai') {
       this.isAIChecked = true;
@@ -99,6 +108,8 @@ export class AiContentDetectorComponent implements OnInit {
       this.Prompt = this.Prompt2;
     }
   }
+
+  // Validates the input text, checks word count, and sends it to the API if valid.
   textValidationMethod() {
     this.responseLoading = true;
     this.loadComplete = false;

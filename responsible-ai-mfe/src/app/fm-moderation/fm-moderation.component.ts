@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnChanges, SimpleChanges, OnDestroy, ViewEncapsulation, ViewChild } from '@angular/core';
@@ -278,7 +282,8 @@ export class FmModerationComponent {
     console.log(this.options, "OPTIONS IN FUNCTION")
 
   }
-  //////////////////////////////
+  
+  // Updates tenant array and placeholder based on selected options.
   viewoptions() {
     const myObject = { ...this.selectedOptions };
     console.log("myObject===", myObject)
@@ -363,6 +368,8 @@ export class FmModerationComponent {
     this.apiEndpoints.rag_video = ip_port.result.Rag + ip_port.result.Rag_Video;
 
   }
+
+  // Retrieves API endpoints, account role, and user ID from local storage.
   retrieveLocalStorageData() {
     let ip_port;
     let Account_Role;
@@ -395,6 +402,8 @@ export class FmModerationComponent {
     }
     return { ip_port, Account_Role };
   }
+
+  // Initializes user role settings by making an API call with the account role.
   initializeUserRole(Account_Role: any) {
     this.https.post(this.apiEndpoints.admin_fm_admin_UserRole, { role: Account_Role }).subscribe(
       (res: any) => {
@@ -467,6 +476,8 @@ export class FmModerationComponent {
 
 
   // }
+
+  // Sets the selected embedded file name and ID based on user selection.
   selectEmbeddedMethod(data: any) {
     this.files = []
     this.RagMultiFiles=[];
@@ -483,6 +494,7 @@ export class FmModerationComponent {
     this.fmlocalselected = true;
   }
 
+  // Handles form submission, validates inputs, and triggers various moderation checks and APIs.
   onSubmit(formData: any) {
     this.getSelectedValues();
     if (this.tenantarr == undefined || this.tenantarr.length == 0) {
@@ -782,6 +794,7 @@ export class FmModerationComponent {
     this.fmlocalselected = false;
   }
 
+  // Resets form data, file uploads, and state variables to their initial values.
   resetData(form: any) {
     this.hallucinationSwitchCheck = false;
     this.nemoGaurdrailCheck = false;
@@ -808,6 +821,7 @@ export class FmModerationComponent {
     this.optionFlag= false;
   }
 
+  // Resets all moderation-related states and responses to their default values.
   resetResultData() {
     this.fmService.resetMultiModal();
     this.setLoadTemplateResMod = false;
@@ -886,6 +900,7 @@ export class FmModerationComponent {
   globalMultiModeltemplateList:any = []
   globalMultiEvaltemplateList:any = []
 
+  // Updates moderation templates and payload based on the selected template.
   onTemplateSelect(event: any) {
     console.log(event?.target.value)
     console.log("all of the templates",this.allTemplates)
@@ -1075,6 +1090,8 @@ export class FmModerationComponent {
   //   }
   //   this.uploadFilesSimulator(0, files)
   // }
+
+  // Processes and prepares the list of selected files by adding metadata and initiating upload simulation.
   prepareFilesList(files: Array<any>) {
     for (const item of files) {
       item.progress = 0;
@@ -1109,7 +1126,7 @@ export class FmModerationComponent {
     console.log("preparedfiles", this.filesExplainability)
   }
 
-
+  // Simulates the upload progress for the selected files by incrementally updating their progress.
   uploadFilesSimulator(index: number) {
     setTimeout(() => {
       if (index === this.files.length) {
@@ -1144,6 +1161,7 @@ export class FmModerationComponent {
     }, 1000);
   }
 
+  // Clears uploaded files and resets related variables.
   removeFile() {
     this.files = [];
     this.RagMultiFiles=[];
@@ -1196,6 +1214,8 @@ export class FmModerationComponent {
       );
     });
   }
+
+  // Validates and categorizes uploaded files as multimodal or video based on their extensions.
   checkRagMultiModal():any{ 
     this.RagMultiFiles = [];
     for (let i = 0; i < this.demoFile.length; i++) {
@@ -1776,6 +1796,8 @@ export class FmModerationComponent {
   transformText(text: string): SafeHtml {
     return this.sanitizer.bypassSecurityTrustHtml(text.replace(/\n/g, '<br/>'));
   }
+
+  // Sends a request to the gEval API to process RAG text and updates the result.
   getSummarygEval(ragText: string, page_content: string) {
     let options = {
       "text": this.prompt,
@@ -1793,6 +1815,7 @@ export class FmModerationComponent {
     );
   }
 
+  // Fetches moderation timing details from the FM API and updates the state.
   callFMTimeApi(hallucinationPostCall: boolean = false) {
     this.https.get(this.apiEndpoints.fm_api_time).subscribe(
       (res: any) => {
@@ -1810,6 +1833,7 @@ export class FmModerationComponent {
     );
   }
 
+  // Triggers Nemo moderation API based on guardrail and summary status.
   callNemoApi(prompt: any, nemoGaurdrail: any, summaryStatus: any) {
     if (nemoGaurdrail == true) {
       if (summaryStatus == 'PASSED') {
@@ -1851,6 +1875,7 @@ export class FmModerationComponent {
     );
   }
 
+  // Handles API errors by logging details and displaying a snackbar message.
   handleError(error: any, customErrorMessage?: any) {
     console.log(error.status);
     console.log(error.error.detail);
@@ -2143,6 +2168,8 @@ export class FmModerationComponent {
   tState = false
   tLoading = false
 
+
+  // Updates the notification preference and triggers translation if applicable.
   updateNotificationPreference(f: any, tchoice: any) {
 
     this.selectedTranslate = tchoice
@@ -2232,6 +2259,7 @@ export class FmModerationComponent {
     };
   }
 
+  // Handles file selection for multimodel processing and validates the file type.
   fileBrowseHandlerMultiModel(file: any) {
     console.log("FILE HANDLER MULTP MODEL")
     this.prepareFilesListMulti(file.target.files);
@@ -2264,6 +2292,8 @@ export class FmModerationComponent {
     }
     this.hallucinationSwitchCheck = false // making file upload as false
   }
+
+  // prepares and stores the list of selected files for multimodel processing.
   prepareFilesListMulti(files: Array<any>) {
     this.filesMultiModel = [];
     this.demoFile = [];
@@ -2272,6 +2302,8 @@ export class FmModerationComponent {
     }
     this.Placeholder = this.tenantarr.includes('Fairness')?"Enter Context":"Enter Prompt";
   }
+
+  // Clears the uploaded multimodel files and resets related variables.
   removeFileMultimodel() {
     console.log("REMOVE MULTIMODEL FILE")
     this.filesMultiModel = [];
@@ -2283,6 +2315,8 @@ export class FmModerationComponent {
     // // this.file = ''
     // this.resetMultiModelResult();
   }
+
+  // Triggers multimodel template-based moderation checks for selected templates.
   callMultimodelTemplateAPI() {
     let templateList = ['Prompt Injection', 'Jailbreak', 'Restricted Topic'];
     // the below code is not being used left for multimodel image template
@@ -2474,6 +2508,8 @@ export class FmModerationComponent {
       }
     );
   }
+
+  // Opens a dialog to display the provided data based on its type (image, PDF, video, etc.).
   openDialog(data: any) {
     console.log("DialogData", data);
   

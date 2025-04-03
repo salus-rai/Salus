@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, ViewChild } from '@angular/core';
@@ -101,7 +105,7 @@ export class AccountsConfigurationModalFmComponent {
     this.fm_config_outputModCheck = ip_port.result.Admin + ip_port.result.Fm_Config_OutputModCheck
 
   }
-
+// This method will submits the form data to the server to update FM parameters.
   submit() {
     console.log(this.FmConfigResponseForm.value);
 
@@ -193,8 +197,8 @@ export class AccountsConfigurationModalFmComponent {
 
   FmConfigResponseForm!: FormGroup;
 
+  // This method will Initializes the form group with form controls and validators.
   fromCreation() {
-
 
     this.FmConfigResponseForm = new FormGroup({
       inputModChecks: new FormControl([], [Validators.required]),
@@ -219,8 +223,6 @@ export class AccountsConfigurationModalFmComponent {
       ThemeTexts: new FormControl('', [Validators.required]),
     });
 
-  
-
   }
   // 
   InputModerationChecks:any = []
@@ -244,6 +246,7 @@ export class AccountsConfigurationModalFmComponent {
   c1: boolean = false;
 
   // select 1
+  // This will toggles the selection of all options in the first select element.
   toggleAllSelection1(event: any) {
     this.event1 = event;
     this.c1 = event.checked;
@@ -266,6 +269,8 @@ export class AccountsConfigurationModalFmComponent {
       });
     }
   }
+
+  // Updates the status of the first select element based on selected options.
   selectInputModeration() {
     let newStatus = true;
     this.select1.options.forEach((item: MatOption) => {
@@ -292,6 +297,7 @@ export class AccountsConfigurationModalFmComponent {
   c2: boolean = false;
 
   // select 2
+  // This will toggles the selection of all options in the second select element.
   toggleAllSelection2(event: any) {
     this.event2 = event;
     this.c2 = event.checked;
@@ -314,6 +320,8 @@ export class AccountsConfigurationModalFmComponent {
       });
     }
   }
+
+  //  Updates the status of the second select element based on selected options.
   selectOutputModeration() {
     let newStatus = true;
     this.select2.options.forEach((item: MatOption) => {
@@ -338,7 +346,7 @@ export class AccountsConfigurationModalFmComponent {
   event3: any;
   c3: boolean = false;
 
-  // select 3
+  // select 3 -Toggles the selection of all options in the third select element.
   toggleAllSelection3(event: any) {
     this.event3 = event;
     this.c3 = event.checked;
@@ -361,6 +369,8 @@ export class AccountsConfigurationModalFmComponent {
       });
     }
   }
+
+  // Updates the status of the third select element based on selected options.
   selectrecognizerList() {
     let newStatus = true;
     this.select3.options.forEach((item: MatOption) => {
@@ -386,7 +396,7 @@ export class AccountsConfigurationModalFmComponent {
   event4: any;
   c4: boolean = false;
 
-  // select 4
+  // select 4 - Toggles the selection of all options in the fourth select element.
   toggleAllSelection4(event: any) {
     this.event4 = event;
     this.c4 = event.checked;
@@ -409,6 +419,8 @@ export class AccountsConfigurationModalFmComponent {
       });
     }
   }
+  
+  // Updates the status of the fourth select element based on selected options.
   selectrecognizerListtoblock() {
     let newStatus = true;
     this.select4.options.forEach((item: MatOption) => {
@@ -433,7 +445,7 @@ export class AccountsConfigurationModalFmComponent {
   event5: any;
   c5: boolean = false;
 
-  // select 5
+  // select 5 - Toggles the selection of all options in the fifth select element.
   toggleAllSelection5(event: any) {
     this.event5 = event;
     this.c5 = event.checked;
@@ -456,6 +468,8 @@ export class AccountsConfigurationModalFmComponent {
       });
     }
   }
+
+  //  Updates the status of the fifth select element based on selected options.
   selectRestrictedtopics() {
     let newStatus = true;
     this.select5.options.forEach((item: MatOption) => {
@@ -472,6 +486,7 @@ export class AccountsConfigurationModalFmComponent {
 
   dataSource3: any;
 
+  // fetches FM configuration data for the form and sets the form values.
   get_fmdataforFmConfigResponseform() {
     this.https.post(this.fm_config_dataList, { accMasterId: this.data.id }).subscribe
       ((res: any) => {

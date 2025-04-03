@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { DICOMViewerComponent } from '../dicom-lib/dicom-viewer.component';
@@ -126,6 +130,7 @@ export class ImageDicomComponent {
     this.isLoadingUpload = false;
   }
 
+  // Logs and displays error messages in a snackbar with optional custom messages.
   handleError(error: any, customErrorMessage?: any) {
     console.log(error)
     console.log(error.status);
@@ -240,6 +245,7 @@ export class ImageDicomComponent {
     reader.readAsText(event.target.files[0]);
   }
 
+  // Handles file selection, validates file type, and prepares the file list for upload.
   fileBrowseHandler(imgFile: any) {
     this.selectedImage = ''
     this.files = []
@@ -265,6 +271,7 @@ export class ImageDicomComponent {
     //  console.log("on choosing")
   }
 
+  // Cleans file names, validates file types, and prepares the file list for upload simulation.
   prepareFilesList(files: Array<any>) {
     for (const item of files) {
       const cleanedName = item.name.replace(/\[object Object\]/g, '');
@@ -274,6 +281,8 @@ export class ImageDicomComponent {
     console.log("PREPRARE", this.files)
     this.uploadFilesSimulator(0, files);
   }
+
+  // Simulates file upload progress and triggers DICOM image loading upon completion.
   uploadFilesSimulator(index: number, files: any) {
     setTimeout(() => {
       console.log(this.files)

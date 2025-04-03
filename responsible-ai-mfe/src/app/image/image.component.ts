@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, ViewEncapsulation } from '@angular/core';
 import { ImageService } from './image.service';
@@ -147,6 +151,7 @@ export class ImageComponent {
 
   }
 
+  // Handles API errors by displaying a snackbar message and logging details.
   handleError(error: any, customErrorMessage?: any) {
     this.spinner = false;
     console.log(error)
@@ -170,6 +175,7 @@ export class ImageComponent {
     });
   }
 
+  // Updates the options list and resets the selected value based on the selected type.
   handleSelectTypeChange(){
     if (this.selectType === 'Privacy'){
       this.options = [
@@ -257,6 +263,7 @@ export class ImageComponent {
     console.log("dataImage", data)
   }
 
+  // Reads the content of a selected file and logs it to the console.
   onFileChange(event: any) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -276,6 +283,7 @@ export class ImageComponent {
     }
   }
 
+  // Clears the uploaded files, resets related variables, and resets the UI state.
   removeFile() {
     this.demoFile = [];
     this.imageArray = [];
@@ -285,6 +293,8 @@ export class ImageComponent {
     this.filePreview='';
     this.resetAll();
   }
+
+  // Validates inputs, prepares form data, and triggers the appropriate API call based on the selected option.
   submit() {
     this.getSelectedValues();
     this.redactedImg = false
@@ -358,6 +368,7 @@ export class ImageComponent {
     }
   }
 
+  // ---------------CALLING APIS----------------------
   privacy_Anonymize(fileData: any, h: any, params: any) {
     console.log('Privacy - Anonymize function call');
     this.privAnzOutput = '';
@@ -641,10 +652,11 @@ export class ImageComponent {
     // this.cdr.detectChanges();
   }
 
-
   toggleCaret() {
     this.isOpen = !this.isOpen;
   }
+
+  // Opens a modal to display image explainability analysis results.
   openExplRightSideModal() {
     const dialogRef = this.dialog.open(ImageReportChartComponent, {
       width: '52vw',
@@ -664,6 +676,8 @@ export class ImageComponent {
     dialogRef.afterClosed().subscribe(() => {
     });
   }
+
+  // Opens a modal to display privacy hashify analysis results.
   openHashifySideModal() {
     const dialogRef = this.dialog.open(ImageHashifyRightModalComponent, {
       width: '52vw',
@@ -693,8 +707,7 @@ export class ImageComponent {
     this.selectedFairnessModel = e.value;
   }
 
-  //
-
+  // Handles file selection, validates the file type, and prepares the file for upload.
   fileBrowseHandler(imgFile: any) {
     this.favoriteSeason = '';
     // this.browseFilesLenth = imgFile.target.files.length;
@@ -726,6 +739,7 @@ export class ImageComponent {
     //  console.log("on choosing")
   }
 
+  // Cleans file names, validates file types, and prepares the file list for upload simulation.
   prepareFilesList(files: Array<any>) {
     this.files = [];
     this.demoFile = [];
@@ -737,6 +751,7 @@ export class ImageComponent {
     this.uploadFilesSimulator(0, files);
   }
 
+  // Simulates file upload progress for the selected files.
   uploadFilesSimulator(index: number, files: any) {
     setTimeout(() => {
       if (index === this.files.length) {
@@ -759,6 +774,7 @@ export class ImageComponent {
     console.log('view change', this.favoriteSeason);
   }
 
+  // Fetches an image from a URL, converts it to a file, and prepares it for upload.
   onClick(s: any) {
     console.log('Clicked image URL:', s);
     this.sampleImageSelected = true;
@@ -807,6 +823,8 @@ export class ImageComponent {
 
     // this.cdr.detectChanges();
   }
+
+  // Opens a modal to display safety analysis results.
   openRightSideModal() {
     const dialogRef = this.dialog.open(ImageReportChartComponent, {
       width: '52vw',
@@ -824,6 +842,8 @@ export class ImageComponent {
 
     dialogRef.afterClosed().subscribe(() => { });
   }
+
+  // Resets all variables and UI states related to file uploads and analysis.
   resetAll() {
     this.filePreview='';
     this.imgOp = false;

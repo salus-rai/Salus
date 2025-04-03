@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component,OnInit } from '@angular/core';
@@ -65,6 +69,8 @@ export class LegalAgentComponent implements OnInit {
       }
     }
   }
+
+  // seting up api list
   setApiList(ip_port: any) {
     this.getData = ip_port.result.legalAgent + ip_port.result.legalAgentReports ;//"http://10.152.196.184:30080/v1/legalAgent/getAllReports";
     this.legalUpload = ip_port.result.legalAgent + ip_port.result.legalAgentUpload ;//"http://10.152.196.184:30080/v1/legalAgent/uploadFile";
@@ -78,6 +84,7 @@ onTableDataChange(event: any) {
   this.pagingConfig.totalItems = this.dataSource.length;
 }
 
+// Reads the content of the selected file and processes it as text.
   onFileChange(event: any) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -87,6 +94,7 @@ onTableDataChange(event: any) {
     reader.readAsText(event.target.files[0]);
   }
 
+  // Handles file selection, validates the file type, and prepares the file list for upload.
   fileBrowseHandler(file: any){
     // to validate file SAST
     const allowedTypes = ['application/pdf','text/plain'];
@@ -103,6 +111,8 @@ onTableDataChange(event: any) {
     this.demoFile = this.files;
     this.file = this.files[0];
   }
+
+  // Cleans file names, validates file types, and prepares the file list for upload simulation.
   prepareFilesList(files: Array<any>) {
     this.files = []
     for (const item of files) {
@@ -112,6 +122,8 @@ onTableDataChange(event: any) {
     }
     this.uploadFilesSimulator(0, files)
   }
+
+  // Simulates file upload progress for the selected files.
   uploadFilesSimulator(index: number, files: any) {
     setTimeout(() => {
       if (index === this.files.length) {
@@ -135,6 +147,8 @@ onTableDataChange(event: any) {
     this.demoFile = [];
     this.file = null;
   }
+
+  // Uploads the selected file to the server and refreshes the data list upon success or failure.
   submit(){
     if (this.useCase.invalid) {
       this.snackBar.open('Please select a File', '✖', {
@@ -178,6 +192,8 @@ onTableDataChange(event: any) {
       return 'Please enter a valid file.';
     }
   }
+
+  // Fetches all data reports for the current user from the server and updates the table.
   getAllData(){
     //this.getData = this.getData + '?user_id='+ this.user;
     this.https.get(this.getData + '?user_id='+ this.user).subscribe

@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
@@ -85,7 +89,7 @@ export class CustomTemplateComponent implements OnInit, PagingConfig {
 
   
   CustomTemplateForm!: FormGroup;
-
+// initializes the form group for creating or updating custom templates with default values and validators.
   formCreation(){
       let role = localStorage.getItem('role');
       let v  = { value: '', disabled: false }
@@ -129,6 +133,7 @@ filterKeysByBoolean(obj: Record<string, boolean>): string[] {
   return Object.keys(obj).filter((key) => obj[key]);
 }
 
+// Resets specific form fields and toggles based on the selected template type.
 resetResultData(template:any){
   console.log("template===",template)
   this.CustomTemplateForm.patchValue({
@@ -156,6 +161,7 @@ resetResultData(template:any){
 
 }
 
+// Updates the map with the content of the active textarea based on the selected toggle.
 handleTextareaChange(event:any){
   const value = event.target.value;
   console.log("prompting_instructions===",this.prompt_instToggle)
@@ -185,7 +191,7 @@ else
     console.log("this. tmeplateNmae Valeu=====",this.templateNameValue)
   }
 
-
+  // Saves or updates a custom template by sending a POST or PATCH request with the form data.
   save(){
     console.log("this.CustomTemplateForm.value===",this.CustomTemplateForm.value)
     if(this.CustomTemplateForm.get('category')?.invalid){
@@ -318,7 +324,7 @@ else
     })}
   }
 
-
+// Saves sub-template data into the map and updates the toggle button state.
   saveSubTemplateData(){
     const newSubTemplate = this.CustomTemplateForm.value.templateSubtype
     this.map.set(newSubTemplate,this.CustomTemplateForm.value.TemplateData)
@@ -329,6 +335,8 @@ else
       this.toggleButton = true
     }
   }
+
+  // Updates the map with the current sub-template data and clears the input field.
   saveTemplateData(option:any){
     // this.prevSubTemplate  =option
     const newSubTemplate = option
@@ -373,6 +381,7 @@ else
     }
   }
 
+  // Fetches template data for the logged-in user and handles the response or errors.
   LoadTemplateData(){
     console.log("fd:",this.loadTemplate+this.userId)
     this.https.get(this.loadTemplate+this.userId).subscribe((res:any)=>{
@@ -423,6 +432,7 @@ else
     // this.Admin_LLmExplain_deleteFile = ip_port.result.Admin_Rag + ip_port.result.Admin_LLmExplain_deleteFile;
   }
 
+  // Deletes a template by sending a DELETE request with the template ID.
   deleteConfirmationModel(templateId: any){
     // const params = new URLSearchParams();
     // params.set('userId', this.user);
@@ -479,6 +489,7 @@ else
     );
   }
 
+  // Opens a side modal to view or edit template data.
   openRightSideModal(templateData:any,templateName:any,mode:any,template_type:any,userId:any){
     console.log("templateData===",templateData)
     const dialogRef = this.dialog.open(TemplateDataComponent, {
@@ -508,6 +519,7 @@ else
   }
   formupdatedisbaled:boolean=false
   updatecall:boolean=false
+  // populates the form with data for updating an existing template and disables certain fields.
   populateCustomtemFrom(templateData:any,templateName:any,mode:any,template_type:any,userId:any,description:any,category:any){
     this.formupdatedisbaled=true
     this.updatecall=true
@@ -527,7 +539,7 @@ else
 
   }
 
-  
+  // Opens a side modal for testing a template with prompt data.
   openRightSidePromptTestModal(templateData:any,templateName:any,mode:any,template_type:any,userId:any){
     console.log("templateData===",templateData)
     const dialogRef = this.dialog.open(TemplateDataComponent, {
@@ -556,7 +568,7 @@ else
 
   }
 
-
+// Fetches all template details for the logged-in user and updates the data source.
   getTemplateDetail(){
     // AllModel
     const params = new HttpParams()

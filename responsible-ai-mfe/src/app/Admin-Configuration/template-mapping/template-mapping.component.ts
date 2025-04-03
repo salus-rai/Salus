@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, Input, ViewChild } from '@angular/core';
 import { MatSelect, MatSelectChange } from '@angular/material/select';
@@ -143,7 +147,7 @@ filterKeysByBoolean(obj: Record<string, boolean>): string[] {
   return Object.keys(obj).filter((key) => obj[key]);
 }
 
-  // select 1
+  // select 1- Toggles the selection of all options in the first select element.
   @ViewChild('select1') select1!: MatSelect;
   allSelected1: any;
 listShowlist1 = new Set();
@@ -169,6 +173,8 @@ toggleAllSelection1(event: any) {
     });
   }
 }
+
+// Updates the selection status of the first select element based on selected options.
 selectRecognizertype() {
   let newStatus = true;
   this.select1.options.forEach((item: MatOption) => {
@@ -183,7 +189,7 @@ selectRecognizertype() {
   this.allSelectedInput = newStatus;
 }
 
-  // select 2
+  // select 2 - Toggles the selection of all options in the second select element.
   toggleAllSelection2(event: any) {
     this.event2 = event;
     this.c2 = event.checked;
@@ -206,6 +212,8 @@ selectRecognizertype() {
       });
     }
   }
+
+  // Updates the selection status of the second select element based on selected options.
   selectRecognizertype2() {
     let newStatus = true;
     this.select2.options.forEach((item: MatOption) => {
@@ -538,6 +546,8 @@ categoryChange(event: MatSelectChange){
   this.getAccountModule()
 
 }
+
+// Updates dropdown options and visibility based on the selected subcategory.
 showresponseDropdownforTemp= true
 subcategoryChange(event: MatSelectChange)
 {
@@ -621,7 +631,7 @@ subcategoryChange(event: MatSelectChange)
 
   }
  
-
+// Fetches template details for the selected category and updates dropdown options.
   getTemplateDetail(){
     console.log("inside getTemplateDetail")
     let temptempalteArray:any= []
@@ -674,6 +684,8 @@ subcategoryChange(event: MatSelectChange)
   })
     
 }
+
+// Fetches template details for multi-model categories and updates dropdown options.
   getTemplateDetailMultiple(){
     console.log("inside getTemplateDetailMultiple")
     let temptempalteArray:any= []
@@ -726,6 +738,8 @@ subcategoryChange(event: MatSelectChange)
   })
     
 }
+
+// Fetches template details for single-model categories and updates dropdown options.
   getTemplateDetailSingle(){
     console.log("inside getTemplateDetail single")
     let temptempalteArray:any= []
@@ -817,6 +831,7 @@ subcategoryChange(event: MatSelectChange)
     
   }
 
+  // Fetches account module data and updates the disabled subcategory list based on the response.
   getAccountModule() {
     // const url = 'http://localhost:30016/api/v1/rai/admin/getModMaps';
     // const url = 'https://rai-toolkit-dev.az.ad.idemo-ppc.com/api/v1/rai/admin/getModMaps';

@@ -1,8 +1,12 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/ 
+*/
+
 import { Component, Inject, OnInit } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -206,6 +210,8 @@ this.router.events.subscribe(event => {
       backToTop.style.display = 'none';
     }
   }
+
+  // This method sets the login display status based on the user's authentication state.
   setLoginDisplay(): void {
     console.log("in set login display");
     this.loggedIn = this.authService.instance.getAllAccounts().length > 0;
@@ -220,6 +226,8 @@ this.router.events.subscribe(event => {
     //   this.loginService.logout();
     // }
   }
+
+  // This method handles the user registration process.
   register(): void {
     console.log("register from navbar");
     this.doNotMatch = false;
@@ -253,6 +261,8 @@ this.router.events.subscribe(event => {
       this.error = true;
     }
   }
+
+  // This method handles the user login process.
    login(): void {
     console.log("IN LOGIN of navbar")
     localStorage.setItem('userName', localStorage.getItem('mail') || '{}');
@@ -318,7 +328,7 @@ this.router.events.subscribe(event => {
   accountDetail: any;
   portfolioArr :any =[]
   AccountForm!: FormGroup;
-  portfolioUrl= 'http://localhost:<YOUR_ADMIN_PORT>/api/v1/rai/admin/getAccount';
+  portfolioUrl= 'https://rai-toolkit-dev.az.ad.idemo-ppc.com/api/v1/rai/admin/getAccount';
 
   AccountFormCall(){
     this.AccountForm = new FormGroup({
@@ -327,6 +337,7 @@ this.router.events.subscribe(event => {
     });
   }
 
+  // This method retrieves all account data and updates the portfolio options.
   getAllAccountData(){
     this.http.get( this.portfolioUrl).subscribe
         ((res: any) => {
@@ -352,6 +363,7 @@ this.router.events.subscribe(event => {
         })
    }
 
+   // This method updates the account options based on the selected portfolio.
   accountDropDown(){
     this.callCount++
     this.portfolioSelected=true
@@ -376,6 +388,8 @@ this.router.events.subscribe(event => {
     }
 
   }
+
+  // This method activates subcommands based on the selected account and portfolio.
   activateSubcommands(){
 
     this.Accountselected = true

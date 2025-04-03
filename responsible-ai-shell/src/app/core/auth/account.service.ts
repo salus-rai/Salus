@@ -1,8 +1,12 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/ 
+*/
+
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -32,6 +36,7 @@ export class AccountService {
     return this.http.get<Account>(urlList.server_api_url+ '/api/account');
   }
 
+  // This method sets the user identity and updates the authentication state.
   authenticate(identity: Account | null): void {
     this.userIdentity = identity;
     this.authenticationState.next(this.userIdentity);
@@ -40,6 +45,7 @@ export class AccountService {
     }
   }
 
+  // This method checks if the user has any of the specified authorities.
   hasAnyAuthority(authorities: string[] | string): boolean {
     if (!this.userIdentity) {
       return false;
@@ -50,6 +56,7 @@ export class AccountService {
     return this.userIdentity.authorities.some((authority: string) => authorities.includes(authority));
   }
 
+  // This method retrieves the current user identity, optionally forcing a refresh.
   identity(force?: boolean): Observable<Account | null> {
     if (!this.accountCache$ || force || !this.isAuthenticated()) {
       this.accountCache$ = this.fetch().pipe(
@@ -111,6 +118,8 @@ export class AccountService {
       this.router.navigateByUrl(previousUrl);
     }
   }
+
+  // This method returns the initials of the user's first and last names.
   getUserNames():string{
     const fName = this.userIdentity ? this.userIdentity.firstName! :'';
     const lName = this.userIdentity ? this.userIdentity.lastName! :'';

@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, INJECTOR, Input } from '@angular/core';
 import { RightSidePopupComponent } from '../right-side-popup/right-side-popup.component';
@@ -180,6 +184,7 @@ toggleTokenCollapse(): void {
     });
   }
 
+  // Calls the COV API to fetch baseline, verification, and final responses and processes the result.
   covgetApi() {
     if (this.ApiCallHappened.has('covgetApi')) {
       console.log("--RESPONSIBLE-COMPARISON-|||-Cov-get-api-already-called");
@@ -253,6 +258,7 @@ toggleTokenCollapse(): void {
     // );
   }
 
+  // Calls the COT API to fetch the response and processes it, including uncertainty metrics.
   callCOT() {
     if (this.ApiCallHappened.has('openAicotgetApi')) {
       console.log("--RESPONSIBLE-COMPARISON-|||-openAicotgetApi-already-called");
@@ -316,6 +322,8 @@ toggleTokenCollapse(): void {
       }
     );
   }
+
+  // Calls the THOT API to fetch the response and processes it, including uncertainty metrics.
   callTHOT() {
     if (this.ApiCallHappened.has('openAiTHOTApi')) {
       console.log("--RESPONSIBLE-COMPARISON-|||-openAiTHOTApi-already-called");
@@ -434,6 +442,7 @@ toggleTokenCollapse(): void {
     // );
   }
 
+  // Calls the token importance API, processes the response, and visualizes the data.
   tokenImportance() {
     if (this.ApiCallHappened.has('tokenImportance')) {
       console.log("--RESPONSIBLE-COMPARISON-|||-tokenImportance-already-called");
@@ -471,6 +480,8 @@ toggleTokenCollapse(): void {
       }
     );
   }
+
+  // Toggles between internet search and local results and processes the search response.
   toggleSearch(event: any) {
     this.isSerperSelected = event.target.checked;
     console.log("search:::", this.isSerperSelected);
@@ -494,6 +505,7 @@ toggleTokenCollapse(): void {
     }
   }
 
+  // Calls the GOT API to fetch the response and processes it, including uncertainty metrics.
   getGOT() {
     if (this.ApiCallHappened.has('got')) {
       console.log("--RESPONSIBLE-COMPARISON-|||-got-already-called");
@@ -542,6 +554,7 @@ toggleTokenCollapse(): void {
     );
   }
 
+  // Updates the graph visualization based on the API result data.
   updateGraph() {
     console.log('updateGraph called');
     this.nodes = [];
@@ -571,6 +584,8 @@ toggleTokenCollapse(): void {
     console.log('links:', this.links);
     this.cdr.detectChanges();
   }
+
+  // Calls the LLM Explain API to fetch explanation metrics and processes the response.
   llmExplanation() {
     if (this.ApiCallHappened.has('llmExplain')) {
       console.log("--RESPONSIBLE-COMPARISON-|||-llmExplain-already-called");
@@ -617,6 +632,8 @@ toggleTokenCollapse(): void {
  
     }
   }
+
+  // Creates a bar chart to visualize token importance scores.
   createTokenBarChart(): void {
     if (!this.tokens || this.tokens.length === 0) {
         console.log("No tokens available to create the chart.");
@@ -706,6 +723,8 @@ toggleTokenCollapse(): void {
       }
     });
   }
+
+  // Creates a frequency distribution chart for token importance scores.
   frequencyDistributionChart(): void {
     if (!this.tokens || this.tokens.length === 0) {
         console.log("No tokens available to create the chart.");

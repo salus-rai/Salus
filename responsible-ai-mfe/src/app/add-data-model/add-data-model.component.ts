@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
@@ -102,6 +106,8 @@ export class AddDataModelComponent {
   closeDialog(){
     this.dialogRef.close();
   }
+
+  //  This method converts the targetOutputClass field value from the SecurityForm to an array of numbers or strings.
   convertToArrayForTargetOutputClass() {
     // this.numberArray2 = this.SecurityForm.value['targetOutputClass'].split(',').map(Number);
     const a= this.SecurityForm.value['targetOutputClass']
@@ -112,6 +118,8 @@ export class AddDataModelComponent {
       this.numberArray2 = a.split(',');
     }
   }
+
+  // This method will converts the targetOutputClass field value from the SecurityUpdateForm to an array of numbers or strings.
   convertToArrayForTargetOutputClass2() {
     // this.numberArray2 = this.SecurityForm.value['targetOutputClass'].split(',').map(Number);
     const a= this.SecurityUpdateForm.value['targetOutputClass']
@@ -122,6 +130,8 @@ export class AddDataModelComponent {
       this.numberArray2 = a.split(',');
     }
   }
+
+  // This method will handles file selection, validates the file type, and initiates the file upload process.
   fileBrowseHandler(imgFile: any) {
     console.log("Called")
     this.files = []
@@ -183,7 +193,7 @@ export class AddDataModelComponent {
     this.files.splice(index, 1);
   }
 
-
+// This method will creates a new data model by submitting the form data to the server.
   createNew(){
     if (this.SecurityForm.invalid) {
       this._snackBar.open('Please fill all fields before submitting', '✖', {
@@ -231,6 +241,8 @@ export class AddDataModelComponent {
         this.closeDialog();
       })
   }
+
+  // This method will updates an existing data model by submitting the updated form data to the server.
   updateDataFile(){
     if (this.SecurityUpdateForm.invalid) {
       this._snackBar.open('Please fill all fields before submitting', '✖', {

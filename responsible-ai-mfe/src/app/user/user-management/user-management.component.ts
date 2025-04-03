@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, ViewEncapsulation } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
@@ -56,6 +60,7 @@ export class UserManagementComponent {
     }
   }
 
+  // Updates the user's activation status and authorities, then sends the updated data to the backend.
   update(i: any,id:any,activated:any,authorities:any) {
     this.editIndex = this.editIndex.filter(index => index !== i);
     // Here you can also add the logic to update the user in your backend
@@ -191,6 +196,8 @@ getListofAuthorities() {
     this.options = res;
   })
   }
+
+  // Deletes a user by their ID and refreshes the user list upon success.
   clickDeleteUser(id: any) {
     let x = this.Backend_DeleteUser
     let y = `${x}/delete?id=${id}`
@@ -223,6 +230,8 @@ getListofAuthorities() {
       }
     });
   }
+
+  // Returns and sets the activation status message based on the user's activation state.
   showActivationStatus:any;
   userActivatedValue(value: any) {
     // console.log(value);
@@ -234,6 +243,8 @@ getListofAuthorities() {
       return this.showActivationStatus ="User Deactivated";
     }
   }
+
+  // Logs and updates the activation status message when the activation toggle is changed.
   ontoggleOpen(event: any, value: any) {
     // console.log("event",event);
     console.log("event", event.target.checked);
@@ -252,6 +263,7 @@ getListofAuthorities() {
     console.log(i);
   }
 
+  // Sends updated user data to the backend and refreshes the user list upon success.
   updateUser(header: any) {
     this.https.patch(this.Backend_UpdateUser, header).subscribe({
       next: (response) => {

@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component } from '@angular/core';
@@ -48,6 +52,7 @@ export class LeaderboardComponent {
     this.isLoadingTable = false;
   }
 
+  // Logs and displays error messages in a snackbar with optional custom messages.
   handleError(error: any) {
     console.log(error)
     console.log(error.status);
@@ -99,6 +104,7 @@ export class LeaderboardComponent {
   dataSourceFairness: any[] = [];
   fairnessKeys: string[] = []
   fairnessCol: string[] = [];
+  // Fetches leaderboard data and initializes model lists.
   getLeaderboard() {
     this.https.get(this.securityLLM_getLeaderBoard).subscribe(
       (res: any) => {
@@ -112,6 +118,8 @@ export class LeaderboardComponent {
       }
     );
   }
+
+  // Fetches available datasets and triggers dataset processing.
   getAvailableDataSets() {
     this.https.get(this.securityLLM_availableDatasets).subscribe(
       (res: any) => {
@@ -126,6 +134,8 @@ export class LeaderboardComponent {
       }
     )
   }
+
+  // Processes and stores dataset names for leaderboard columns.
   getListOfDataSets() {
     try {
       for (let i = 0; i < this.avaiableDataSetsVariable.length; i++) {
@@ -136,6 +146,8 @@ export class LeaderboardComponent {
       console.log("method failed",error);
     }
   }
+
+  // Constructs the leaderboard data source by mapping models to datasets.
   leaderboardMethod() {
     try {
       if (this.leaderboardModelLists.length != 0) {
@@ -166,6 +178,8 @@ export class LeaderboardComponent {
       console.log("method failed",error);
     }
   }
+
+  // Fetches fairness leaderboard data from the API.
   getFairnessLeaderboard() {
     // https://rai-toolkit-dev.az.ad.idemo-ppc.com/api/v1/trustllm/scores/getScores?category=fairness
 
@@ -181,6 +195,8 @@ export class LeaderboardComponent {
       }
     );
   }
+
+  // Processes fairness data and constructs the fairness data source.
   leaderboardFairnessMethod() {
     try {
       this.fairnessKeys = this.fairness.map((dict) => Object.keys(dict)[0]);
@@ -198,6 +214,7 @@ export class LeaderboardComponent {
   dataSourceMachineEthics: any[] = [];
   dataSourceRobustness: any[] = []
   dataSourceAttackScore: any[] = [];
+  // Fetches external robustness scores and updates the data source.
   getExternalRobustnessScore() {
     this.https.get(this.externalRobustnessScore).subscribe(
       (res: any) => {
@@ -269,6 +286,8 @@ export class LeaderboardComponent {
   toString(value: any): string {
     return value != null ? String(value) : '';
 }
+
+// Sorts the fairness data based on the specified column and direction.
 sortColumn: string = '';
 currentSortColumn: string = '';
   // sortDirection: boolean = true; // true for ascending, false for descending

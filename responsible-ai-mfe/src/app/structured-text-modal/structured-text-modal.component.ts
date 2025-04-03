@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewChild,ElementRef  } from '@angular/core';
@@ -98,6 +102,8 @@ export class StructuredTextModalComponent {
     this.getAllTenants();
     this.getAllPreprocessor();
   }
+
+  // seting up api list
   setApilist(ip_port: any) {
     this.apiEndpoints.security_applicableAttacks = ip_port.result.SecurityWrapper + ip_port.result.security_applicableAttack;
     this.apiEndpoints.getAllData = ip_port.result.Workbench + ip_port.result.Workbench_Data;
@@ -131,6 +137,7 @@ export class StructuredTextModalComponent {
     }
   }
 
+  // Fetches the list of all available models for the logged-in user.
   getModels() {
     // this.showSpinner1 = true;
     const formData = new FormData;
@@ -144,6 +151,8 @@ export class StructuredTextModalComponent {
       this.handleError(error)
     })
   }
+
+  // Fetches the list of all available data files for the logged-in user.
   getDataFiles() {
     const formData = new FormData;
     formData.append("userId", this.loggedin_userId)
@@ -154,6 +163,8 @@ export class StructuredTextModalComponent {
       this.handleError(error)
     })
   }
+
+  // Fetches the list of all available preprocessors for the logged-in user.
   getAllPreprocessor() {
     const formData = new FormData;
     formData.append("userId", this.loggedin_userId)
@@ -170,6 +181,8 @@ export class StructuredTextModalComponent {
       this.allTenants = res;
     })
   }
+
+  // Fetches applicable attacks and explanation methods based on the selected model and dataset.
   applicableAttacksMethod() {
     const fdata = new FormData();
     fdata.append('TargetClassifier', this.selectedTargetClassifier)
@@ -325,6 +338,7 @@ export class StructuredTextModalComponent {
 
 
   // ------------FUNCTIONS------------SECURITY
+  // Toggles the selection of all options in the first dropdown for security-related selections.
   toggleAllSelection1(event: any) {
     this.event1 = event;
     this.c1 = event.checked;
@@ -347,6 +361,8 @@ export class StructuredTextModalComponent {
       });
     }
   }
+
+  // Updates the selection status of security-related options based on user input.
   selectApplicableAttackSecurity() {
     let newStatus = true;
     this.select2.options.forEach((item: MatOption) => {
@@ -361,6 +377,7 @@ export class StructuredTextModalComponent {
     this.allSelectedInput = newStatus;
   }
   // --------------FUNCTIONS------------EXPLAINABILITY
+  // toggles the selection of all options in the dropdown for explainability-related selections.
   toggleAllSelection2(event: any) {
     this.event2 = event;
     this.c2 = event.checked;
@@ -382,6 +399,8 @@ export class StructuredTextModalComponent {
       });
     }
   }
+
+  // Updates the selection status of explainability-related options based on user input.
   selectApplicableMethod() {
     let newStatus = true;
     this.select3.options.forEach((item: MatOption) => {
@@ -405,6 +424,8 @@ export class StructuredTextModalComponent {
   onSelectMethodType(e: any) {
     this.selectoption1 = e.value;
   }
+
+  // Submits fairness-related data to the API and processes the response for further actions.
   fairSubmit() {
     console.log(this.fairnessType, this.selectedTaskTypeOption, this.selectoption1)
     let fileData;
@@ -529,6 +550,8 @@ export class StructuredTextModalComponent {
     this.predLabel = e.value
     console.log("predLabel::",this.predLabel);
   }
+
+  // Handles the selection of a protected attribute and updates the corresponding row data.
   optionClickFromFO(e: any) {
     console.log("______________ SECOND")
     console.log(e.value)
@@ -582,6 +605,7 @@ export class StructuredTextModalComponent {
     this.getPriviledged()
   }
 
+  // Retrieves the list of privileged groups for the selected protected attribute.
   getPriviledged() {
     // this.privDrop = true
     const fo = this.selectedProtAtt
@@ -723,6 +747,8 @@ export class StructuredTextModalComponent {
     })
 
   }
+
+  // Triggers the batch generation process for fairness and downloads the generated report.
   callBatchGenerationFairness(batchId: any) {
     this.structuredTextService.api(this.apiEndpoints.inProcessGenerate,{Batch_id:batchId}).subscribe({
           next: (data: any) => {

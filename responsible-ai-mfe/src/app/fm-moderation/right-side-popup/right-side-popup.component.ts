@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component, Inject, Input } from '@angular/core';
@@ -50,6 +54,8 @@ export class RightSidePopupComponent {
     this.apiUrlList.fm_api_inf_ProfanityPopup = ip_port.result.FM_Moderation + ip_port.result.Moderationlayer_ProfanityPopup; // + environment.fm_api_inf_ProfanityPopup
 
   }
+
+// retrieves and parses API endpoint data from local storage.
   retrieveLocalStorageData() {
     let ip_port;
     if (localStorage.getItem('res') != null) {
@@ -61,6 +67,7 @@ export class RightSidePopupComponent {
     return { ip_port };
   }
 
+  // Handles API errors by displaying an error message and closing the dialog.
   handleError(error: any) {
     console.log(error.status);
     const action = 'Close';
@@ -77,6 +84,8 @@ export class RightSidePopupComponent {
     });
     this.closeDialog()
   }
+
+  // Calls the privacy API with the provided prompt and updates the privacy check results.
   callPrivacyPopupAPI(prompt:any) {
     const payload = {
       text: prompt,
@@ -127,6 +136,8 @@ export class RightSidePopupComponent {
       }
     );
   }
+
+  // Calls the toxicity API for response text and updates the toxicity results.
   callResToxicityInfoAPI(summaryStatus:any,openai_result:any) {
     // if (((this.summaryStatus == "FAILED") || (this.reSstatus == 'FAILED')) || ((this.summaryStatus == 'FAILED') && (this.reSstatus == 'FAILED'))) {
     if (summaryStatus == 'PASSED') {
@@ -160,6 +171,8 @@ export class RightSidePopupComponent {
       });
     }
   }
+
+  // Calls the toxicity API for a prompt and updates the toxicity results.
   callReqToxicityInfoAPI(prompt:any) {
     const options = {
       text: prompt,
@@ -185,6 +198,8 @@ export class RightSidePopupComponent {
     );
     // }
   }
+
+  // Calls the profanity API for input text and updates the profanity results.
   callReqProfanityAPI(inputText:any) {
     const options = {
       text: inputText,

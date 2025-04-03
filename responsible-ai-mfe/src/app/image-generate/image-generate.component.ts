@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
@@ -144,10 +148,9 @@ export class ImageGenerateComponent implements AfterViewInit {
     this.isLoadingSelectType = false;
     this.isLoadingPrompt = false;
 
-
-
   }
 
+  // Logs and displays error messages in a snackbar with optional custom messages.
   handleError(error: any, customErrorMessage?: any) {
     console.log(error)
     console.log(error.status);
@@ -191,9 +194,7 @@ export class ImageGenerateComponent implements AfterViewInit {
 
   }
 
-
-
-
+  // Opens a modal to display safety analysis results.
   openRightSideModal() {
     const dialogRef = this.dialog.open(ImageReportChartComponent, {
       width: '52vw',
@@ -210,6 +211,7 @@ export class ImageGenerateComponent implements AfterViewInit {
     });
   }
 
+  // Opens a modal to display fairness analysis results.
   openFairnessSideModal() {
     const dialogRef = this.dialog.open(FairnessSideModalComponent, {
       width: '52vw',
@@ -223,7 +225,7 @@ export class ImageGenerateComponent implements AfterViewInit {
     });
   }
 
-
+  // Opens a modal to display explainability analysis results.
   openExplRightSideModal() {
     const dialogRef = this.dialog.open(ImageReportChartComponent, {
       width: '52vw',
@@ -308,6 +310,7 @@ export class ImageGenerateComponent implements AfterViewInit {
 
   }
 
+  // Sends a request to analyze image content for profanity and updates the analysis results.
   imageProfanity(fileData: any) {
     this.https.post(this.imageGenerateUrl, fileData).subscribe((data: any) => {
       this.imageOutput = true
@@ -329,6 +332,7 @@ export class ImageGenerateComponent implements AfterViewInit {
     })
   }
 
+  // Sends a request to generate an image and analyze its fairness, then processes the results.
   imageFairness(prompt: any) {
     const fileData = new FormData();
     fileData.append('prompt', prompt);
@@ -344,6 +348,7 @@ export class ImageGenerateComponent implements AfterViewInit {
     })
   }
 
+  // Converts a base64 image to a blob, sends it for fairness analysis, and updates the results.
   callFairnessAnalysis(img: any,prompt: any) {
     try {
       const byteCharacters = atob(img);
@@ -386,6 +391,7 @@ export class ImageGenerateComponent implements AfterViewInit {
     return Object.keys(obj).filter((key) => obj[key]);
   }
 
+  // Resets all form inputs, file uploads, and analysis results to their initial state.
   reset() {    
     this.prompt = '';
     this.portfolioName = '';
@@ -406,6 +412,8 @@ export class ImageGenerateComponent implements AfterViewInit {
       }
     }
   }
+
+  // Clears the analysis results and resets related variables.
   resetResult() {
     this.imageOutput = false;
     this.imagePath = '';
@@ -588,6 +596,8 @@ export class ImageGenerateComponent implements AfterViewInit {
         }
       });
   }
+
+  // Converts a base64 string into a Blob object with the specified MIME type.
   base64ToBlob(base64: string, mimeType: string): Blob {
     const byteCharacters = atob(base64);
     const byteNumbers = new Array(byteCharacters.length);
@@ -598,6 +608,7 @@ export class ImageGenerateComponent implements AfterViewInit {
     return new Blob([byteArray], { type: mimeType });
   }
 
+  // Converts an image file into a base64-encoded string.
   convertImageToBase64(file: File): Promise<string> {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -607,6 +618,7 @@ export class ImageGenerateComponent implements AfterViewInit {
     });
   }
 
+  // Converts the selected image file to a base64 string and logs it.
   async handleImageConversion() {
     try {
       const base64String = await this.convertImageToBase64(this.imageFile);

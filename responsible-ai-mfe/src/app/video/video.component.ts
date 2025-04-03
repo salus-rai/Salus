@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component, ViewEncapsulation, OnInit, ViewChild, ElementRef, TemplateRef} from '@angular/core';
@@ -149,6 +153,8 @@ export class VideoComponent implements OnInit{
       }
     }
   }
+
+  // seting up api list
   setApilist(ip_port: any) {
     this.getFile = ip_port.result.DocProcess + ip_port.result.DocProcess_getFiles  // + environment.getFile
 
@@ -158,6 +164,7 @@ export class VideoComponent implements OnInit{
 
   }
 
+// Fetches the list of uploaded video files for the current user and updates the table.
   getVideoFilesList() {
     this.https.get(this.getFile + "/" + this.userId + "/video").subscribe
       ((res: any) => {
@@ -202,6 +209,8 @@ export class VideoComponent implements OnInit{
     }
 
   }
+
+  // Validates the form inputs and triggers the video file upload process.
   submit() {
     this.form2.updateValueAndValidity();
     const message = this.form1.invalid && this.form2.invalid ? 'Please select a Video File & Category before Submitting' :
@@ -219,6 +228,8 @@ export class VideoComponent implements OnInit{
     console.log("submit")
     this.upload_file()
   }
+
+  // Prepares and validates the selected video file, then initiates the upload process.
   upload_file() {
     this.showSpinner1 = true;
     let userId = this.getLogedInUser()
@@ -245,6 +256,8 @@ export class VideoComponent implements OnInit{
       });
     }
   }
+
+  // Sends the video file and metadata to the server via an API call and handles the response.
   uploadFileApiCall(fileData: any) {
     this.https.post(this.uploadFile, fileData).subscribe((res: any) => {
       this.result = res
@@ -306,6 +319,7 @@ export class VideoComponent implements OnInit{
     window.location.href = documentLink; 
   }
 
+  // Handles file selection, validates the file type, and prepares the file for upload.
   fileBrowseHandler(imgFile: any) {
     // this.browseFilesLenth = imgFile.target.files.length;
     this.files = [];
@@ -336,6 +350,8 @@ export class VideoComponent implements OnInit{
     }
     this.uploadFilesSimulator(0, this.files);
   }
+
+  // Simulates the upload progress for the selected video files by incrementally updating their progress.
   uploadFilesSimulator(index: number,files:any) {
     setTimeout(() => {
       console.log(this.files[0].name)

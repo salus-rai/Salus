@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component } from '@angular/core';
@@ -106,6 +110,8 @@ export class InfosysLeaderboardComponent {
       }
     );
   }
+
+  // Fetches available datasets and triggers dataset processing.
   getAvailableDataSets(){
     this.https.get(this.securityLLM_availableDatasets).subscribe(
       (res: any) => {
@@ -119,6 +125,8 @@ export class InfosysLeaderboardComponent {
         }
     )
   }
+
+  // Processes and stores dataset names for leaderboard columns.
   getListOfDataSets(){
     try{
     for(let i=0;i<this.avaiableDataSetsVariable.length;i++){
@@ -129,6 +137,8 @@ export class InfosysLeaderboardComponent {
     console.log("getListOfDataSets method failed",error);
   }
   }
+
+  // Constructs the leaderboard data source by mapping models to datasets.
   leaderboardMethod(){
     try{
     if(this.leaderboardModelLists.length!=0){
@@ -159,6 +169,8 @@ export class InfosysLeaderboardComponent {
   console.log("leaderboardMethod method failed",error);
 }
   }
+
+  // Fetches fairness leaderboard data from the API.
   getFairnessLeaderboard(){
     this.https.get(this.securityLLMFairnesInfo_leaderboard).subscribe(
       (res: any) => {
@@ -171,6 +183,8 @@ export class InfosysLeaderboardComponent {
       }
     );
   }
+
+  // Processes fairness data and constructs the fairness data source.
   leaderboardFairnessMethod(){
     try{
     this.fairnessKeys = this.fairness.map((dict) => Object.keys(dict)[0]);
@@ -187,6 +201,7 @@ export class InfosysLeaderboardComponent {
   dataSourceSafety:any[]=[];
   dataSourcePrivacy:any[]=[];
   dataSourceMachineEthics:any[]=[]
+  // Fetches truthfulness scores and updates the data source.
   getTruthfullnessScore(){
     this.https.get(this.LLMLeaderboardTruthfullness).subscribe(
       (res: any) => {

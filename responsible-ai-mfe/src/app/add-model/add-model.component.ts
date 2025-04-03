@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
@@ -122,6 +126,8 @@ setApilist(ip_port: any) {
   this.addModels =ip_port.result.Workbench + ip_port.result.Workbench_AddModel
     this.updateModels =ip_port.result.Workbench + ip_port.result.Workbench_UpdateModel
 }
+
+// This method will handles file selection, validates the file type, and initiates the file upload process.
 fileBrowseHandler(imgFile: any) {
   console.log("Called")
   this.files = []
@@ -185,6 +191,8 @@ deleteFile(index: number) {
 closeDialog(){
   this.dialogRef.close();
 }
+
+// This method will creates a new model by submitting the form data to the server.
 createNew(){
   this.spinner = true;
     const mName = this.SecurityFormModel.value.modelName;
@@ -235,6 +243,8 @@ this.https.post(this.addModels,fileData).subscribe((res: any)=>{
   this.closeDialog();
 })
 }
+
+// This method will updates an existing model by submitting the updated form data to the server.
 updateModel(){
   this.spinner = true;
   const tdType = this.SecurityFormModelUpdate.value.targetDataType;

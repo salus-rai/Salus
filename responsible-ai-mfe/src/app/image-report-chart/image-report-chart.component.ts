@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
@@ -52,8 +56,6 @@ export class ImageReportChartComponent implements OnInit {
       this.analyze = this.data?.analyze;
     }
 
-      
-   
       // this.dataValue = Object.values(this.analyze.Score.Aesthetics[2]);
     // this.labelValue = Object.keys(this.analyze);
     // this.dataValue = Object.values(this.analyze);
@@ -95,6 +97,8 @@ export class ImageReportChartComponent implements OnInit {
   // this.createBarChart()
 
 }
+
+// Creates a doughnut chart to visualize data values with corresponding labels.
 createChart() { 
   const data = {
     labels: this.labelValue,
@@ -124,11 +128,11 @@ createChart() {
       }, 
      
     },
-    
   },
   });
 }
 
+// Opens a modal to display detailed analysis for a specific metric.
 openPopup(metric:any){
   if(metric == "Aesthetics"){
      this.newData = {
@@ -136,8 +140,6 @@ openPopup(metric:any){
       label : [this.labelValue[2]],
       score_desc:[this.aesLable],
       description : "Aesthetics involves evaluating various aspects such as composition, coherence with the input text, style consistency, diversity, realism, and subjective appeal"
-
-
     }
   }
   else if(metric == "Alignment" ){
@@ -188,7 +190,7 @@ else if(metric == "Bias"){
   // modalRef.componentInstance.chartData = this.aesData;
 }
 
-
+// Creates a bar chart to visualize aesthetics scores.
 createAestheticsChart() { 
   // var ctx = document.getElementById("aesthetics");
   // if (ctx) {
@@ -231,9 +233,7 @@ createAestheticsChart() {
         },
         
         position: 'top'
-      }, 
-      
-     
+      },    
     },
     scales: {
       y:{
@@ -241,16 +241,14 @@ createAestheticsChart() {
         ticks:{
           stepSize:2
         }
-      
       }
-    },
-    
+    },  
     
   },
   });
 }
 
-
+// Creates a bar chart to visualize image alignment and knowledge alignment scores.
 createImage_AlignmentChart() { 
   console.log("this.labelImage_Alignment[0]====",this.labelImage_Alignment)
   // var ctx = document.getElementById("image_Alignment");
@@ -305,7 +303,7 @@ createImage_AlignmentChart() {
   });
 }
 
-
+// Creates a bar chart to visualize originality scores, including watermark presence.
 createOriginalityChart() { 
   // var ctx = document.getElementById("aesthetics");
   // if (ctx) {
@@ -355,9 +353,7 @@ createOriginalityChart() {
   });
 }
 
-
-
-
+// Creates a bar chart to visualize gender bias scores.
 createBiasChart() { 
   // var ctx = document.getElementById("bias");
   // if (ctx) {
@@ -421,9 +417,7 @@ createBiasChart() {
   });
 }
 
-
-
-
+// Opens a dialog and creates a bar chart for aesthetics analysis.
 openDialogAesthetics(){
   this.aestheticsFlag=true
   this.createAestheticsChart()
@@ -489,9 +483,7 @@ closeDialog() {
 //   }
 // }
 
-
-
-
+// Creates a pie chart with predefined labels and data.
 genChart(){
   const ctx = document.getElementById('myPieChart') as HTMLCanvasElement;
 const data = {
@@ -526,6 +518,7 @@ new Chart(ctx, {
 // });
  }
 
+//  Configures a doughnut chart for project cost breakdown with predefined data points.
 new(){
   const chartOptions = {
 	  animationEnabled: true,

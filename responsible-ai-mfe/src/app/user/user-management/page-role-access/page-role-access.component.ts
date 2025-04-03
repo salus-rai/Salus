@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, Inject, ViewChild } from '@angular/core';
 import { PageRoleAccessService } from './page-role-access.service';
@@ -104,7 +108,7 @@ tabs!: Tab[];
 
   }
 
-
+  // Fetches and processes accessible pages and updates the UI based on the selected role.
   onOptionSelected() {
     // DATA ASSIGNING
     // WORKBENCH TABS
@@ -132,6 +136,7 @@ tabs!: Tab[];
       );
   }
 
+  // Transforms the pages data into a structured format for UI rendering.
 functionForPages(pages: any) {
     this.pagestabs = Object.entries(pages).map(([name, value]: [string, any]) => {
         const tab: Tab = {
@@ -184,7 +189,7 @@ functionForPages(pages: any) {
     console.log(this.pagestabs, "pagestabs");
 }
 
-
+// Processes the original pages data into a structured format for UI rendering.
 functionForOriginalPages(originalPages: any) {
     // Function to process the originalPages structure into the desired format
     this.originalpagestabs = Object.entries(originalPages).map(([name, value]: [string, any]) => {
@@ -238,6 +243,7 @@ functionForOriginalPages(originalPages: any) {
     console.log(this.originalpagestabs, "originalpagestabs");
 }
 
+// Compares original and current pages data to update checkbox states accordingly.
 compareAndSetCheckboxes() {
     this.tabs = this.originalpagestabs.map((tab: Tab) => {
         const tabInPages = this.pagestabs.find((t: Tab) => t.name === tab.name);
@@ -298,6 +304,7 @@ compareAndSetCheckboxes() {
     return subtabInPages ? true : false;
   }
 
+  // Checks if a specific select type is active based on the pages data.
   isSelectTypeActive(subtabName: string, selectTypeName: string, selectTypeValue: any): boolean {
     const subtabInPages = this.pages[subtabName];
     // console.log(subtabInPages, "subtabInPages")
@@ -314,6 +321,7 @@ compareAndSetCheckboxes() {
     this.generativeAIEnabled = this.selectAllEnabled;
   }
 
+  // Updates the active state of a select type and its options based on user interaction.
   onSelectTypeChange(event: MatCheckboxChange, tabName: string, subTabName: string, selectTypeName: string) {
     const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
     const subtab = tab?.subtabs.find((st: { name: string; }) => st.name === subTabName);
@@ -326,6 +334,7 @@ compareAndSetCheckboxes() {
     }
 }
 
+// Updates the active state of a specific option within a select type based on user interaction.
 onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, selectTypeName: string, optionName: string) {
   const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
   const subtab = tab?.subtabs.find((st: { name: string; }) => st.name === subTabName);
@@ -335,6 +344,8 @@ onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, s
       option.active = event.checked;
   }
 }
+
+// Updates the active state of a tab, its subtabs, and their select types and options.
   onTabCheckboxChange(event: MatCheckboxChange, tabName: string) {
     const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
     if (tab) {
@@ -351,7 +362,7 @@ onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, s
     }
 }
 
-
+// Updates the active state of a subtab, its select types, and their options.
   onSubTabCheckboxChange(event: MatCheckboxChange, tabName: string, subTabName: string) {
     const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
     const subtab = tab?.subtabs.find((st: { name: string; }) => st.name === subTabName);
@@ -497,6 +508,7 @@ CreateNewRoleForm(){
   });
 }
 
+// Submits the new role form and creates role-based page access configurations.
 submitRoleForm() {
   if (this.NewAccPort.valid) {
     const formData = this.NewAccPort.value;
@@ -526,6 +538,7 @@ submitRoleForm() {
   }
 }
 
+// Fetches the updated list of roles from the server.
 getUpdatedRoles(){
   this.https.get(this.getRoleUrl).subscribe(
     (response: any) => {

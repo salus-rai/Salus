@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
@@ -164,6 +168,8 @@ export class UnstructuredTextComponent implements OnInit, PagingConfig {
     this.lot_details = ip_port.result.Questionnaire + ip_port.result.AllLotDetails;
     this.Workbench_UploadFile = ip_port.result.Questionnaire + ip_port.result.Workbench_UploadFile;
   }
+
+  // Retrieves API configuration details from local storage.
   getLocalStoreApi() {
     let ip_port
     if (localStorage.getItem("res") != null) {
@@ -173,6 +179,8 @@ export class UnstructuredTextComponent implements OnInit, PagingConfig {
       }
     }
   }
+
+  // Fetches and updates the list of lots assigned to the current user.
   getLotDetails(user: any) {
     this.dataSource = [];
     const getUrl = this.lot_details + user;
@@ -221,6 +229,7 @@ export class UnstructuredTextComponent implements OnInit, PagingConfig {
     this.pagingConfig.totalItems = this.dataSource.length;
   }
 
+  // Handles file selection, validates the file type, and prepares the file for upload.
   fileBrowseHandler(imgFile: any) {
     const allowedTypes = ['text/csv'];
     console.log("fileBrowseHandler", imgFile.target.files[0].type)
@@ -264,6 +273,7 @@ export class UnstructuredTextComponent implements OnInit, PagingConfig {
     this.resetRadioButtons()
   }
 
+  // Simulates file upload progress for the selected files.
   uploadFilesSimulator(index: number, files: any) {
     setTimeout(() => {
       if (index === this.files.length) {
@@ -311,6 +321,7 @@ export class UnstructuredTextComponent implements OnInit, PagingConfig {
     // }
   }
 
+  // Sends the selected file and metadata to the server via an API call.
   intervalId: any
   workBenchPostApiCall(fileData: any) 
   {
@@ -375,6 +386,7 @@ export class UnstructuredTextComponent implements OnInit, PagingConfig {
 
   }
 
+  // Updates the tenant array based on selected options and patches the form with the selected values.
   viewoptions() {
     // console.log("Array===",this.selectedOptions)
     // [Privacy: true, Profanity: true, Explainability: true, FM-Moderation: true]
@@ -407,7 +419,8 @@ export class UnstructuredTextComponent implements OnInit, PagingConfig {
   sampleFile2 = environment.imagePathurl + '/assets/samplefiles/Sample_File2.csv';
   // sampleSrc2 = environment.imagePathurl + '/assets/image/sampleImage2.png';
   // sampleSrc3 = environment.imagePathurl + '/assets/image/sampleImage3.jpg';
-
+  
+  // Fetches a file from a given URL, converts it to a File object, and prepares it for upload.
   onClick(s: any) {
     console.log("s======",s);
     fetch(s)

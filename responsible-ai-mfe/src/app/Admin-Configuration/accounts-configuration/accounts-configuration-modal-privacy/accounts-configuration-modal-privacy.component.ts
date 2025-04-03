@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, Inject, ViewChild } from '@angular/core';
@@ -82,7 +86,7 @@ allSelectedInput = false;
 event1: any;
 c1: boolean = false;
 
-// select 1
+// select 1 - // toggles the selection of all options in the first select element.
 toggleAllSelection1(event: any) {
   this.event1 = event;
   this.c1 = event.checked;
@@ -105,6 +109,8 @@ toggleAllSelection1(event: any) {
     });
   }
 }
+
+// Updates the status of the first select element based on selected options.
 selectRecognizertype() {
   let newStatus = true;
   this.select1.options.forEach((item: MatOption) => {
@@ -138,6 +144,7 @@ selectRecognizertype() {
 
   }
   userId: any
+  // get the user id from the local storage
   getLogedInUser() {
     if (localStorage.getItem("userid") != null) {
       const x = localStorage.getItem("userid")
@@ -175,6 +182,7 @@ selectRecognizertype() {
     this.admin_list_AccountMaping_AccMasterList_Delete_Data = ip_port.result.Admin + ip_port.result.Admin_AccDataDelete      
   }
 
+// Updates the active status of a recognizer for the account.
   updateActiveStatus(element: any, RecogId: any) {
 
     // this.resAccMasterid
@@ -223,6 +231,7 @@ selectRecognizertype() {
 
   public thresholdDisplay: any = 0;
 
+  // Sets and updates the threshold score for the account.
   setThreshold(e: any,valuex:any) {
     this.thresholdDisplay = valuex
     console.log("slide value",valuex)
@@ -286,8 +295,8 @@ selectRecognizertype() {
       
 
   }
-
-  // 
+ 
+  // Adds a new recognizer to the list by fetching available recognizers and filtering out existing ones.
   editReconList:any[] = []
   addRecognizerInList() {
     this.https.get(this.admin_list_rec_get_list).subscribe
@@ -357,6 +366,7 @@ selectRecognizertype() {
     });
   }
 
+  // Updates the recognizer list for the account with the selected recognizers.
   updateRecList(){
     console.log("updateRecList")
     console.log(this.accountUpdateForm.value)
@@ -427,6 +437,7 @@ selectRecognizertype() {
       })
   }
 
+  // Deletes account data for the specified recognizer ID.
   deleteAccounttData(id: any) {
 
     const options = {

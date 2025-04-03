@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
@@ -113,8 +117,8 @@ export class QuestionnaireUsecaseComponent {
       console.log("this.currentScreenPage90===",this.currentScreenPage)
     }
     
+    // Updates the selected tab and triggers change detection.
   selectTab(tab: any) {
-
     console.log("FirstFormGroup====",this.firstFormGroup.value)
     this.selectedTab = tab;
     console.log("seectedTab====",this.selectedTab)
@@ -144,6 +148,7 @@ export class QuestionnaireUsecaseComponent {
       }
     }
 
+    // seting up api list
     setApilist(ip_port: any) {
       this.createUseCase = ip_port.result.Questionnaire + ip_port.result.Questionnaire_createUsecase
     this.aiCanvasSubmitResponse = ip_port.result.Questionnaire + ip_port.result.Ai_Canvas_Submit
@@ -155,6 +160,7 @@ export class QuestionnaireUsecaseComponent {
    this.Ques_selectedResponse = ip_port.result.Questionnaire + ip_port.result.Ques_selectedResponse
     }
 
+    // Retrieves the logged-in user ID from local storage.
     getLogedInUser() {
       if (window && window.localStorage && typeof localStorage !== 'undefined') {
         const x = localStorage.getItem("userid") ? JSON.parse(localStorage.getItem("userid")!) : "NA";
@@ -165,6 +171,8 @@ export class QuestionnaireUsecaseComponent {
         return this.userId;
       }
     }
+
+    // Retrieves API configuration details from local storage.
     getLocalStoreApi() {
       let ip_port
       if (localStorage.getItem("res") != null) {
@@ -175,6 +183,7 @@ export class QuestionnaireUsecaseComponent {
       }
     }
 
+    // Moves to the next step in the stepper and triggers change detection.
     goToNextStep() {
       console.log("inside Rai next===")
       if (this.stepper2) {
@@ -237,6 +246,7 @@ export class QuestionnaireUsecaseComponent {
   }
 // getDetails()  closed ///
 
+// Validates and tracks the responses for all questions.
 saveResponse(result:any){
     
   for(let i=0;i<result.length;i++){
@@ -258,8 +268,7 @@ saveResponse(result:any){
   
 }
 
-
-
+// maps question responses with their details and updates the service.
 responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_secore:any){
   this.userId = this.getLogedInUser()
   // console.log("Id====",Id,QuestionId,OptionsValue,this.userId,this.quesUseCaseName,Question_Weightage,RAI_secore)
@@ -273,17 +282,13 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
 
   this.useCaseService.setQuestionnaireResponse(this.map)
   
-
-
- 
 }
   // UseCaseName(arg0: string, UseCaseName: any) {
   //   throw new Error('Method not implemented.');
   // }
 
+  // Submits the questionnaire, AI Canvas, and RAI Canvas data to the server.
   submit() {
-
-
     this.useCaseService.getQuestionnaireResponse.subscribe((msg) => this.map1 = msg)
     console.log("map==========", this.map1)
     this.useCaseService.getUsecaseName.subscribe((msg) => (this.useCaseName = msg));
@@ -361,23 +366,8 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
       // c++;
 
       console.log("payload=====", payload["UserId"])
-
-
-
-
-
-
-
-
-
-
-
     }
-
-
-
     console.log("RaiCanvaspayload182===========", this.raiCanvasDatDetail)
-
 
     this.creatUsecsse(payload, aiCanvaspayload, raiCanvasPayload, this.questionPayload)
 
@@ -385,7 +375,7 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
 
   }
 
-  
+  // Creates a new use case and triggers subsequent submissions.
   creatUsecsse(payload: any, aiCanvaspayload: any, raiCanvasPayload: any, quesPayload: any) {
     this.https.post(this.createUseCase, payload).subscribe(
 
@@ -397,16 +387,11 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
           console.log("Successfully usecasename created")
 
         }
-
-
         const element = document.getElementById('aicanvasTab');
         if (element) {
           console.log("Inside element click")
           element.click();
         }
-
-
-
 
       }, error => {
         console.log(error.status);
@@ -423,6 +408,7 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
     )
   }
 
+  // Submits AI Canvas data to the server and handles the response.
   aiCanvasSubmit(aiCanvaspayload: any, raiCanvasPayload: any, quesPayload: any) {
     this.https.post(this.aiCanvasSubmitResponse, aiCanvaspayload).subscribe(
       (res: any) => {
@@ -476,6 +462,7 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
     )
   }
 
+  // Submits RAI Canvas data to the server and handles the response.
   raiCanvasSubmit(raiCanvasPayload: any, quesPayload: any) {
     this.https.post(this.raiCanvasSubmitResponse, raiCanvasPayload).subscribe(
       (res: any) => {
@@ -526,6 +513,7 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
     );
   }
 
+  // Submits questionnaire responses to the server and resets the state.
   questionnaireSubmit(payload: any) {
     const payload1 = {
       // "data":this.questionPayload
@@ -541,15 +529,9 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
           this.useCaseService.setUseCaseName("")
           this.useCaseService.setAiCanvas("")
           this.useCaseService.setRaiCanvas("")
-
-
-
         }
 
         console.log("res========76", res)
-
-
-
 
       }, error => {
         const message = (error && error.error && (error.error.detail || error.error.message)) || "The Api has failed"
@@ -567,9 +549,9 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
     )
   }
 
-
+  // Fetches previously submitted questionnaire responses for editing.
   getResubmitDetails(){
-    
+  
     // this.https.get(this.getUrl).subscribe
     // this.userId = localStorage.getItem("userid")
     // this.https.get(this.getResetData+this.userId+"/"+this.UseCaseName).subscribe
@@ -585,12 +567,8 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
       // console.log("result====",res)
       console.log("result1111====116====",res)
       this.cdr.detectChanges();
-  
-      
-  
+
     }  , error => {
-  
-  
       // this.showSpinner1 = false;
   
       // console.log(error.error.detail)
@@ -605,10 +583,6 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
   })
     this.cdr.detectChanges();
   }
-  
-
-  
-  
   
     ngOnInit(){
       this.qutionnaireForm=this._formBuilder.group({})
@@ -631,10 +605,7 @@ responseData(Id:any,QuestionId:any,OptionsValue:any,Question_Weightage:any,RAI_s
     }else{
       this.getDetails()
     }
-    
-
     console.log("firstFormGroup2====",this.firstFormGroup2)
-   
     
     // Initialize the form controls for each question
     // this.initializeFormControls();

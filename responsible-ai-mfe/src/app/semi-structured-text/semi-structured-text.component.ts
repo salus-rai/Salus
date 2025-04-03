@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -63,6 +67,7 @@ export class SemiStructuredTextComponent implements OnInit{
     this.url = ip_port.result.Privacy + ip_port.result.Privacy_Pdf;  
    }
 
+  //  Resets all form fields, file lists, and output states to their initial values.
   resetAll() {
     this.portfolioName_value = '';
     this.accountName_value = '';
@@ -71,10 +76,14 @@ export class SemiStructuredTextComponent implements OnInit{
     this.spinner = false;
     this.removeFile();
   }
+
+  // Clears the uploaded files and resets the file lists.
   removeFile() {
     this.demoFile = [];
     this.files = [];
   }
+
+  // Validates inputs, uploads the file, and processes the response to display the output PDF.
   submit() {
     this.getSelectedValues();
     this.output = false;
@@ -146,6 +155,7 @@ export class SemiStructuredTextComponent implements OnInit{
       this.selectValue = '';
   }
 
+  // Reads the content of the selected file and logs it as text.
   onFileChange(event: any) {
     const reader = new FileReader();
     reader.onload = (e: any) => {
@@ -155,6 +165,7 @@ export class SemiStructuredTextComponent implements OnInit{
     reader.readAsText(event.target.files[0]);
   }
 
+  // Handles file selection, validates the file type, and prepares the file for upload.
   fileBrowseHandler(File: any) {
     console.log(File.target.files);
     this.prepareFilesList(File.target.files);
@@ -179,6 +190,8 @@ export class SemiStructuredTextComponent implements OnInit{
       console.log("filePreview",this.filePreview )
     };
   }
+
+  // Cleans file names, validates file types, and prepares the file list for upload simulation.
   prepareFilesList(files: Array<any>) {
     this.files = [];
     this.demoFile = [];
@@ -190,6 +203,7 @@ export class SemiStructuredTextComponent implements OnInit{
     this.uploadFilesSimulator(0, files);
   }
 
+  // Simulates file upload progress for the selected files.
   uploadFilesSimulator(index: number, files: any) {
     setTimeout(() => {
       if (index === this.files.length) {
@@ -208,6 +222,8 @@ export class SemiStructuredTextComponent implements OnInit{
       }
     }, 1000);
   }
+
+  // Fetches a sample file, processes it, and triggers file handling methods.
   uploadSampleFile(fileType: string) {
     const fileToFetch = fileType === 'sampleFile' ? this.sampleFile : this.sampleFile2;
   

@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, Input, OnInit, AfterViewInit  } from '@angular/core';
 import { Chart } from  'chart.js/auto';;
@@ -141,6 +145,8 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
     if(this.explainabilityOption == 'Sentiment'){this.createBarChart();}
     this.TokenImportance();
   }
+
+  // Creates a bar chart to visualize token importance scores.
   createBarChart(): void {
     const ctx = document.getElementById('myBarChart') as HTMLCanvasElement;
 
@@ -250,6 +256,7 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
   //     });
   // }
 
+  // Calls the OpenAI API to generate a response and processes the result.
   OpenAI() {
     this.isLoadingOpenAI = true;
     const payload1 = {
@@ -340,6 +347,7 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
       });
   }
 
+  // displays metrics like uncertainty and coherence in a table format.
   displayMetrics(response: any) {
     const metrics = ['uncertainty', 'coherence'];
     let tableHtml = '<table style="border-collapse: collapse; width: 100%;">';
@@ -363,6 +371,7 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
     }
   }
 
+  // Calls the token importance API, processes the response, and updates the token data.
   TokenImportance() {
     this.isLoadingTokenImportance = true;
     this.tokenImportanceShowErrorMessage = false;
@@ -413,6 +422,8 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
         this.isLoadingGOT = false;
       });
   }
+
+  // Toggles between internet search and local results based on user input.
   onToggleSearch(event: Event) {
     const inputElement = event.target as HTMLInputElement;
     this.isSerperSelected = inputElement.checked;
@@ -422,6 +433,8 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
       this.finalAnswer = this.covFinalAnswer;
     }
   }
+
+  // Calls the internet search API and updates the search metrics.
   toggleSearch(){
     this.isLoadingSearch= true;
     const payload6 = {
@@ -439,6 +452,7 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
     });
   }
 
+  // Calls the COVRAG API, processes the response, and updates the COVRAG results.
   COVRAG() {    
     this.isLoadingCOVRAG = true;
     console.log('COVRAG started, isLoadingCOVRAG:', this.isLoadingCOVRAG);
@@ -466,6 +480,8 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
         console.log('COVRAG error, isLoadingCOVRAG:', this.isLoadingCOVRAG);
       });
   }
+
+  // Calls the THOTRAG API, processes the response, and updates the THOTRAG results.
   THOTRAG() {    
     this.isLoadingTHOTRAG = true;
     const payload8 = {
@@ -484,6 +500,8 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
         this.isLoadingTHOTRAG = false;
       });
   }
+
+  // Processes the THOTRAG response to extract and format results and explanations.
   splitFunction(){
     const lines = this.THOTRAGResponse.split('\n');
     let explanationValue = '';
@@ -527,6 +545,8 @@ export class ExplainabilityResultComponent implements OnInit, AfterViewInit  {
       this.topTokens = this.topTokens.slice(0, 10);
       (console.log('topTokens:', this.topTokens));
 }
+
+// Creates a bar chart to visualize token importance scores.
 createTokenBarChart(): void {
   if (!this.tokens || this.tokens.length === 0) {
       console.log("No tokens available to create the chart.");
@@ -616,6 +636,8 @@ createTokenBarChart(): void {
     }
   });
 }
+
+// Creates a frequency distribution chart for token importance scores.
 frequencyDistributionChart(): void {
   if (!this.tokens || this.tokens.length === 0) {
       console.log("No tokens available to create the chart.");

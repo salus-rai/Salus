@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
@@ -133,6 +137,7 @@ export class RecognizersComponent implements OnInit {
     this.admin_list_rec_get_list_Delete_DataRecogGrpEntites = ip_port.result.Admin + ip_port.result.Admin_DataRecogEntityDelete    //environment.admin_list_rec_get_list_Delete_DataRecogGrpEntites
   }
 
+  // fetches the list of recognizers and updates the data source by excluding predefined ones.
   getRecognizerList() {
     this.https.get(this.admin_list_rec_get_list).subscribe
       ((res: any) => {
@@ -214,7 +219,7 @@ export class RecognizersComponent implements OnInit {
     console.log(event)
   }
   fileName!: string;
-
+// Handles file selection, validates the file type, and prepares the file for upload.
   fileBrowseHandler(imgFile: any) {
     console.log(imgFile)
     this.files = [];
@@ -272,6 +277,7 @@ export class RecognizersComponent implements OnInit {
     this.payloadonSubmit()
   }
 
+  // Prepares the payload with form data and selected file, then submits it to the API.
   payloadonSubmit(): void {
     let score = this.listForm.value.tempValue / 10
     console.log("score", score)
@@ -291,6 +297,7 @@ export class RecognizersComponent implements OnInit {
     this.postDataRecogGroupApi(fileData)
   }
 
+  // Sends a POST request to create a new recognizer group and handles the response or errors.
   postDataRecogGroupApi(fileData: FormData) {
     this.https.post(this.admin_list_rec, fileData).subscribe
       ((res: any) => {
@@ -312,8 +319,7 @@ export class RecognizersComponent implements OnInit {
 
   }
 
-
-
+// Deletes a recognizer group if it is not predefined and refreshes the recognizer list.
   clickDeleteRecognizer(id: any, preDefined: any) {
     // console.log("Delete clicked")
     // const formattedDate = methods.hi();
@@ -419,6 +425,7 @@ export class RecognizersComponent implements OnInit {
     }
   }
 
+  // Logs the current recognizer data source and demonstrates fetching recognizers using a helper method.
   clickgetRecognizers() {
     const methodsInstance = new methods(this.https, this._snackBar, this.recognizerService);
     // this.dataSource = methodsInstance.getRecognizers(this.admin_list_rec_get_list);
@@ -440,6 +447,7 @@ export class RecognizersComponent implements OnInit {
 
   }
 
+  // Updates a recognizer group with the provided payload and refreshes the recognizer list.
   update(i: any,RecogId: any,RecogName:any,supported_entity:any,RecogType: any) {
     this.editIndex = this.editIndex.filter(index => index !== i);
     let payload ={
@@ -450,6 +458,8 @@ export class RecognizersComponent implements OnInit {
     }
     this.updateRecognizer(payload)
   }
+
+  // Sends a PATCH request to update a recognizer group and handles the response or errors.
   updateRecognizer(payload:any){
     this.https.patch(this.admin_list_rec_get_list_Update_DataRecogGrp, payload).subscribe 
     ((res: any) => 

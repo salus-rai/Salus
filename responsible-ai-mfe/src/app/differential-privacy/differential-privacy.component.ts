@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FileHandler } from './fileHandler'
@@ -76,6 +80,8 @@ export class DifferentialPrivacyComponent implements OnInit {
       this.postFile()
     }
   }
+
+  // Uploads the selected file to the server and processes the response to populate dropdown options.
   postFile() {
     this.showSpinner1 = true;
     let formData = new FormData();
@@ -112,7 +118,7 @@ export class DifferentialPrivacyComponent implements OnInit {
     });
   }
   
-
+// Submits the form data to the server for anonymization and triggers a file download upon success.
   submitFrom(){
     if (this.form.valid) {
     console.log("form",this.form.value)
@@ -172,6 +178,7 @@ export class DifferentialPrivacyComponent implements OnInit {
     this._snackBar.dismiss();
   }
 
+  // Displays an error message in a snackbar for API failures.
   errormessageCall(error: any){
       // const message = error.error.detail
       const message = (error && error.error && (error.error.detail || error.error.message)) || "The Api has failed"

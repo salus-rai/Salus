@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
@@ -63,8 +67,6 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
     Privacy: new FormControl(''),
     IPProtectionandIPInfringement : new FormControl('')
   })
- 
-
 
   constructor(private _snackBar: MatSnackBar,
     private _formBuilder: FormBuilder,
@@ -78,7 +80,7 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
   }
   // private stepper:MatStepper
 
-
+  // Calculates and updates the word count for a specific input field.
     countWords(event:any,index:any){
       const text = event.target.value
       const words = text.trim().split(/\s+/);
@@ -90,6 +92,7 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
   
     }
 
+    // Resets and updates the word count for a specific input field.
     resetFeatureCountWords(event:any,index:any){
       const text = event.target.value
       const words = text.trim().split(/\s+/);
@@ -100,7 +103,6 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
       this.cdr.detectChanges();
   
     }
-  
 
     // emitDataToParent(){
     //   this.useCaseService.setRaiCanvas(this.raiCanvasForm)
@@ -115,6 +117,7 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
       this.useCaseService.setRaiCanvas(this.raiCanvasForm.value)
     }
 
+    // Handles changes to input properties and updates the form with edit data if applicable.
     ngOnChanges() {
     
       // this.editDataSet(this.aicanvasEditData)
@@ -136,7 +139,7 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
     // this.useCaseService.setRaiCanvas("")
   }
 
-
+  // Updates the form fields with the provided data for editing the RAI Canvas.
   editDataSet(res:any){
     console.log("res181editDataaRaiCanvas========",res)
     this.raiCanvasForm.patchValue({
@@ -161,6 +164,7 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
 
       }
 
+      // Moves to the next step in the stepper and triggers change detection.
       goToNextStep() {
         console.log("inside Rai next===")
         if (this.stepper) {
@@ -192,13 +196,13 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
         // return this.aiCanvasForm.get('BusinessProblem')?.valid && this.aiCanvasForm.get('BusinessValue')?.valid && this.aiCanvasForm.get('EndUserValue')?.valid
       }
 
+      // Advances to the next screen and updates the current screen page.
       currentScreen:any=1;
       nextScreen() {
         // if (this.raiCanvasForm.invalid) {
         //   return;
         // }
 
-        
         if (this.currentScreen < 3 ) {
          
           this.currentScreen++;
@@ -243,8 +247,5 @@ export class RaiCanvasUsecaseComponent implements OnChanges{
       //   this.editDataSet(this.raicanvasEditData)
       // }
     }
-  
-
-  
 
 }

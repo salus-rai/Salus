@@ -1,7 +1,11 @@
-/**  MIT license https://opensource.org/licenses/MIT
-”Copyright 2024-2025 Infosys Ltd.”
+/**
+SPDX-License-Identifier: MIT
+Copyright 2024 - 2025 Infosys Ltd.
+"
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"
 */ 
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
@@ -76,6 +80,7 @@ export class ModelValidationComponent {
     this.getAvailableModels();
   }
 
+  // Updates the selected prompt and retrieves the dataset length based on the selected dataset.
   onDataSetSelect(event: any) {
     const selectedOption = event.target.value;
     this.getLengthofDataSet(selectedOption);
@@ -93,6 +98,7 @@ export class ModelValidationComponent {
     }
   }
 
+  // Fetches the length of the selected dataset and updates the placeholder text.
   getLengthofDataSet(selectedDataSetValue: any) {
     const fData = new FormData();
     const a2 = '1';
@@ -152,6 +158,8 @@ export class ModelValidationComponent {
       });
     }
   }
+
+  // Processes and maps prompts and labels from the model validation data source.
   validateModelData(){
     try{
     const a = this.modelValidateDataSource.prompts.length;
@@ -356,6 +364,7 @@ export class ModelValidationComponent {
     this.uploadFilesSimulator(0, "dataFile")
   }
 
+  // Simulates file upload progress for model or dataset files.
   uploadFilesSimulator(index: number, files: any) {
     if (files == 'modelFile') {
       setTimeout(() => {
@@ -416,6 +425,7 @@ export class ModelValidationComponent {
     });
   }
 
+  // Fetches the list of available datasets from the API.
   getAvailableDataSets() {
     this.https.get(this.apiUrlEndpoints.securityLLM_availableDatasets).subscribe(
       (res: any) => {
@@ -427,6 +437,8 @@ export class ModelValidationComponent {
       }
     )
   }
+
+  // Extracts and stores dataset names from the fetched dataset list.
   getListOfDataSets(avaiableDataSetsVariable: any) {
     try {
       for (let i = 0; i < avaiableDataSetsVariable.length; i++) {
@@ -436,6 +448,8 @@ export class ModelValidationComponent {
       console.log(error)
     }
   }
+
+  // Fetches the list of available models from the API.
   getAvailableModels() {
     this.https.get(this.apiUrlEndpoints.securityLLM_availableModels).subscribe(
       (res: any) => {
@@ -447,6 +461,8 @@ export class ModelValidationComponent {
       }
     )
   }
+
+  // Extracts and stores model names from the fetched model list.
   getListOfModels() {
     try {
       for (let i = 0; i < this.availableModels.length; i++) {
@@ -478,6 +494,8 @@ export class ModelValidationComponent {
       }
     );
   }
+
+  // Deletes a dataset by sending a request to the API and refreshes the dataset list.
   deleteDataSet(dataSet: string) {
     const fData = new FormData();
     fData.append('datasetName', dataSet);
