@@ -10,7 +10,7 @@
 - [Running the Application](#running-the-application)
 - [Features](#features)
 - [License](#license)
-
+- [Contact](#contact)
 
 ## Introduction
 Privacy is application which detects and masks any PII data present in Unstructured, Text, Image, DICOM, Video and returns the processed data.
@@ -154,7 +154,7 @@ After installing all the required packages, configure the variables necessary to
    ```
     
     *TELE_FLAG is made true only if user wants to request the response in telemetry. Otherwise for the normal flow it can be set as False.
-    For Telemetry setup, refer this link [responsible-ai-telemetry](https://github.com/salus-rai/Salus/tree/main/responsible-ai-telemetry)
+    For Telemetry setup, refer this link [responsible-ai-telemetry](https://github.com/Infosys-AI-Cloud-MMS/responsible-ai-telemetry)
     set the below env variables for connecting with telemetry alongside Telemetry flag.
    
    ```sh
@@ -190,13 +190,13 @@ Once we have completed all the aforementioned steps, we can start the service.
 
     *Privacyfiles is used for accessing data from files like excel, pdf, video etc.
 
-3. Open the following URL in your browser: 
+3. Open the following URL in your browser:
     For privacy_main :
- `http://localhost:30002/v1/privacy/docs#/`
+    [http://localhost:30002/v1/privacy/docs#/](http://localhost:30002/v1/privacy/docs#/)
         User can also change the port which is mentioned in privacy_main.py file
 
     For privacyfiles_main :
-    `http://localhost:30003/rai/v1/privacy-files/docs#/`
+    [http://localhost:30003/rai/v1/privacy-files/docs#/](http://localhost:30003/rai/v1/privacy-files/docs#/)
         User can also change the port which is mentioned in privacyfiles_main.py file
   
 4. Note: /rai/v1/privacy-files/excel/anonymize : This API endpoint is not working and it will be removed in next release.
@@ -285,4 +285,3 @@ Once we have completed all the aforementioned steps, we can start the service.
 ## License
 
 The source code for the project is licensed under the MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
-

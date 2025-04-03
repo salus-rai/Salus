@@ -17,6 +17,15 @@ The **Moderation Model** module acts as a central hub for machine learning model
 ## Features
 The **Moderation Model** module acts as a wrapper for the traditional AI models we are using for various checks like prompt injection, jailbreak, toxicity etc. 
 
+## Prerequisites
+1. Python 3.9  (version >= 3.9 & <3.12)
+2. pip
+3. VS Code
+4. Ensure that privacy-2.0.8-py3-none-any.whl is present under src/lib folder
+5. Download and place the en_core_web_lg-3.5.0-py3-none-any.whl inside the lib folder.
+   [en_core_web_lg](https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl)
+6. Download appropriate torch wheel file version if working on any Linux system, supporting python version which is installed there. [torch wheel files](https://download.pytorch.org/whl/torch/)
+
 ## Installation
 To run the application, first we need to install Python and the necessary packages:
 
@@ -63,8 +72,7 @@ To run the application, first we need to install Python and the necessary packag
    pip install --pre torch torchvision torchaudio \--extra-index-url https://download.pytorch.org/whl/nightly/cpu
     ```
   
-  Download and place the en_core_web_lg-3.5.0-py3-none-any.whl inside the lib folder.
-    [en_core_web_lg](https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl) and install the requirements:
+  Install the requirements now:
     
     ```sh
     pip install -r requirement.txt

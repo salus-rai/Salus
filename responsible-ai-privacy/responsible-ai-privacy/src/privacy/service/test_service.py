@@ -1,12 +1,14 @@
-'''
-MIT license https://opensource.org/licenses/MIT Copyright 2024 Infosys Ltd
+"""
+# SPDX-License-Identifier: MIT
+# Copyright 2024 - 2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
+ 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
+ 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
+
 #from privacy.mappers.mappers import PIIEntity, PIIAnalyzeRequest, PIIAnalyzeResponse,PIIAnonymizeRequest,PIIAnonymizeResponse,PIIImageAnonymizeResponse,PIIImageAnalyzeResponse,PIIImageAnalyzeRequest
 #from privacy.mappers.mappers import PIIEntity, PIIAnalyzeRequest, PIIAnalyzeResponse,PIIAnonymizeRequest,PIIAnonymizeResponse,PIIImageAnonymizeResponse,PIIImageAnalyzeResponse,PIIImageAnalyzeRequest
 import json
@@ -19,7 +21,6 @@ from privacy.service.easy import EasyOCR
 from privacy.service.azureComputerVision import ComputerVision
 # from privacy.dao.TelemetryFlagDb import TelemetryFlag
 from privacy.mappers.mappers import *
-import secrets
 import os
 # from privacy.dao.privacy.PrivacyException import ExceptionDb
 import httpx
@@ -109,6 +110,9 @@ import contextvars
 
 
 class ImageRotation:
+    """
+    A class that provides methods for rotating images.
+    """
     def float_convertor(x):
         if x.isdigit():
             out= float(x)
@@ -163,6 +167,18 @@ class PrivacyService:
     # @profile
 
     def analyze(payload: PIIAnalyzeRequest) -> PIIAnalyzeResponse:
+        """
+        Analyzes the given payload for personally identifiable information (PII).
+
+        Args:
+            payload (PIIAnalyzeRequest): The request payload containing the input text and optional exclusion list.
+
+        Returns:
+            PIIAnalyzeResponse: The response containing the analyzed PII entities.
+
+        Raises:
+            Exception: If an error occurs during the analysis process.
+        """
         error_dict[request_id_var.get()]=[]
         log.debug("Entering in analyze function")
         # gc.collect()
@@ -211,6 +227,21 @@ class PrivacyService:
     # @profile
     
     def __analyze(text: str,accName:any=None,exclusion:any=None):
+        """
+        Analyzes the given text for privacy-related information.
+
+        Args:
+            text (str): The text to be analyzed.
+            accName (any, optional): The account name. Defaults to None.
+            exclusion (any, optional): The exclusion list. Defaults to None.
+
+        Returns:
+            list: A list of analysis results.
+
+        Raises:
+            Exception: If an error occurs during the analysis.
+
+        """        
         result=[]
         
         
@@ -307,6 +338,18 @@ class PrivacyService:
             raise Exception(e)
   
     def anonymize(payload: PIIAnonymizeRequest):
+        """
+        Anonymizes the given payload by replacing sensitive information with anonymized data.
+
+        Args:
+            payload (PIIAnonymizeRequest): The payload containing the input text and other parameters.
+
+        Returns:
+            PIIAnonymizeResponse: The response object containing the anonymized text.
+
+        Raises:
+            Exception: If an error occurs during the anonymization process.
+        """
         error_dict[request_id_var.get()]=[]
         log.debug("Entering in anonymize function")
         try:
@@ -370,6 +413,18 @@ class PrivacyService:
             raise Exception(e)
 
     def encrypt(payload: PIIAnonymizeRequest):
+        """
+        Encrypts the PII (Personally Identifiable Information) in the given payload.
+
+        Args:
+            payload (PIIAnonymizeRequest): The payload containing the input text and other parameters.
+
+        Returns:
+            PIIEncryptResponse: The response object containing the encrypted text and items.
+
+        Raises:
+            Exception: If an error occurs during the encryption process.
+        """
         log.debug("Entering in encrypt function")
         
         try:
@@ -416,6 +471,18 @@ class PrivacyService:
             raise Exception(e)
     
     def decryption(payload: PIIDecryptRequest):
+        """
+        Decrypts the given payload using the deanonymizer.
+
+        Args:
+            payload (PIIDecryptRequest): The payload containing the text and anonymized entities.
+
+        Returns:
+            PIIDecryptResponse: The decrypted text.
+
+        Raises:
+            Exception: If an error occurs during the decryption process.
+        """
         log.debug("Entering in decrypt function")
         # payload=AttributeDict(payload)
         print("payload=====",payload)
@@ -453,6 +520,19 @@ class PrivacyService:
 
 
     def image_analyze(payload):  
+        """
+        Analyzes an image and returns the PII entities found in the image.
+
+        Args:
+            payload (dict): The payload containing the image and other parameters.
+
+        Returns:
+            PIIAnalyzeResponse: An object containing the PII entities found in the image.
+
+        Raises:
+            Exception: If an error occurs during the analysis.
+
+        """        
         error_dict[request_id_var.get()]=[]
         try:
             log.debug("Entering in image_analyze function")        
@@ -579,6 +659,18 @@ class PrivacyService:
    
 
     def image_anonymize(payload): 
+        """
+        Anonymizes the given image based on the provided payload.
+
+        Args:
+            payload (dict): The payload containing the necessary information for image anonymization.
+
+        Returns:
+            bytes: The base64 encoded anonymized image.
+
+        Raises:
+            Exception: If an error occurs during the image anonymization process.
+        """
         log.debug("Entering in image_anonymize function")
         error_dict[request_id_var.get()]=[]
         try: 
@@ -687,7 +779,18 @@ class PrivacyService:
             error_dict[request_id_var.get()].append({"UUID":request_id_var.get(),"function":"imageAnonimyzeFunction","msg":str(e.__class__.__name__),"description":str(e)+"Line No:"+str(e.__traceback__.tb_lineno)})
             raise Exception(e)
 
-    async def image_masking(main_image,template_image):
+    async def image_masking(main_image, template_image):
+        """
+        Apply image masking to remove a template image from a main image.
+
+        Parameters:
+            main_image (numpy.ndarray): The main image from which the template image will be removed.
+            template_image (numpy.ndarray): The template image to be removed from the main image.
+
+        Returns:
+            numpy.ndarray: The main image with the template image removed.
+
+        """
         template_gray = cv2.cvtColor(template_image, cv2.COLOR_BGR2GRAY)
         # Threshold the template image to create a binary mask
         _, template_mask = cv2.threshold(template_gray, 1, 255, cv2.THRESH_BINARY)
@@ -710,7 +813,7 @@ class PrivacyService:
 
         return result_with_mask
     
-    def zipimage_anonymize(payload):                                            #$$$$$$$$$$$$
+    def zipimage_anonymize(payload):
         result=[]
         in_memory_file=io.BytesIO(payload.file.read())
 
@@ -733,6 +836,18 @@ class PrivacyService:
         return result
     
     def image_verify(payload):  
+           """
+            Verify the image for sensitive PII information and redact it if necessary.
+
+            Args:
+                payload (dict): The payload containing the image and other parameters.
+
+            Returns:
+                bytes: The base64 encoded redacted image.
+
+            Raises:
+                Exception: If an error occurs during the verification process.
+           """          
            error_dict[request_id_var.get()]=[]
            log.debug("Entering in image_verify function")
            try:
@@ -814,6 +929,18 @@ class PrivacyService:
                 raise Exception(e)
        
     def imageEncryption(payload):
+            """
+            Encrypts an image based on the provided payload.
+
+            Args:
+                payload (dict): The payload containing the necessary information for image encryption.
+
+            Returns:
+                dict: A dictionary containing the encrypted image and the encryption mapping.
+
+            Raises:
+                Exception: If an error occurs during the image encryption process.
+            """           
             error_dict[request_id_var.get()]=[]
             log.debug("Entering in imageEncryption function")
             try:
@@ -940,6 +1067,15 @@ class PrivacyService:
     
     
     def privacyShield(payload: PIIPrivacyShieldRequest) -> PIIPrivacyShieldResponse:
+        """
+        Analyzes the privacy of the given payload using the PIIPrivacyShieldRequest object.
+
+        Args:
+            payload (PIIPrivacyShieldRequest): The request object containing the payload to be analyzed.
+
+        Returns:
+            PIIPrivacyShieldResponse: The response object containing the privacy analysis results.
+        """
         log.debug("Entering in privacyShield function")
         log.debug(f"payload: {payload}")
 
@@ -1023,7 +1159,22 @@ class PrivacyService:
         # return res
 
 class FakeDataGenerate:
+
     def fakeDataGeneration(results,inputText):
+        """
+        Generate fake data based on the given results and input text.
+
+        Args:
+            results (list): A list of results.
+            inputText (str): The input text.
+
+        Returns:
+            dict: A dictionary containing the generated fake data.
+
+        Raises:
+            None.
+
+        """    
         fakeData_Dict = {}
         for i in results:
             if hasattr(FakeData, i.entity_type):
@@ -1038,7 +1189,7 @@ class FakeDataGenerate:
                 random_data=""
                 while True:
                     if text in entValue:
-                        random_data = secrets.choice(entValue)
+                        random_data = random.choice(entValue)
                         print("RNDAOM dATA 348===",random_data)
                         if random_data.lower() != str(inputText[i.start:i.end]).lower()  :
                             fakeData_Dict.update({i.entity_type: OperatorConfig("replace", {"new_value": random_data})})

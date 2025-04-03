@@ -23,10 +23,12 @@ import random
 class FakeDataGenerate:
     def fakeDataGeneration(results,inputText):
         fakeData_Dict = {}
+        
         for i in results:
             if hasattr(FakeData, i.entity_type):
                 ent = getattr(FakeData, i.entity_type)
                 fakeData_Dict.update({i.entity_type: OperatorConfig("replace", {"new_value": ent()})})
+           
             elif i.entity_type in get_session_dict():
                 entValue =get_session_dict()[i.entity_type]
                         #  log.debug("result="
@@ -56,6 +58,7 @@ class FakeDataGenerate:
             else:
                 # Handle the case when ent does not exist
                 decision_process = i.analysis_explanation
+                
                 # log.debug("decision process======"+str(decision_process))
                 if(decision_process==None):        
                     continue

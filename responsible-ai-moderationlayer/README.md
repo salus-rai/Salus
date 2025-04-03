@@ -113,7 +113,9 @@ pip --version
 ```
 If pip is installed correctly, you should see the installed version number displayed.
 
-
+4. **Wheel files** :
+Ensure that under src/lib folder the two wheel files : aiclouldlibs-0.1.0-py3-none-any.whl and
+better_profanity-2.0.0-py3-none-any.whl are present.  
 
 ## Installation
 

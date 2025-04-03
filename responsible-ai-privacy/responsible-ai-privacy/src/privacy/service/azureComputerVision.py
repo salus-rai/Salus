@@ -1,12 +1,13 @@
-'''
-MIT license https://opensource.org/licenses/MIT Copyright 2024 Infosys Ltd
+"""
+# SPDX-License-Identifier: MIT
+# Copyright 2024 - 2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
+ 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
+ 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 # from privacy.util.encrypt import EncryptImage
 
@@ -44,6 +45,7 @@ apiendpint=os.getenv("API_ENDPOINT")
 # Set Content-Type to octet-stream
 headers = {'Ocp-Apim-Subscription-Key': apikey, 'Content-Type': 'application/octet-stream'}
 params = {'language': 'en', 'detectOrientation': 'true','features':['read']}
+sslv={"False":False,"True":True,"None":True}
 class ComputerVision(OCR):
 
     def process(a):
@@ -113,7 +115,7 @@ class ComputerVision(OCR):
         binary_data = buffer.getvalue()
         image_data = binary_data
         # put the byte array into your post request
-        response = requests.post(apiendpint, headers=headers, params=params, data = image_data)
+        response = requests.post(apiendpint, headers=headers, params=params, data = image_data,verify=sslv[os.getenv("VERIFY_SSL","None")])
 
         response.raise_for_status()
 
