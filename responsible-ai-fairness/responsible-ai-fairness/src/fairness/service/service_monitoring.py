@@ -1,15 +1,12 @@
+# SPDX-License-Identifier: MIT
+# Copyright 2024 - 2025 Infosys Ltd.
+ 
 """
-Copyright 2024-2025 Infosys Ltd.”
-
-Use of this source code is governed by MIT license that can be found in the LICENSE file or at
-MIT license https://opensource.org/licenses/MIT
-
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
+ 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
+ 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 """
 import datetime
 from io import BytesIO
@@ -49,6 +46,8 @@ import uuid
 import os
 import datetime
 import textwrap
+from requests.exceptions import ChunkedEncodingError
+import re
 timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 log=logging.getLogger(__name__)
@@ -122,10 +121,13 @@ class FairnessAudit:
                     
                 )
             generated_report = response.choices[0].message.content
-            json_string=generated_report[generated_report.find('['): generated_report.rfind(']')+1]
-            json_string=json_string.replace("\n","").replace("\t","").replace("\r","").strip()
-            json_response=json.loads(json_string)
-            return json_response
+            if generated_report is not None:
+                json_string=generated_report[generated_report.find('['): generated_report.rfind(']')+1]
+                json_string=json_string.replace("\n","").replace("\t","").replace("\r","").strip()
+                json_response=json.loads(json_string)
+                return json_response
+            else:
+                log.info("Error: generated_report is None.")
         except json.decoder.JSONDecodeError as e:
             response=self.check_response([],input_text,errors=["JSONDecodeError: "+str(e)])
             return response['response']
@@ -177,8 +179,8 @@ class FairnessAudit:
                             errors.append(f"Invalid unprivileged_groups {response_dict['unprivileged_groups']}. Must be one of the following: {bias_types['groups']} for the bias_type {response_dict['bias_type']}")
                     
                     if "bias_indicator" in response_dict:
-                        if response_dict['bias_indicator'] not in ['Low', 'Medium', 'High']:
-                            errors.append(f"Invalid bias_indicator {response_dict['bias_indicator']}. Must be one of the following: Low, Medium, High")
+                        if response_dict['bias_indicator'] not in ['low', 'medium', 'high']:
+                            errors.append(f"Invalid bias_indicator {response_dict['bias_indicator']}. Must be one of the following: low, medium, high")
            
         if errors:
             response=self.correct_respnse(response,errors,input_text)
@@ -188,8 +190,25 @@ class FairnessAudit:
             'errors': errors,
             'response': response,
         }
-        
-    backoff.on_exception(backoff.expo, exception=(openai.RateLimitError,json.decoder.JSONDecodeError), max_tries=10)
+    # Function to extract JSON from response
+    def extract_json(self,response_text):
+        try:
+            extraction_methods = [
+                lambda x: json.loads(re.search(r'```json(.*?)```', x, re.DOTALL).group(1).strip()) if re.search(r'```json(.*?)```', x, re.DOTALL) else None,
+                lambda x: json.loads(re.search(r'\[.*\]', x, re.DOTALL).group(0)) if re.search(r'\[.*\]', x, re.DOTALL) else None,
+                lambda x: json.loads(re.findall(r'\[[^\[\]]*(?:\[[^\[\]]*\][^\[\]]*)*\]', x)[-1]) if re.findall(r'\[[^\[\]]*(?:\[[^\[\]]*\][^\[\]]*)*\]', x) else None
+]
+            for method in extraction_methods:
+                try:
+                    extracted_json = method(response_text)
+                    if extracted_json:
+                        return extracted_json
+                except Exception as e:
+                    continue
+            return None
+        except Exception as e:
+            return None    
+    backoff.on_exception(backoff.expo, exception=(openai.RateLimitError,json.decoder.JSONDecodeError,openai.BadRequestError), max_tries=15)
     def call_gpt(self,prompt_template,text_message,flag=True):
         log.info("Analyzing the input text: "+str(text_message))
         model=os.getenv("OPENAI_ENGINE_NAME")
@@ -210,20 +229,39 @@ class FairnessAudit:
                 
             )
             generated_report = response.choices[0].message.content
-            json_string=generated_report[generated_report.find('['): generated_report.rfind(']')+1]
-            json_string=json_string.replace("\n","").replace("\t","").replace("\r","").strip()
-            json_response=json.loads(json_string)
-            # json_response[0]['bias_type']="Education"
-            errors=self.check_response(json_response,text_message)
-            if errors['valid']:
+            if generated_report is not None:
+                json_response=self.extract_json(generated_report)
                 return json_response
+                # errors=self.check_response(json_response,text_message)
+                # if errors['valid']:
+                #     return json_response
+                # else:
+                #     return errors['response']
             else:
-                return errors['response']
+                log.info("Error: generated_report is None.")
         except json.decoder.JSONDecodeError as e:
             log.error("JSONDecodeError: "+str(e))
             log.error(str(e.doc))
             response=self.call_gpt(prompt_template,text_message)
             return response
+        except openai.BadRequestError as e:
+            # Handle the error
+            log.info(f"Error: {e}")
+            response_with_error = [{
+            'bias_type': 'Blocked By Azure',
+            'bias_indicator': 'high',
+            'privileged_groups': [],
+            'unprivileged_groups': [],
+            'bias_score': 100,
+            'explanation': 'This request was blocked by Azure. Immediate manual intervention required.'
+        }]
+        
+            # Log the error for future reference
+            log.error(f"BadRequestError encountered. Bias type set to 'Blocked By Azure' with a bias score of 100%.")
+            
+            return response_with_error
+        except openai.RateLimitError as e:
+            log.info(f"Rate limit exceeded: {e}")
         
     def image_to_pdf(image_paths, output_pdf, label=None):
         pdf = FPDF()
@@ -281,7 +319,7 @@ class FairnessAudit:
         
         # Save PDF
         pdf.output(output_pdf)
-        print(f"PDF created: {output_pdf}")
+        log.info(f"PDF created: {output_pdf}")
         
     def bias_type_bar_chart_visualize(df):
         try:
@@ -364,6 +402,41 @@ class FairnessAudit:
             graph_path = os.path.join(OUTPUT_FOLDER, f'Frequency_of_Unprivileged_Groups_{times_stamp}.png')
             plt.savefig(graph_path)
             plt.close()
+
+            # Plot average bias score by bias level with threshhold and bias density
+            threshold = int(os.getenv('THRESHOLD'))
+            df["bias_score"] = pd.to_numeric(df["bias_score"], errors='coerce') # Converts non-numeric to NaN
+            bias_density = df["bias_score"].sum()/(len(df["bias_score"])) # concentration of bias across the dataset
+            # Group and sort data
+            mean_scores = df.groupby("bias_indicator")["bias_score"].mean().sort_values(ascending=False)
+            counts = df["bias_indicator"].value_counts()
+            # Convert to DataFrame
+            mean_scores = mean_scores.to_frame().reset_index()
+            # Define colors manually
+            color_map = {"high": "coral", "medium": "grey", "low": "skyblue"}
+            bar_colors = [color_map[b] for b in mean_scores["bias_indicator"]]
+            # Plot bar chart
+            fig,ax=plt.subplots(figsize=(8, 6))
+            sns.barplot(x=mean_scores["bias_indicator"], y=mean_scores["bias_score"], palette=bar_colors)
+            # Add threshold and bias_density lines
+            plt.axhline(threshold, color="red", linestyle="dashed", label=f"Threshold: {threshold}%")
+            plt.axhline(bias_density, color="blue", linestyle="dashed", label=f"Bias Density: {round(bias_density)}%")
+            for i, (count, y_value) in enumerate(zip(counts[mean_scores["bias_indicator"]], mean_scores["bias_score"])):
+                ax.text(i, y_value + 2, f'({str(count)})', ha='center', va='bottom', fontsize=12, color=bar_colors[i], fontweight='bold')
+            # Add legend for counts
+            for label,color in color_map.items():
+                ax.bar(0, 0, color=color, label=f'{label} Count: {counts.get(label, 0)}')
+            # Format axes
+            ax.set_title("Average Bias Score by Bias Level")
+            ax.set_xlabel("Bias Indicator (high, medium, low)")
+            ax.set_ylabel("Average Bias Score (%)")
+            ax.set_ylim(0, 110)
+            ax.set_yticks(range(0, 110, 10)) # Set Y-axis scale to 0, 10, 20, ..., 100
+            plt.legend()
+            plt.tight_layout()
+            times_stamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+            graph_path = os.path.join(OUTPUT_FOLDER, f"bias_analysis_with_threshold_{times_stamp}.png")
+            plt.savefig(graph_path)
             graph_paths.append(graph_path)
             # Read the image file and encode it in base64
             FairnessAudit.image_to_pdf(graph_paths, os.path.join(LOCAL_PATH, pdf_filename))
@@ -493,7 +566,51 @@ class FairnessAudit:
         with open(graph_path, "rb") as image_file:
             image_base64 = base64.b64encode(image_file.read()).decode('utf-8')
         html_content += f'<img src="data:image/png;base64,{image_base64}" alt="Frequency of Unprivileged Groups">'
-
+        
+        # Plot average bias score by bias level with threshhold and bias density
+        threshold = int(os.getenv('THRESHOLD'))
+        df["bias_score"] = pd.to_numeric(df["bias_score"], errors='coerce') # Converts non-numeric to NaN
+        bias_density = df["bias_score"].sum()/(len(df["bias_score"])) # concentration of bias across the dataset
+        # Group and sort data
+        mean_scores = df.groupby("bias_indicator")["bias_score"].mean().sort_values(ascending=False)
+        counts = df["bias_indicator"].value_counts()
+        # Convert to DataFrame
+        mean_scores = mean_scores.to_frame().reset_index()
+        # Define colors manually
+        color_map = {"high": "coral", "medium": "grey", "low": "skyblue"}
+        bar_colors = [color_map[b] for b in mean_scores["bias_indicator"]]
+        # Plot bar chart
+        fig,ax=plt.subplots(figsize=(8, 6))
+        sns.barplot(x=mean_scores["bias_indicator"], y=mean_scores["bias_score"], palette=bar_colors)
+        # Add threshold and bias_density lines
+        plt.axhline(threshold, color="red", linestyle="dashed", label=f"Threshold: {threshold}%")
+        plt.axhline(bias_density, color="blue", linestyle="dashed", label=f"Bias Density: {round(bias_density)}%")
+        for i, (count, y_value) in enumerate(zip(counts[mean_scores["bias_indicator"]], mean_scores["bias_score"])):
+            ax.text(i, y_value + 2, f'({str(count)})', ha='center', va='bottom', fontsize=12, color=bar_colors[i], fontweight='bold')
+        # Add legend for counts
+        for label,color in color_map.items():
+            ax.bar(0, 0, color=color, label=f'{label} Count: {counts.get(label, 0)}')
+        # Format axes
+        ax.set_title("Average Bias Score by Bias Level")
+        ax.set_xlabel("Bias Indicator (high, medium, low)")
+        ax.set_ylabel("Average Bias Score (%)")
+        ax.set_ylim(0, 110)
+        ax.set_yticks(range(0, 110, 10)) # Set Y-axis scale to 0, 10, 20, ..., 100
+        plt.legend()
+        # Save the plot
+        pdf.savefig(fig)
+        plt.tight_layout()
+        # Save the graph to a file
+        graph_path = os.path.join(OUTPUT_FOLDER, f'Average_Bias_Score_by_Bias_Level_{times_stamp}.png')
+        plt.savefig(graph_path)
+        plt.close()
+        # Add the graph path to a list for later reference
+        graph_paths.append(graph_path)
+        # Read the image file and encode it in base64
+        with open(graph_path, "rb") as image_file:
+            image_base64 = base64.b64encode(image_file.read()).decode('utf-8')
+        # Add the image to HTML content
+        html_content += f'<img src="data:image/png;base64,{image_base64}" alt="Average Bias Score by Bias Level">'
         pdf.close()
 
         # Define the HTML file path
@@ -585,7 +702,6 @@ class FairnessAudit:
             data['privileged_groups']=data['response'].apply(lambda x: x[0]['privileged_groups'] if isinstance(x, list) and len(x) > 0 else (x if isinstance(x, str) else 'NA'))  
             data['unprivileged_groups']=data['response'].apply(lambda x: x[0]['unprivileged_groups'] if isinstance(x, list) and len(x) > 0 else (x if isinstance(x, str) else 'NA'))
             data['bias_indicator']=data['response'].apply(lambda x: x[0]['bias_indicator'] if isinstance(x, list) and len(x) > 0 else (x if isinstance(x, str) else 'NA'))
-            
             data=data.replace('NA', pd.NA)
             csv_name='bias_audit_report_'+str(uuid.uuid4())+'.csv'
             data.to_csv(os.path.join(LOCAL_PATH,csv_name))
@@ -614,10 +730,13 @@ class FairnessAudit:
             "POST", url, data=payload, verify=False).json()
             
             report_id = self.report.find(batch_id=batchId)
-            print(report_id)
+            log.info(report_id)
             reportId = report_id['ReportFileId']
             reportName=report_id['ReportName']
-            content = self.fileStore.read_file(reportId,os.getenv("PDF_CONTAINER_NAME"))
+            try:
+                content = self.fileStore.read_file(reportId,os.getenv("PDF_CONTAINER_NAME"))
+            except:
+                content= self.fileStore.read_chunked_file(reportId,os.getenv("PDF_CONTAINER_NAME"))
             pdf_name=content['name']+"."+content['extension']
             #load csv and pdf and convert to bytes
             with open(os.path.join(LOCAL_PATH,csv_name), 'rb') as f:

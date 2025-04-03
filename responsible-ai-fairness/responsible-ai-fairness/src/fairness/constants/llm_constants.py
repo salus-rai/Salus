@@ -1,3 +1,14 @@
+# SPDX-License-Identifier: MIT
+# Copyright 2024 - 2025 Infosys Ltd.
+ 
+"""
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
+
 OPENAI='openai'
 GPT_4='GPT_4'
 GPT_4O='GPT_4O'
@@ -86,3 +97,4 @@ CORRECTION_PROMPT_TEMPLATE="""
                     """
 
 SUCCESS_RATE_INFO="The objective of this report is to show the success rate and population for each attribute.\nThis analysis will provide insights into which attributes are most successful and whether the size of the group impacts its performance."
+LLAMA_TEXT_TEMPLATE="""input: {input_placeholder} context: You are an advanced bias analyzer tasked with identifying and quantifying biases specifically related to people. Analyze the input for any potential biases that affect individuals or groups based on their identity, such as gender, race, age, education, or other identity markers. Focus exclusively on biases tied to people and avoid focusing on process, business, or education system-related biases. Identify any people-related bias present in the input and evaluate the implications it may have on different groups. Instructions: - Exclude anthropomorphisms and business-related biases from the analysis. - Analyze any potential bias related to gender, race, age, education, socio-economic status, etc. - Pay special attention to any references to groups of people based on identity, qualifications, position, or personal traits. - Provide a response in the following JSON format: output-format -> {{\"Analysis\": \"[Crisp and to the point analysis identifying the people-related bias]\", \"Key Words\": \"[Highlight the words in the input which are crucial for the analysis]\", \"Justification\": \"[Explain why the highlighted words are significant for the bias analysis]\", \"Bias type(s)\": \"[Bias type(s), state NA in case of no bias]\", \"Privileged group(s)\": \"[Group(s) benefiting from the bias, state NA in case of no group]\", \"Un-privileged group(s)\": \"[Group(s) disadvantaged or ignored by the bias, state NA in case of no group]\", \"Bias score\": \"[High / Medium / Low]\" }} Example: {{ \"Analysis\": \"The input statement uses 'he' to refer to a teacher, which implies a gender bias by assuming that teachers are male. This can contribute to gender bias by reinforcing the stereotype that teaching positions are held by men.\", \"Key Words\": \"he\", \"Justification\": \"The word 'he' assumes the teacher is male, which reinforces a gender stereotype about teaching being a male profession.\", \"Bias type(s)\": \"Gender bias\", \"Privileged group(s)\": \"Male teachers\", \"Un-privileged group(s)\": \"Female teachers, Non-binary teachers\", \"Bias score\": \"Medium\" }} This template will ensure that the analysis focuses specifically on people-related biases and provides a clear, structured assessment of any identity-based disparities."""

@@ -1,15 +1,12 @@
+# SPDX-License-Identifier: MIT
+# Copyright 2024 - 2025 Infosys Ltd.
+ 
 """
-Copyright 2024-2025 Infosys Ltd.”
-
-Use of this source code is governed by MIT license that can be found in the LICENSE file or at
-MIT license https://opensource.org/licenses/MIT
-
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-
+ 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
+ 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
 """
 
 from io import BytesIO
@@ -121,6 +118,10 @@ class FileStoreReportDb:
                 raise HTTPException(status_code=500, detail=f"No file found with unique ID {unique_id}")
             # Get the file from the database
             file_content = self.fs.get(file_metadata._id).read()
+            if file_metadata.content_type=="application/pdf":
+                file_name=f"file_{str(unique_id)}.pdf"
+                extenion="pdf"    
+                return {"data": file_content, "name":file_name, "extension": extenion,"contentType":file_metadata.content_type} 
             
             return {"data": file_content, "name":file_metadata.filename, "extension": file_metadata.filename.split('.')[-1],"contentType":file_metadata.content_type}
         else:
@@ -159,7 +160,8 @@ class FileStoreReportDb:
             return {"data": file_content, "name":file_metadata.filename, "extension": file_metadata.filename.split('.')[-1],"contentType":file_metadata.content_type}
         else:
             download_file_api = os.getenv('AZURE_GET_API')
-            container_name = os.getenv('Model_CONTAINER_NAME')
+            if container_name is None:
+                container_name = os.getenv('Model_CONTAINER_NAME')
 
             # Check if the environment variable is set
             if not download_file_api:
@@ -174,7 +176,7 @@ class FileStoreReportDb:
             with requests.get(url=download_file_api, params={"container_name": container_name, "blob_name": unique_id}, stream=True) as r:
                 r.raise_for_status()
                 content_type=r.headers['Content-Type']
-                for chunk in r.iter_content(chunk_size=8192):
+                for chunk in r.iter_content(chunk_size=4096):
                     if chunk:
                         file_bytes.write(chunk)
             file_bytes.seek(0)
