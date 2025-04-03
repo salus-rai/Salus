@@ -1,8 +1,24 @@
 ## Introduction
 The telemetry repository is used for getting the telemetry data from various other API's to push to elastic and visualize in the kibana.
 
-## Requirements
-Python 3.9 - 3.11 VSCode
+## Pre-requisites
+
+## System Requirements
+
+1. **Python Version**:  
+   Python 3.9 - 3.11 
+   
+2. **Java Development Kit (JDK)**:  
+   - Install a Java JDK compatible with Elasticsearch.  
+   - You can download it from [Oracle's official site](https://www.oracle.com/java/technologies/javase-downloads.html).
+     
+3. **Visual Studio Code (VSCode)**:  
+   - Install the latest version of [VSCode](https://code.visualstudio.com/).
+
+## Software Requirements
+1. Elasticsearch
+2. Kibana
+Follow the instruction given in "Steps for running elastic and kibana in local system" Section.
 
 ## Environment Variables
 1. Locate the `.env` file, which contains keys like the following:
