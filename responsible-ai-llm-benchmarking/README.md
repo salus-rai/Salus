@@ -18,7 +18,7 @@
 2. pip
 3. Mongo DB
 4. VSCode
-
+5. 
 
 ## Features
 - Benchmarking of huggingface models using the dataset provided.
@@ -49,7 +49,7 @@ and activate it by going to
       ```bash 
          python main_api.py 
       ```
-7. Once server is running successfully, go to `http://localhost:8000/api/v1/trustllm/docs#/`
+7. Once server is running successfully, go to [http://localhost:8000/api/v1/trustllm/docs](http://localhost:8000/api/v1/trustllm/docs#/)
 
 ## Open Source Tools used
 | Open Source Tools Used | Link |
