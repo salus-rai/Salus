@@ -1,12 +1,13 @@
-'''
-MIT license https://opensource.org/licenses/MIT
-Copyright 2024 Infosys Ltd
- 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
+# SPDX-License-Identifier: MIT
+# Copyright 2024 - 2025 Infosys Ltd.
 
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ 
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+"""
 from questionnaire.dao.Questionnaires.UseCaseDetailDb import *
 
 from questionnaire.mapper.Questionnaires.mapper import UseCaseNameRequest
@@ -33,6 +34,23 @@ class WorkBench:
     
 
     def getLotNumber(user):
+        """
+        Retrieves or generates a new lot number for a given user based on their allocation history.
+        Args:
+          user (str): The identifier of the user for whom the lot number is being retrieved or generated.
+        Returns:
+          str: A new or existing lot number for the user, prefixed with the server type.
+        Raises:
+          Exception: If an error occurs during the process, logs the error details and raises the exception.
+        Notes:
+          - The function checks the user's lot allocation history in the `UserLotAllocationDb`.
+          - If the user has existing allocations, the new lot number is incremented based on the count.
+          - If no allocations exist, a new lot number is generated starting from 1.
+          - The server type is retrieved from the environment variable `SERVERTYPE`.
+          - Errors are logged with details including the line number and traceback frame.
+          - Error details are also stored in the `ExceptionDb` for tracking purposes.
+        """
+        
         try:
             userLength = UserLotAllocationDb.findall({'user':user})
             
@@ -54,6 +72,25 @@ class WorkBench:
             raise Exception(e)
         
     def setLotNumber(new_lot,fileName,user,tenant):
+        
+        """
+          Updates or creates a lot number entry for a user in the database and generates a telemetry link.
+          Args:
+            new_lot (str): The new lot number to be assigned to the user.
+            fileName (str): The name of the file associated with the lot number.
+            user (str): The user for whom the lot number is being set.
+            tenant (str): The tenant identifier, used to determine the telemetry URL format.
+          Raises:
+            Exception: If an error occurs during the operation, it logs the error details and raises the exception.
+          Functionality:
+            - Retrieves the telemetry URL for the given tenant.
+            - Constructs a telemetry link based on the tenant and user details.
+            - Checks if the lot number already exists for the user in the database.
+            - If the lot number exists, updates the telemetry links for the existing entry.
+            - If the lot number does not exist, creates a new entry in the database with the provided details.
+            - Logs the operation details and errors, if any, for debugging purposes.
+          """
+
         try:
             # print(new_lot)    
             # print(tenant)
@@ -83,6 +120,18 @@ class WorkBench:
                     
 
     def apiCall(url, payload):
+        """
+        Makes a POST API call to the specified URL with the given payload.
+        Args:
+          url (str): The endpoint URL to which the API call is made.
+          payload (dict): The data to be sent in the POST request body.
+        Returns:
+          dict: The JSON response from the API call.
+        Raises:
+          Exception: If an error occurs during the API call, logs the error details 
+                 and raises the exception.
+        """
+
         payload=AttributeDict(payload)
         try:
             log.debug("url:"+str(url))
@@ -97,6 +146,26 @@ class WorkBench:
                 raise Exception(e)
     
     def tenant(i,lotNum,fileName,userid,tenant,text,n):
+                    """
+                    Handles tenant-specific operations and API calls for processing text analysis, moderation, 
+                    and explainability tasks.
+                    Args:
+                      i (int): The current iteration index.
+                      lotNum (str): The lot number associated with the operation.
+                      fileName (str): The name of the file being processed.
+                      userid (str): The user ID of the person initiating the operation.
+                      tenant (str): The tenant name or identifier.
+                      text (str): The input text to be analyzed or processed.
+                      n (int): The total number of iterations.
+                    Raises:
+                      Exception: If an error occurs during the operation, logs the error details and raises the exception.
+                    Functionality:
+                      - Initializes tenant-specific settings for the first iteration.
+                      - Constructs a request payload for privacy, safety, moderation, and explainability tasks.
+                      - Makes an API call to the tenant's URL with the constructed payload.
+                      - Logs the response and handles errors by logging detailed information and storing it in the ExceptionDb.
+                    """
+
                     try:
                         if(i==0):
                             # print("=====",tenant,lotNum)
@@ -224,6 +293,32 @@ class WorkBench:
                         raise Exception(e)
     
     def uploadFile(payload):
+        """
+        Uploads a file and processes its content for multiple tenants.
+        Args:
+          payload (dict): A dictionary containing the following keys:
+            - tenant (list): A list of tenant names to process the file for.
+            - userId (str): The ID of the user uploading the file.
+            - file (object): An object containing:
+              - file (file-like object): The file to be uploaded.
+              - filename (str): The name of the file.
+        Raises:
+          Exception: If an error occurs during file processing, an exception is raised
+                 with details logged and stored in the ExceptionDb.
+        Processing Details:
+          - Reads the uploaded file as a CSV without headers.
+          - Iterates through each row of the file and processes the text for each tenant.
+          - Updates the status of the processing in the UserLotAllocationDb.
+          - Handles specific tenant-related processing (e.g., Privacy, Profanity, FM-Moderation)
+            through API calls (commented out in the current implementation).
+          - Logs errors and stores exception details in the ExceptionDb if any issues occur.
+        Notes:
+          - The function uses the WorkBench and UserLotAllocationDb classes for processing
+            and database updates.
+          - The commented-out sections indicate additional tenant-specific processing logic
+            that can be enabled or modified as needed.
+        """
+
         payload=AttributeDict(payload)
         tenantList=payload.tenant
         userid=payload.userId

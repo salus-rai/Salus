@@ -1,11 +1,13 @@
-'''
-MIT license https://opensource.org/licenses/MIT
-Copyright 2024 Infosys Ltd
- 
+"""
+# SPDX-License-Identifier: MIT
+# Copyright 2024 - 2025 Infosys Ltd.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-'''
+"""
 
 import json
 from math import ceil
@@ -163,6 +165,20 @@ class Questionnaires:
     
 
     def createImpact(payload):
+        """
+        Creates or updates an impact entry in the database based on the provided payload.
+        Args:
+            payload (object): An object containing the following attributes:
+                - Dimension (str): The dimension associated with the impact.
+                - Impact (str): The name or type of the impact.
+                - MinScore (int): The minimum score for the impact.
+                - MaxScore (int): The maximum score for the impact.
+        Returns:
+            dict: A dictionary containing:
+                - "id" (str): The ID of the created or updated impact entry.
+                - "status" (str): A string indicating whether the entry was "Created" or "Updated".
+        """
+        
         impValue=ImpactDb.findall({"Dimension":payload.Dimension,"Impact":payload.Impact})
         res={}
         if(len(impValue)>0):
@@ -177,6 +193,23 @@ class Questionnaires:
     
     
     def getQuestionnaries():
+        """
+        Retrieves a hierarchical structure of questionnaires, including dimensions, sub-dimensions, 
+        questions, and their associated options.
+        The function fetches data from multiple database collections:
+        - Dimensions
+        - Sub-dimensions (linked to dimensions)
+        - Questions (linked to sub-dimensions)
+        - Options (linked to questions)
+        Returns:
+            list: A list of dimensions, where each dimension contains its sub-dimensions, 
+                  each sub-dimension contains its questions, and each question contains its options.
+        Raises:
+            Exception: Logs the error details and raises an exception if any error occurs during 
+                       the data retrieval process. The error details include the exception type, 
+                       message, and the line number where the error occurred.
+        """
+        
         try:
             dimensionDetails = DimensionDb.findall({})
             # result=[]
@@ -208,6 +241,29 @@ class Questionnaires:
 
 
     def addResponseDetail(payload) :
+        
+        """
+            Adds or updates response details in the database based on the provided payload.
+            Args:
+                payload (dict): A dictionary containing the following keys:
+                    - UserId (str): The ID of the user.
+                    - UseCaseName (str): The name of the use case.
+                    - QuestionId (str): The ID of the question.
+                    - QuestionOptionId (str): The ID of the selected question option.
+                    - ResponseDesc (str): The description of the response.
+            Returns:
+                str: A message indicating whether the response was added or updated successfully.
+            Raises:
+                Exception: If an error occurs during the execution, it logs the error details
+                           and raises the exception.
+            Notes:
+                - If no existing response is found for the given question, user, and use case,
+                  a new response is created.
+                - If an existing response is found, it is updated with the new details.
+                - Logs the execution time for creating a new response.
+                - Logs errors with details such as the line number and traceback frame.
+            """
+        
         try:
 #             def addResponseDetail(payload) :
             payload = AttributeDict(payload)
@@ -259,7 +315,8 @@ class Questionnaires:
             raise Exception(e)
     
 
-    def addMultipleResponse(payload) :                                                                                                              
+    def addMultipleResponse(payload) : 
+                                                                                                                    
         try:
 #             def addResponseDetail(payload) :
             for i in payload:
@@ -326,6 +383,22 @@ class Questionnaires:
 
 
     def classification(dimName,score):
+        """
+        Classifies a given score into an impact category based on the specified dimension.
+        Args:
+            dimName (str): The name of the dimension to classify the score under.
+            score (float): The score to be classified.
+        Returns:
+            str: The impact category corresponding to the given score and dimension.
+        Raises:
+            IndexError: If no matching impact category is found in the database.
+        Notes:
+            - This function queries the `ImpactDb` database to find an entry where:
+              - The dimension matches `dimName`.
+              - The score is within the range defined by `MinScore` and `MaxScore`.
+            - The function assumes that the query will return at least one result.
+        """
+        
         
         result=ImpactDb.findall({"Dimension":dimName,"MinScore":{'$lte':score},"MaxScore":{'$gte':score}})
         result=result[0]["Impact"]
@@ -334,6 +407,25 @@ class Questionnaires:
     
 
     def getriskDashboardDetails(userId:str,useCaseName):
+        
+        """
+            Retrieves risk dashboard details for a specific user and use case.
+            Args:
+                userId (str): The unique identifier of the user.
+                useCaseName (str): The name of the use case.
+            Returns:
+                list: A list of dictionaries containing dimension-wise and total risk details.
+                      Each dictionary includes:
+                      - DimensionName (str): The name of the dimension.
+                      - totalQuestion (int): The total number of questions in the dimension.
+                      - weightage (int): The total weightage of the questions in the dimension.
+                      - riskIndex (int): The calculated risk index for the dimension.
+                      - classification (str): The risk classification (e.g., "Unacceptable").
+                      If no records are found, returns a string: "No Record Found...".
+            Raises:
+                Exception: If an error occurs during execution, logs the error details and raises the exception.
+            """
+        
         # UserId
         try:
             riskClassificationFlag=False
@@ -457,6 +549,38 @@ class Questionnaires:
 
 
     def getResetQuestionnaries(userId,useCaseName):
+        
+        """
+            Retrieves and resets the questionnaire data for a specific user and use case.
+            This function fetches all dimensions, their associated sub-dimensions, 
+            questions, and options from the database. It also retrieves the user's 
+            responses for the specified use case and marks the selected options for 
+            each question.
+            Args:
+                userId (str): The unique identifier of the user.
+                useCaseName (str): The name of the use case for which the questionnaire 
+                                   data is being retrieved.
+            Returns:
+                list: A list of dimensions, each containing sub-dimensions, questions, 
+                      and their associated options and user responses.
+            Raises:
+                Exception: If any error occurs during the execution, it logs the error 
+                           details and raises the exception.
+            Database Collections Accessed:
+                - DimensionDb: To fetch all dimensions.
+                - SubDimensionDb: To fetch sub-dimensions for each dimension.
+                - QuestionDb: To fetch questions for each sub-dimension.
+                - QuestionOptionDb: To fetch options for each question.
+                - UseCaseNameDb: To fetch the use case details for the user.
+                - ResponseDb: To fetch the user's responses for the questions.
+                - ExceptionDb: To log exceptions in case of errors.
+            Notes:
+                - If a response exists for a question, the "Selected_Option" field is 
+                  populated with the corresponding option ID. Otherwise, it is set to 0.0.
+                - Logs errors with details such as the exception message, line number, 
+                  and traceback frame in case of failures.
+            """
+        
         try:
             dimensionDetails = DimensionDb.findall({})
             # result=[]

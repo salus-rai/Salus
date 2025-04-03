@@ -1,7 +1,13 @@
 fastapi==0.100.1
+# pydantic
+
+# fastapi==0.100.1
 pydantic==1.10.11
 requests==2.31.0
 requests-file==1.5.1
+
+# requests==2.32.0
+# requests-file==1.5.1
 uvicorn
 PyYAML
 pymongo
@@ -9,11 +15,11 @@ python-dotenv
 python-multipart
 pandas
 langchain
-langgraph==0.1.15
+langgraph
 pandas 
 langchain-openai 
 chardet 
 langchain_community
 fpdf 
 matplotlib
-#lib/aicloudlibs-0.1.0-py3-none-any.whl
+lib/aicloudlibs-0.1.0-py3-none-any.whl
