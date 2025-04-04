@@ -101,12 +101,8 @@ git push origin <new-branch-name>
 - Be prepared to make changes based on their feedback. You can push additional commits to the same branch, and the PR will automatically update.
 - Once the maintainers are satisfied, your PR will be merged into the main project.
 
-### 9. Contribution:
- - Ensure that your contribution license is compatible with the MIT license and that there are no copyleft licenses present, such as GPL, AGPL, LGPL 2.1, MPL 1.0, etc. 
-   If you wish to contribute, please review the [contribution license agreement](https://github.com/salus-rai/Salus/blob/main/Contribution%20License%20Agreement.docx) and email a signed PDF of this agreement to infosysraitoolkit@infosys.com. Additionally, 
-   refer to the [release notice](https://github.com/salus-rai/Salus/blob/main/Release%20Notice.docx) for the permissive licenses used in this project.
   
-### 10. Celebrate 🎉
+### 9. Celebrate 🎉
 - Congratulations! You've contributed to an open-source project! 🎉
 
 ## 📜 License
