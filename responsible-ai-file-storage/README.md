@@ -62,7 +62,7 @@ and activate it by going to
       ```bash 
          python main_api.py 
       ```
-6. Once server is running successfully, go to [http://localhost:8000/api/v1/azureBlob/docs](http://localhost:8000/api/v1/azureBlob/docs#/)
+6. Use the Port No that is mentioned in main.py file. Open the swagger URL in browser once server is running:`http://localhost:8000/api/v1/azureBlob/docs#/`
 
 
 ## Configurations
