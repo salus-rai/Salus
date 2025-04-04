@@ -13,7 +13,7 @@
 - [Contact](#contact)
 
 ## Introduction
-Privacy is application which detects and masks any PII data present in Unstructured, Text, Image, DICOM, Video and returns the processed data.
+Privacy is application which detects and masks any PII data present in Unstructured, Text, Image, DICOM and returns the processed data.
  
 ## Prerequistes
 1. Python 3.9 - 3.11
@@ -180,22 +180,13 @@ Once we have completed all the aforementioned steps, we can start the service.
     ```sh
     python privacy_main.py
      ```
-    To run privacyfiles_main* :
-    ```sh
-    python privacyfiles_main.py
-     ```
-
-    *Privacyfiles is used for accessing data from files like excel, pdf, video etc.
-
+   
 3. Open the following URL in your browser:
     For privacy_main :
     `http://localhost:30002/v1/privacy/docs#/`
         User can also change the port which is mentioned in privacy_main.py file
 
-    For privacyfiles_main :
-    `http://localhost:30003/rai/v1/privacy-files/docs#/`
-        User can also change the port which is mentioned in privacyfiles_main.py file
-  
+    
 4. Note: /rai/v1/privacy-files/excel/anonymize : This API endpoint is not working and it will be removed in next release.
    
  
@@ -262,22 +253,6 @@ Once we have completed all the aforementioned steps, we can start the service.
   </tr>
 </table>
 
-**Privacy Files :**
-
-<table>
-  <tr>
-    <th>API NAME</th>
-    <th>DESCRIPTION</th>
-  </tr>
-  <tr>
-    <td>Excel Anonymize</td>
-    <td>Anonymize PII entities in excel file.</td>
-  </tr>
-  <tr>
-    <td>Video Anonymize</td>
-    <td>Anonymize PII entities in video.</td>
-  </tr>
-</table>
 
 ## License
 
