@@ -185,7 +185,9 @@ Once we have completed all the aforementioned steps, we can start the service.
     For privacy_main :
     `http://localhost:30002/v1/privacy/docs#/`
         User can also change the port which is mentioned in privacy_main.py file
-   
+
+   Note: We are currently working on anonymizing PDF content, which will be available in the next release.
+     In the meantime, please comment out the PDF anonymize router (from privacy.service.pdf_service import PDFService) and the privacy file anonymize router (@fileRouter.post('/privacy-       files/anonymize')) with its respective import statements (i.e., linenumber 2536-2623 and 2907-2972 in [privacy_router.py](https://github.com/salus-rai/Salus/blob/main/responsible-ai-privacy/responsible-ai-privacy/src/privacy/routing/privacy_router.py) file).
  
 ## Features
 
