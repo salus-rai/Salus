@@ -215,7 +215,7 @@ class feedbackdb:
 
 class Results:
     # mycol = mydb["moderationtelemetrydata"]
-    if conn == None:
+    if conn == None and os.getenv("DBTYPE")!="False":
         logdb=mydb["Logdb"]
         mycol = mydb["Results"]
         mycol2 = mydb["Results"]
