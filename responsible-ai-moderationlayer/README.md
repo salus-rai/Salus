@@ -258,6 +258,7 @@ detoxifymodel=<Put the model url needed for toxicity>
 promptinjectionmodel=<Put the model url needed for prompt injection>
 jailbreakmodel=<Put the model url needed for jailbreak>
 privacy=<Put the model url needed for privacy>
+TARGETENVIRONMENT="azure"
 ```
 For example :
 ```sh
