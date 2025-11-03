@@ -1,12 +1,9 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { HttpClient } from '@angular/common/http';
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
@@ -32,6 +29,7 @@ export class SafetyParametersComponent {
   // xv: number = 10;
   tempValue: number = 10;
 
+  // Submits the safety parameters
   submit() {
     console.log("submit");
     console.log("submit", this.safetyForm.value);
@@ -49,7 +47,7 @@ export class SafetyParametersComponent {
 
   }
 
-
+// Creates the safety form
   fromCreation() {
     this.safetyForm = this._fb.group({
       xv: [5, Validators.required],
@@ -63,7 +61,7 @@ export class SafetyParametersComponent {
 
   }
 
-  // Sends a POST request to set safety parameters and handles the response or errors.
+  // Sends the safety parameters to the server
   safetySubmit(payload: any) {
     this.https.post(this.Admin_SetSafetyParamter, payload).subscribe
       ((res: any) => {
@@ -76,7 +74,7 @@ export class SafetyParametersComponent {
             panelClass: ['le-u-bg-black'],
           });
         } else if (res.status === "False") {
-          const message = "Failed, Check Portfolio and Account"
+          const message = "Mapping already exists for the account "
           // this.getAccountMasterEntryList();
           const action = "Close"
           this._snackBar.open(message, action, {
@@ -102,6 +100,7 @@ export class SafetyParametersComponent {
       })
   }
 
+  // Initializes the component and sets up API configurations
   ngOnInit(): void {
     let ip_port: any
 
@@ -111,6 +110,8 @@ export class SafetyParametersComponent {
     this.setApilist(ip_port)
     console.log("oninit");
   }
+
+  // Retrieves the logged-in user from local storage
   getLogedInUser() {
     if (localStorage.getItem("userid") != null) {
       const x = localStorage.getItem("userid")
@@ -124,6 +125,8 @@ export class SafetyParametersComponent {
       console.log("userId", this.userId)
     }
   }
+
+  // Retrieves API configuration from local storage
   getLocalStoreApi() {
     let ip_port
     if (localStorage.getItem("res") != null) {

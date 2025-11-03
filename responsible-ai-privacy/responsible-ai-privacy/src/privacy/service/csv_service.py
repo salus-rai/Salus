@@ -1,20 +1,8 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
-
 import pandas as pd
 import io
 import logging
 import tempfile
-from presidio_analyzer import AnalyzerEngine, BatchAnalyzerEngine, DictAnalyzerResult
+from presidio_analyzer import AnalyzerEngine, BatchAnalyzerEngine
 from presidio_anonymizer import AnonymizerEngine, BatchAnonymizerEngine
 from privacy.service.imagePrivacy import AttributeDict, ImagePrivacy
 from privacy.service.api_req import ApiCall
@@ -22,9 +10,6 @@ from privacy.config.logger import request_id_var
 
 from privacy.service.__init__ import *
 from privacy.util.special_recognizers.DataListRecognizer import DataListRecognizer
-from privacy.util.special_recognizers.fakeData import FakeDataGenerate
-from privacy.util.special_recognizers.fakeDataCSV import *
-
 
 
 
@@ -33,22 +18,8 @@ log = logging.getLogger(__name__)
 class CSVService:
     @staticmethod
     def csv_anonymize(payload):
-        """
-        Anonymizes the data in a CSV file based on the provided payload.
-
-        Args:
-            payload (dict): The payload containing the necessary information for anonymization.
-
-        Returns:
-            io.StringIO: The anonymized CSV data as a StringIO object.
-
-        Raises:
-            Exception: If an error occurs during the anonymization process.
-        """
         try:
-            
             payload = AttributeDict(payload)
-            analyzer,imageAnalyzerEngine,imageRedactorEngine,imagePiiVerifyEngine,encryptImageEngin=selectNlp(payload.nlp)
             if(payload.portfolio!=None or payload.account!=None):
                 response_value=ApiCall.request(AttributeDict({"portfolio":payload.portfolio,"account":payload.account}))
                 if(response_value==None):
@@ -60,8 +31,7 @@ class CSVService:
             piiEntitiesToBeRedacted=[]
             if payload["piiEntitiesToBeRedacted"] is not None:
                piiEntitiesToBeRedacted=payload["piiEntitiesToBeRedacted"].split(',')
-             
-
+                 
             accName=None
             if(payload.portfolio!=None):
                 accName=AttributeDict({"portfolio":payload.portfolio,"account":payload.account})
@@ -79,11 +49,7 @@ class CSVService:
 
             # Initialize the analyzer and anonymizer engines
             
-
-            # analyzer = AnalyzerEngine()
-
-            
-
+            analyzer = AnalyzerEngine()
             batch_analyzer = BatchAnalyzerEngine(analyzer_engine=analyzer)
             batch_anonymizer = BatchAnonymizerEngine()
             
@@ -91,7 +57,7 @@ class CSVService:
             
             
             # Read the CSV file into a DataFrame
-            df = pd.read_csv(file.file,encoding='utf-8', encoding_errors='ignore')
+            df = pd.read_csv(file.file)
             log.debug("Original DataFrame: " + str(df))
             
             # Convert DataFrame to dictionary
@@ -104,10 +70,10 @@ class CSVService:
             if(accName==None):
                 
                 if(piiEntitiesToBeRedacted == None):
-                    analyzer_results = batch_analyzer.analyze_dict(dff, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,return_decision_process = True,score_threshold=payload.scoreThreshold if payload.scoreThreshold is not None else 0,ad_hoc_recognizers=spRecog)
+                    analyzer_results = batch_analyzer.analyze_dict(dff, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,return_decision_process = True,score_threshold=0.5,ad_hoc_recognizers=spRecog)
                 else:
                     try:
-                        analyzer_results = batch_analyzer.analyze_dict(dff, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=piiEntitiesToBeRedacted,return_decision_process = True,score_threshold=payload.scoreThreshold if payload.scoreThreshold != None else 0,ad_hoc_recognizers=spRecog)
+                        analyzer_results = batch_analyzer.analyze_dict(dff, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=piiEntitiesToBeRedacted,return_decision_process = True,score_threshold=0.5,ad_hoc_recognizers=spRecog)
                     except Exception as e:
                         log.error(str(e))
                         raise e
@@ -121,9 +87,7 @@ class CSVService:
                 if(response_value==404):
                         
                         return response_value
-                
                 entityType,datalist,preEntity=response_value
-                
                 for d in range(len(datalist)):
                     record=ApiCall.getRecord(entityType[d])
                     record=AttributeDict(record)
@@ -156,28 +120,13 @@ class CSVService:
                             registry.add_recognizer(patternRecog)  
                                             
 
-                analyzer_results=batch_analyzer.analyze_dict(dff,language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=entityType+preEntity,score_threshold=admin_par[request_id_var.get()]["scoreTreshold"],return_decision_process = True,ad_hoc_recognizers=spRecog)
+                analyzer_results=batch_analyzer.analyze_dict(dff,language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=entityType+preEntity,score_threshold=admin_par[request_id_var.get()]["scoreTreshold"],ad_hoc_recognizers=spRecog)
                 log.debug("Analyzer results: " + str(analyzer_results))
 
-
-            
-            # print("analyzer_results====",analyzer_results)
-            # print("dff====",dff)
-
              
-
             dfs=list(analyzer_results)
-            
-            dict_operators = {} 
-            # print("======",dfs)
-            # omm
-            if payload.fakeData == True:
-                fake_dict_operator,dfs = FakeDataCSVGenerate.fakeDataGeneration(dfs,list(dff))
-                dict_operators.update(fake_dict_operator)
-            # print("fake_dict_operator===",fake_dict_operator)
-                # print( "Fake Data Generated DataFrame: " + str(df1))
-           
-            anonymizer_results = batch_anonymizer.anonymize_dict(dfs, operators=dict_operators)   #
+            # Anonymize the data
+            anonymizer_results = batch_anonymizer.anonymize_dict(dfs)
             log.debug("Anonymizer results: " + str(anonymizer_results))
 
             # Convert the anonymized data back to a DataFrame

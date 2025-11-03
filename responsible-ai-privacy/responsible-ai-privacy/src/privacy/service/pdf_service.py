@@ -1,13 +1,12 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
+# MIT license https://opensource.org/licenses/MIT
+# Copyright 2024 Infosys Ltd
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
 
 import base64
 import io
@@ -37,26 +36,7 @@ def pdfToImage():
     pass
     
 class PDFService:
-    """
-    A class that provides methods for processing PDF files and performing privacy-related operations.
-    """
-
     def processImages(pdf_file,page,imgs,pgno,payload,uid):
-        """
-        Process the images in the PDF file and perform image anonymization.
-
-        Args:
-            pdf_file (fitz.Document): The PDF file object.
-            page (fitz.Page): The current page object.
-            imgs (list): List of images on the page.
-            pgno (int): Page number.
-            payload (dict): Payload containing the necessary information for image anonymization.
-            uid (str): Unique identifier.
-
-        Returns:
-            None
-        """
-
         try:
             request_id_var.set(uid)
             img=pdf_file.extract_image(imgs[0])
@@ -80,20 +60,7 @@ class PDFService:
                 error_dict[request_id_var.get()].append({"UUID":request_id_var.get(),"function":"PDFMASKMainFunction","msg":str(e.__class__.__name__),"description":str(e)+"Line No:"+str(e.__traceback__.tb_lineno)})
                 # ExceptionDb.create({"UUID":request_id_var.get(),"function":"textAnalyzeMainFunction","msg":str(e.__class__.__name__),"description":str(e)+"Line No:"+str(e.__traceback__.tb_lineno)})
                 raise Exception(e)
-        
     def editText(text,i,page):
-        """
-        Edit the text on the page by adding redaction annotations.
-
-        Args:
-            text (str): The text on the page.
-            i (object): The text entity to be redacted.
-            page (fitz.Page): The current page object.
-
-        Returns:
-            None
-        """
-
         request_id_var.set("editText")
         log.debug(unidecode(str(text[i.start:i.end]))+":"+str(i.entity_type))
         x=page.search_for(text[i.start:i.end])
@@ -105,18 +72,6 @@ class PDFService:
             # page.insert_text((inst[0],inst[1]), i.entity_type,fontname="helv", fontsize=5) 
             # page.write_text((inst[0],inst[1]), (i.entity_type),overlay=True)
     def processText(page,payload,uid):
-        """
-        Process the text on the page and perform text anonymization.
-
-        Args:
-            page (fitz.Page): The current page object.
-            payload (dict): Payload containing the necessary information for text anonymization.
-            uid (str): Unique identifier.
-
-        Returns:
-            None
-        """
-
         try:
             request_id_var.set(uid)
             text=page.get_text()
@@ -125,7 +80,7 @@ class PDFService:
             if(payload.portfolio!=None):
                 accDetails=AttributeDict({"portfolio":payload.portfolio,"account":payload.account})             
             
-            res=TextPrivacy.textAnalyze(text=text,accName=accDetails,exclusion=payload.exclusion.split(',') if payload.exclusion != None else [],piiEntitiesToBeRedacted=payload.piiEntitiesToBeRedacted.split(',') if payload.piiEntitiesToBeRedacted != None else [],nlp=payload.nlp,scoreThreshold=payload.scoreThreshold if payload.scoreThreshold != None else 0.0) 
+            res=TextPrivacy.textAnalyze(text=text,accName=accDetails,exclusion=payload.exclusion.split(',') if payload.exclusion != None else [],piiEntitiesToBeRedacted=payload.piiEntitiesToBeRedacted.split(',') if payload.piiEntitiesToBeRedacted != None else [],nlp=payload.nlp)
 
             res=anonymizer._remove_conflicts_and_get_text_manipulation_data(res,(
                 ConflictResolutionStrategy.MERGE_SIMILAR_OR_CONTAINED
@@ -152,16 +107,6 @@ class PDFService:
                 # ExceptionDb.create({"UUID":request_id_var.get(),"function":"textAnalyzeMainFunction","msg":str(e.__class__.__name__),"description":str(e)+"Line No:"+str(e.__traceback__.tb_lineno)})
                 raise Exception(e)
     def mask_pdf(payload):
-        """
-        Mask the PDF file by performing image and text anonymization.
-
-        Args:
-            payload (dict): Payload containing the necessary information for PDF masking.
-
-        Returns:
-            io.BytesIO: The masked PDF file as a BytesIO object.
-        """
-
         try:
             log.debug("payload:-"+str(payload))
             id = uuid.uuid4().hex

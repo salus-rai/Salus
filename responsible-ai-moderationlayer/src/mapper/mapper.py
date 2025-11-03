@@ -1,12 +1,12 @@
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
-"""
+'''
+Copyright 2024-2025 Infosys Ltd.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 from dataclasses import dataclass
 from pydantic import BaseModel, Field,Extra
@@ -25,6 +25,7 @@ class Result(str, Enum):
     PASSED = 'PASSED'
     FAILED = 'FAILED'
     UNMODERATED  = 'UNMODERATED'
+    UNDETERMINED = 'UNDETERMINED'
 
     class Config:
         orm_mode = True
@@ -40,6 +41,10 @@ class MODCHECKS(str, Enum):
     TextQuality  = 'TextQuality'
     TextRelevance = "TextRelevance"
     CustomizedTheme = "CustomizedTheme"
+    Sentiment = "Sentiment"
+    InvisibleText = "InvisibleText"
+    Gibberish = "Gibberish"
+    BanCode = "BanCode"
 
     class Config:
         orm_mode = True
@@ -139,6 +144,33 @@ class promptInjectionCheck(BaseModel):
     injectionThreshold:str = Field(example="60")
     result:Result=Field(example="PASSED")
 
+    class Config:
+        orm_mode = True
+
+class sentimentCheck(BaseModel):
+    score:str = Field(example="0.85")
+    threshold:str = Field(example="0.0")
+    result:Result=Field(example="PASSED")
+    class Config:
+        orm_mode = True
+
+class invisibleTextCheck(BaseModel):
+    invisibleTextIdentified:List = Field(['bullshit'])
+    threshold:str = Field(example="0.0")
+    result:Result=Field(example="PASSED")
+    class Config:
+        orm_mode = True
+
+class gibberishCheck(BaseModel):
+    gibberishScore:List = Field(['bullshit'])
+    threshold:str = Field(example="0.0")
+    result:Result=Field(example="PASSED")
+    class Config:
+        orm_mode = True
+
+class bancodeCheck(BaseModel):
+    label:str="CODE"
+    result:Result=Field(example="PASSED")
     class Config:
         orm_mode = True
 
@@ -291,6 +323,10 @@ class RequestModeration(BaseModel):
     refusalCheck : refusalCheck
     # textRelevance : textRelevanceCheck
     customThemeCheck : customThemeCheck
+    sentimentCheck : sentimentCheck
+    invisibleTextCheck : invisibleTextCheck
+    gibberishCheck : gibberishCheck
+    bancodeCheck : bancodeCheck
     summary : summary
 
     class Config:
@@ -310,6 +346,10 @@ class CoupledRequestModeration(BaseModel):
     customThemeCheck : customThemeCheck
     randomNoiseCheck : smoothLlmCheck
     advancedJailbreakCheck: bergeronCheck
+    sentimentCheck : sentimentCheck
+    invisibleTextCheck : invisibleTextCheck
+    gibberishCheck : gibberishCheck
+    bancodeCheck : bancodeCheck
     summary : summary
 
     class Config:
@@ -341,6 +381,21 @@ class RTTHRESHOLDS(BaseModel):
 
     class Config:
         orm_mode = True
+
+class ITTHRESHOLDS(BaseModel):
+    InvisibleTextCountThreshold: int = Field(example=1)
+    BannedCategories: List = Field(["Cf","Co","Cn","So","Sc"])
+
+    class Config:
+        orm_mode = True
+
+class GBTHRESHOLDS(BaseModel):
+    GibberishThreshold: float = Field(example=0.7)
+    GibberishLabels: List = Field(["word salad","noise","mild gibberish","clean"])
+
+    class Config:
+        orm_mode = True
+
 class CustomThemeTexts(BaseModel):
     Themename: str
     Themethresold: float = Field(example=60)
@@ -359,6 +414,10 @@ class MODTHRESHOLDS(BaseModel):
     ProfanityCountThreshold: int = Field(example=1)
     RestrictedtopicDetails: RTTHRESHOLDS
     CustomTheme: CustomThemeTexts
+    SentimentThreshold: float = Field(example=-0.01)
+    BanCodeThreshold: float = Field(example=0.70)
+    InvisibleTextCountDetails: ITTHRESHOLDS
+    GibberishDetails: GBTHRESHOLDS
 
     class Config:
         orm_mode = True
@@ -383,7 +442,9 @@ class COUPLEDMODERATIONTHRESHOLD(BaseModel):
     RestrictedtopicDetails: RTTHRESHOLDS
     CustomTheme: CustomThemeTexts
     SmoothLlmThreshold: SmoothLlmThreshold
-
+    SentimentThreshold: float = Field(example=-0.01)
+    InvisibleTextCountDetails: ITTHRESHOLDS
+    GibberishDetails: GBTHRESHOLDS
 
     class Config:
         orm_mode = True
@@ -472,6 +533,10 @@ class ResponseModeration(BaseModel):
     textQuality : textQuality
     textRelevanceCheck : textRelevanceCheck
     refusalCheck : refusalCheck
+    sentimentCheck : sentimentCheck
+    invisibleTextCheck : invisibleTextCheck
+    gibberishCheck : gibberishCheck
+    bancodeCheck : bancodeCheck
     summary : summary
 
     class Config:
@@ -489,9 +554,7 @@ class Faithfullness(BaseModel):
     model_name: Optional[str] =Field(example="gpt4")
     
 class CoupledModerationResults(BaseModel):
-    # id:str = Field(example= "123e4567-e89b-12d3-a456-426614174000")
     requestModeration : CoupledRequestModeration
-
     responseModeration : ResponseModeration
 
     class Config:

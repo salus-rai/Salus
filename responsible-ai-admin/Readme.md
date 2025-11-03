@@ -115,7 +115,7 @@ Once we have completed all the aforementioned steps, we can start the service.
     python main.py
      ```
 3. Use the Port No that is mentioned in main.py file. Open the swagger URL in browser once server is running: 
-  `http://localhost:<portno>/api/v1/rai/admin/docs#/`
+    `http://localhost:<portnumber>/api/v1/rai/admin/docs#/`
 
     User can also change the port which is mentioned in main.py file
 
@@ -126,6 +126,7 @@ NOTE : To use the following API endpoints:
             /api/v1/rai/admin/UpdateGoalPriority
             /api/v1/rai/admin/getOpenAI
             /api/v1/rai/admin/userRole
+      To use getRole , need to have Authority Table with roles defined
             /api/v1/rai/admin/getRole
             
    Make the following changes :
@@ -166,4 +167,10 @@ NOTE : To use the following API endpoints:
 
 The source code for the project is licensed under the MIT license, which you can find in the [License.md](License.md) file.
 
-  
+
+### Known Issue:
+Below mentioned endpoints will not work in the current release
+1. RAG-setCache/api/v1/rai/admin/setCache
+2. RAG-getEmbedings	/api/v1/rai/admin/getEmbedings
+3. RAG-clearEmbedings	/api/v1/rai/admin/clearEmbedings
+4. RAG-deleteFile	/api/v1/rai/admin/deleteFile

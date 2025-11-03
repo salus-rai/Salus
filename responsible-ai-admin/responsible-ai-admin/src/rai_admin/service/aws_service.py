@@ -12,7 +12,7 @@ from collections import defaultdict
 from rai_admin.config.logger import CustomLogger
 from rai_admin.dao.AWSCredDb import AWSCredDb
 from rai_admin.mappers.AWSMapper import *
-
+import datetime
 
 log = CustomLogger()
 class AttributeDict(dict):
@@ -61,7 +61,8 @@ class AWSService:
                 return obj
             updateCred = AWSCredDb.update(res[0]['_id'],{"awsAccessKeyId":payload.awsAccessKeyId,
                                                         "awsSecretAccessKey":payload.awsSecretAccessKey,
-                                                        "awsSessionToken":payload.awsSessionToken})
+                                                        "awsSessionToken":payload.awsSessionToken,
+                                                        "creationTime":datetime.datetime.now()})
             obj.status=str(updateCred)
             return obj
         except Exception as e:

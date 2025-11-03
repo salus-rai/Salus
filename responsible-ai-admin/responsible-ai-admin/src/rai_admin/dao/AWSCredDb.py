@@ -42,7 +42,9 @@ class AWSCredDb:
             v=AttributeDict(v)
             value_list.append({"_id":v._id,"awsAccessKeyId":v.awsAccessKeyId,
                                "awsSecretAccessKey":v.awsSecretAccessKey,
-                               "awsSessionToken":v.awsSessionToken})
+                               "awsSessionToken":v.awsSessionToken,
+                               "expirationTime":v.expirationTime,
+                               "creationTime":v.creationTime})
         return value_list
     
     
@@ -55,8 +57,8 @@ class AWSCredDb:
             "awsAccessKeyId":value.awsAccessKeyId,
             "awsSecretAccessKey":value.awsSecretAccessKey,
             "awsSessionToken":value.awsSessionToken,
-            "CreatedDateTime": datetime.datetime.now(),
-            "LastUpdatedDateTime": datetime.datetime.now()
+            "expirationTime": "12hrs",
+            "creationTime": datetime.datetime.now()
          }
          PtrnRecogCreatedData = AWSCredDb.mycol.insert_one(mydoc)
          return PtrnRecogCreatedData.inserted_id

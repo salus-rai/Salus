@@ -75,3 +75,7 @@ class newRoleUpdRqst(BaseModel):
 
 class newRoleCreate(BaseModel):
     role:str = Field(example="ROLE_ML")
+
+class UserConsentCreate(BaseModel):
+    userId: str = Field(example="abc")
+    userConsentStatus: bool

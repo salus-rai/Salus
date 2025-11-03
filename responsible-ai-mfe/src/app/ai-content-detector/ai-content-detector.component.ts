@@ -1,18 +1,15 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { Component, OnInit, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NGXLogger } from "ngx-logger";
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+
 @Component({
   selector: 'app-ai-content-detector',
   templateUrl: './ai-content-detector.component.html',
@@ -35,9 +32,10 @@ export class AiContentDetectorComponent implements OnInit {
   loadComplete = false;
   isAIChecked: boolean = false;
   isHumanChecked: boolean = false;
-  public safeTemplateData!: SafeHtml; 
-  constructor(private cdr: ChangeDetectorRef, private logger: NGXLogger, public https: HttpClient, private _snackBar: MatSnackBar,private sanitizer: DomSanitizer, ) { }
 
+  constructor(private cdr: ChangeDetectorRef, private logger: NGXLogger, public https: HttpClient, private _snackBar: MatSnackBar) { }
+
+   // Initializes the component and sets up the API endpoint
   ngOnInit(): void {
     if (localStorage.getItem("res") != null) {
       const x = localStorage.getItem("res")
@@ -51,7 +49,7 @@ export class AiContentDetectorComponent implements OnInit {
     this.textDetector = this.ip_port.result.textDetector + this.ip_port.result.textDetectorModel;
   }
 
-  // Logs and displays error messages in a snackbar for API failures.
+   // Handles API errors and displays appropriate messages
   handleError(error: any) {
     console.log(error)
     console.log(error.status);
@@ -65,6 +63,8 @@ export class AiContentDetectorComponent implements OnInit {
     const action = 'Close';
     this.openSnackBar(message, action);
   }
+
+  // Displays a snackbar with a message
   openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, {
       duration: 3000,
@@ -72,18 +72,19 @@ export class AiContentDetectorComponent implements OnInit {
     });
   }
 
-
+ // Resets the text input and related states
   resetText() {
     this.Prompt = '';
     this.loadComplete=false;
     this.responseLoading=false; 
   }
 
+  // Resets the response table
   resetTable(): void {
     this.response = {};
   }
 
-  // Updates the selected checkbox state and sets the corresponding prompt text.
+   // Handles checkbox selection and updates the prompt
   onCheckboxChange(checkboxId: string): void {
     if (checkboxId === 'ai') {
       this.isAIChecked = true;
@@ -96,7 +97,7 @@ export class AiContentDetectorComponent implements OnInit {
     }
   }
 
-  // Updates the selected button state and sets the corresponding prompt text.
+  // Handles button clicks and updates the prompt
   onButtonClick(buttonId: string): void {
     if (buttonId === 'ai') {
       this.isAIChecked = true;
@@ -108,8 +109,8 @@ export class AiContentDetectorComponent implements OnInit {
       this.Prompt = this.Prompt2;
     }
   }
-
-  // Validates the input text, checks word count, and sends it to the API if valid.
+  
+  // Validates the text input and makes an API call if valid
   textValidationMethod() {
     this.responseLoading = true;
     this.loadComplete = false;
@@ -158,9 +159,5 @@ export class AiContentDetectorComponent implements OnInit {
     } catch (error) {
       this.logger.error("textValidationMethod method failed", error);
     }
-  }
-  // Function to sanitize the data before it is used
-  sanitizeData(data: string): SafeHtml {
-    return this.sanitizer.bypassSecurityTrustHtml(data);
   }
 }

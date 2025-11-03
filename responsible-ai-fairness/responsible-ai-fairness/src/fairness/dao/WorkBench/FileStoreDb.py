@@ -1,7 +1,7 @@
+"""
 # SPDX-License-Identifier: MIT
 # Copyright 2024 - 2025 Infosys Ltd.
- 
-"""
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
@@ -28,7 +28,9 @@ import time
 import requests
 
 log = CustomLogger()
-        
+ssl_verify=os.getenv("VERIFY_SSL").strip()
+verify = False if ssl_verify == "False" else True
+active_file_storage = os.getenv('ACTIVE_LLM')
    
 # ModelWorkBench = DataBase_WB() 
 class FileStoreReportDb:
@@ -75,11 +77,16 @@ class FileStoreReportDb:
             if filename is None or contentType is None or tenet is None:
                 raise ValueError("Filename, contentType, and tenet cannot be None")
                 # container_name = os.getenv('HTML_CONTAINER_NAME')
-            upload_file_api = os.getenv('AZURE_UPLOAD_API')
+            if active_file_storage == "azureopenai":
+                upload_file_api = os.getenv('AZURE_UPLOAD_API')
+            elif active_file_storage == "gemini-2.5-flash" or active_file_storage == "gemini-2.5-pro":
+                upload_file_api = os.getenv('GCP_UPLOAD_API')
+            elif active_file_storage == "aws":
+                upload_file_api = os.getenv('AWS_UPLOAD_API')
             # html_containerName = os.getenv('HTML_CONTAINER_NAME')
             log.info(f"container_name:{container_name}")
             # filename = "fairness_file"  # Replace with your actual filename if available
-            response =requests.post(url =upload_file_api, files ={"file":(filename, file)}, data ={"container_name":container_name}).json()
+            response =requests.post(url =upload_file_api, files ={"file":(filename, file)}, data ={"container_name":container_name},verify=verify).json()
             if response is None:
                 raise HTTPException(f"An error occurred: file not found")
             blob_name =response["blob_name"]
@@ -125,7 +132,12 @@ class FileStoreReportDb:
             
             return {"data": file_content, "name":file_metadata.filename, "extension": file_metadata.filename.split('.')[-1],"contentType":file_metadata.content_type}
         else:
-            download_file_api = os.getenv('AZURE_GET_API')
+            if active_file_storage == "azureopenai":
+                download_file_api = os.getenv('AZURE_GET_API')
+            elif active_file_storage == "gemini-2.5-flash" or active_file_storage == "gemini-2.5-pro":
+                download_file_api = os.getenv('GCP_GET_API')
+            elif active_file_storage == "aws":
+                download_file_api = os.getenv('AWS_GET_API')
             if container_name is None:
                 container_name = os.getenv('Dt_containerName')
 
@@ -137,7 +149,7 @@ class FileStoreReportDb:
             if not container_name or not unique_id:
                 raise ValueError("container_name and unique_id must not be empty")
                
-            response = requests.get(url=download_file_api, params={"container_name": container_name, "blob_name": unique_id})
+            response = requests.get(url=download_file_api, params={"container_name": container_name, "blob_name": unique_id}, verify=verify)
             if response is None:
                 raise HTTPException("occurred: file not found")
             # Check if the request was successful
@@ -159,7 +171,12 @@ class FileStoreReportDb:
             
             return {"data": file_content, "name":file_metadata.filename, "extension": file_metadata.filename.split('.')[-1],"contentType":file_metadata.content_type}
         else:
-            download_file_api = os.getenv('AZURE_GET_API')
+            if active_file_storage == "azureopenai":
+                download_file_api = os.getenv('AZURE_GET_API')
+            elif active_file_storage == "gemini-2.5-flash" or active_file_storage == "gemini-2.5-pro":
+                download_file_api = os.getenv('GCP_GET_API')
+            elif active_file_storage == "aws":
+                download_file_api = os.getenv('AWS_GET_API')
             if container_name is None:
                 container_name = os.getenv('Model_CONTAINER_NAME')
 
@@ -173,7 +190,7 @@ class FileStoreReportDb:
 
             file_bytes=BytesIO()
             content_type=""
-            with requests.get(url=download_file_api, params={"container_name": container_name, "blob_name": unique_id}, stream=True) as r:
+            with requests.get(url=download_file_api, params={"container_name": container_name, "blob_name": unique_id}, stream=True, verify=verify) as r:
                 r.raise_for_status()
                 content_type=r.headers['Content-Type']
                 for chunk in r.iter_content(chunk_size=4096):
@@ -203,7 +220,12 @@ class FileStoreReportDb:
             
             return {"data": file_content, "name":file_metadata.filename, "extension": file_metadata.filename.split('.')[-1],"contentType":file_metadata.content_type}
         else:
-            download_file_api = os.getenv('AZURE_GET_API')
+            if active_file_storage == "azureopenai":
+                download_file_api = os.getenv('AZURE_GET_API')
+            elif active_file_storage == "gemini-2.5-flash" or active_file_storage == "gemini-2.5-pro":
+                download_file_api = os.getenv('GCP_GET_API')
+            elif active_file_storage == "aws":
+                download_file_api = os.getenv('AWS_GET_API')
             container_name = os.getenv('Model_CONTAINER_NAME')
 
             # Check if the environment variable is set
@@ -213,7 +235,7 @@ class FileStoreReportDb:
             # Check if container_name and unique_id are not empty
             if not container_name or not unique_id:
                 raise ValueError("container_name and unique_id must not be empty")
-            response = requests.get(url=download_file_api, params={"container_name": container_name, "blob_name": unique_id})
+            response = requests.get(url=download_file_api, params={"container_name": container_name, "blob_name": unique_id}, verify=verify)
             # Check if the request was successful
             if response.status_code != 200:
                 raise Exception(f"Request to {download_file_api} failed with status code {response.status_code}")

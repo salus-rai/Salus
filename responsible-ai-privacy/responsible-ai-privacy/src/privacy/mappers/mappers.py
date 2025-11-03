@@ -1,13 +1,12 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
+'''
+MIT license https://opensource.org/licenses/MIT Copyright 2024 Infosys Ltd
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 """
 fileName: mappers.py
@@ -15,13 +14,9 @@ description: A Pydantic model object for usecase entity model
              which maps the data model to the usecase entity schema
 """
 
-import os
 from pydantic import BaseModel, Field
 from datetime import datetime
 from typing import Optional,Union, List
-from dotenv import load_dotenv
-
-load_dotenv()
 
 """
 description: piiEntity
@@ -35,16 +30,6 @@ class PIIEntity(BaseModel):
     endOffset: Optional[int] = Field(example=28)
     score:Optional[float]=Field(example=1.1)  
     responseText:Optional[str]=Field(example="012884567")
-
-    class Config:
-        orm_mode = True
-
-class PIIEntityImages(BaseModel):
-    type: Optional[str] = Field(example="US_SSN")
-    beginOffset: Optional[int] = Field(example=19)
-    endOffset: Optional[int] = Field(example=28)
-    score:Optional[float]=Field(example=1.1)  
-    # responseText:Optional[str]=Field(example="012884567")
 
     class Config:
         orm_mode = True
@@ -81,7 +66,6 @@ class PIIAnalyzeRequest(BaseModel):
     exclusionList:Optional[str] = Field(default=None)
     user: Optional[str] = Field(default=None)
     lotNumber:Optional[str] =Field(default=None)
-    scoreThreshold:Optional[float] = Field(default=float(0.4))
     
 class PIIEncryptResponse(BaseModel):
     text: str = Field(example="John Smith's SSN is 012884567")
@@ -112,19 +96,8 @@ class PIIAnonymizeRequest(BaseModel):
     user: Optional[str] = Field(default=None)
     lotNumber:Optional[str] = Field(default=None)
     fakeData: Optional[bool] = Field(example = False)
-    scoreThreshold:Optional[float] = Field(default=float(0.4))
 
-class PIIEncryptRequest(BaseModel):
-    inputText: str = Field(example="John Smith's SSN is 012884567")
-    nlp: Optional[str] = Field(default=None,example="basic/good/roberta/ranha",description="basic,good,better")
-    portfolio:Optional[str] =Field(default=None)
-    account:Optional[str] =Field(default=None)
-    exclusionList:Optional[str] = Field(default=None)
-    piiEntitiesToBeRedacted: Optional[list] = Field(default=None)
-    redactionType: Optional[str] = Field(default=None)
-    user: Optional[str] = Field(default=None)
-    lotNumber:Optional[str] = Field(default=None)
-    scoreThreshold:Optional[float] = Field(default=float(0.4))
+
 
 class PIIAnonymizeResponse(BaseModel):
     anonymizedText: str = Field(example="John Smith's SSN is <US_SSN>")
@@ -170,9 +143,6 @@ class PIIMultipleImageAnalyzeResponse(BaseModel):
     class Config:
         orm_mode = True
 
-class PIIMultipleImageResponse(BaseModel):
-    filename: str
-    PIIEntities: List[PIIEntityImages]
 
 
 class PIIPrivacyShieldRequest(BaseModel):

@@ -17,28 +17,19 @@ The **Moderation Model** module acts as a central hub for machine learning model
 ## Features
 The **Moderation Model** module acts as a wrapper for the traditional AI models we are using for various checks like prompt injection, jailbreak, toxicity etc. 
 
-## Prerequisites
-1. Python 3.9  (version >= 3.9 & <3.12)
-2. pip
-3. VS Code
-4. Ensure that privacy-2.0.8-py3-none-any.whl is present under src/lib folder
-5. Download and place the en_core_web_lg-3.5.0-py3-none-any.whl inside the lib folder.
-   [en_core_web_lg](https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl)
-6. Download appropriate torch wheel file version if working on any Linux system, supporting python version which is installed there. [torch wheel files](https://download.pytorch.org/whl/torch/)
-
 ## Installation
 To run the application, first we need to install Python and the necessary packages:
 
-1. Install Python (version >= 3.9 & <3.12) from the [official website](https://www.python.org/downloads/) and ensure it is added to your system PATH.
+1. Install Python (version 3.11.x) from the [official website](https://www.python.org/downloads/) and ensure it is added to your system PATH.
 
-2. Clone the repository : responsible-ai-ModerationModel:
+2. Clone the repository : responsible-ai-mm-flask:
     ```sh
     git clone <repository-url>
     ```
 
-3. Navigate to the `responsible-ai-ModerationModel` directory:
+3. Navigate to the `responsible-ai-mm-flask` directory:
     ```sh
-    cd responsible-ai-ModerationModel
+    cd responsible-ai-mm-flask
     ```
 
 4. Create a virtual environment:
@@ -72,7 +63,8 @@ To run the application, first we need to install Python and the necessary packag
    pip install --pre torch torchvision torchaudio \--extra-index-url https://download.pytorch.org/whl/nightly/cpu
     ```
   
-  Install the requirements now:
+  Download and place the en_core_web_lg-3.5.0-py3-none-any.whl inside the lib folder.
+    [en_core_web_lg](https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.5.0/en_core_web_lg-3.5.0-py3-none-any.whl) and install the requirements:
     
     ```sh
     pip install -r requirement.txt
@@ -129,6 +121,18 @@ Now download the model checkpoint file from this url and keep it under this fold
 [toxic_model_ckpt_file](https://github.com/unitaryai/detoxify/releases/download/v0.3-alpha/toxic_debiased-c7548aa0.ckpt)
 Name the folder as 'detoxify'.
 
+5. [Gibberish](https://huggingface.co/madhurjindal/autonlp-Gibberish-Detector-492513457)
+Files required to download here are : vocab.json, tokenizer.json,config.json,pytorch_model.bin, tokenizer_config.json,special_tokens_map.json.
+Name the folder as 'gibberish'.
+
+6. [Bancode](https://huggingface.co/vishnun/codenlbert-tiny)
+Files required to download here are : vocab.txt, tokenizer.json,config.json,pytorch_model.bin, tokenizer_config.json,special_tokens_map.json.
+Name the folder as 'bancode'.
+
+7. [Restricted Topic](https://huggingface.co/cross-encoder/nli-MiniLM2-L6-H768)
+Files required to download here are : vocab.json, tokenizer.json,config.json,merges.txt,pytorch_model.bin, tokenizer_config.json,special_tokens_map.json.
+Name the folder as 'nli-MiniLM2-L6-H768'.
+
 Place the above folders in a folder named 'models' in the following way: 'responsible-ai-mm-flask/models'.
 
 ## Running the Application
@@ -136,17 +140,20 @@ Once we have completed all the aforementioned steps, we can start the service.
 
 1. Navigate to the `src` directory:
 
-2. Run `main.py` file:
+2. Run `main_MM.py` file:
     ```sh
-    python main.py
+    python main_MM.py
      ```
 
 3. PORT_NO : Use the Port No that is configured in .env file.
 
    Open the following URL in your browser:
-  `http://localhost:<PORT_NO>/rai/v1/raimoderationmodels/docs`
+  `http://localhost:8000/rai/v1/raimoderationmodels/docs`
 
-Note:- To address the issue where the Passport Number is not recognized in Privacy, modify the "piiEntitiesToBeRedacted" field in the privacy() under service.py file (line no: 98) from None to an empty list []. This adjustment ensures that the Passport Number is correctly identified.
+**Note:** :
+1. To address the issue where the Passport Number is not recognized in Privacy, modify the "piiEntitiesToBeRedacted" field in the privacy() under service.py file (line no: 98) from None to an empty list []. This adjustment ensures that the Passport Number is correctly identified.
+
+2. Do not use this Moderation Model repository as a standalone repository. It serves as the base or dependency for the Moderation Layer repository, which provides the 'Guardrail' functionality, so access this repository APIs through Moderation layer.
   
 ## License
 The source code for the project is licensed under the MIT license, which you can find in the [LICENSE.txt](LICENSE.txt) file.

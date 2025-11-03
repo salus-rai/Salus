@@ -1,12 +1,12 @@
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
-"""
+'''
+Copyright 2024-2025 Infosys Ltd.
+
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 import os
 import traceback
@@ -24,6 +24,9 @@ coupledtelemetryurl=os.getenv("COUPLEDTELEMETRYPATH")
 evalLLMtelemetryurl=os.getenv("EVALLLMTELEMETRYPATH")
 
 log=CustomLogger()
+
+verify_ssl = os.getenv("VERIFY_SSL")
+sslv={"False":False,"True":True,"None":True}
 
 class telemetry:
     tel_flag=os.getenv("TEL_FLAG")
@@ -44,7 +47,7 @@ class telemetry:
                         moderation_telemetry_request["accountName"]="None"
                     moderation_telemetry_request['Moderation layer time'] = dict_timecheck
                     log.info(f"coupled data : {json.dumps(moderation_telemetry_request)}")
-                    response = requests.post(coupledtelemetryurl, json=moderation_telemetry_request)
+                    response = requests.post(coupledtelemetryurl, json=moderation_telemetry_request,verify=sslv[verify_ssl])
                     log.info(" ------------------ sending to telemetry ----------------- ")
                     response.raise_for_status()
                     log.info(" ------------------ sent to telemetry ----------------- ")
@@ -86,7 +89,7 @@ class telemetry:
                         moderation_telemetry_request["userid"]="None"
 
                     log.info(f"telemetry_request--->>> {moderation_telemetry_request}")
-                    response = requests.post(telemetryurl, json=moderation_telemetry_request)
+                    response = requests.post(telemetryurl, json=moderation_telemetry_request,verify=sslv[verify_ssl])
                     response.raise_for_status()
                     log.info("--------------- Sent from moderation Telemetry Azure ----------- ")
             elif tel_env == "ETA":
@@ -130,7 +133,7 @@ class telemetry:
                             headers=headers,
                             auth=HTTPBasicAuth(username,password),
                             data=json.dumps(payload),
-                            verify = False
+                            verify=sslv[verify_ssl]
                         )
 
                         if response.status_code >= 200 and response.status_code < 300:
@@ -335,7 +338,7 @@ class telemetry:
 
                     log.info(f"updated json ------ {json.dumps(telemetry_request)}")
 
-                    response = requests.post(evalLLMtelemetryurl, json=telemetry_request)
+                    response = requests.post(evalLLMtelemetryurl, json=telemetry_request, verify=sslv[verify_ssl])
                     log.info(" ------------------ sending to telemetry for EvalLLM ----------------- ")
                     response.raise_for_status()
                     log.info(" ------------------ sent to telemetry for EvalLLM----------------- ")

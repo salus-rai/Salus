@@ -23,10 +23,12 @@ class gevalRequest(BaseModel):
     text: str = Field(example="How many moons do earth have?")
     response: str = Field(example="Earth have only one moon")
     sourcetext: str= Field(example="source")
+    llmtype: str = Field(example="openai")
 
 class defaultRetrievalRequest(BaseModel):
     fileupload:bool = Field(example=True)
     text: str = Field(example="Total area of India")
+    llmtype: str = Field(example="openai")
     vectorestoreid :Optional[str] = Field(example="764r876634874")
     
 class covRequest(BaseModel):
@@ -34,15 +36,11 @@ class covRequest(BaseModel):
     text: str = Field(example="Total area of India")
     vectorestoreid :Optional[str] = Field(example="764r876634874")
     complexity : str = Field(enum=["simple", "medium", "complex"])
-
-class thotRequest(BaseModel):
-    fileupload:bool = Field(example=True)
-    text: str = Field(example="Total area of India")
-    vectorestoreid :Optional[str] = Field(example="764r876634874")
-    complexity : str = Field(enum=["simple", "medium", "complex"])    
+    llmtype: str = Field(example="openai")   
     
 class cachingRequest(BaseModel):
-    blobname: List[str] = Field(example=["fileabc-qweresxbwusx.pdf"])
+    vectorestoreid: str = Field(example="764r876634874")
+    llmtype: str = Field(example="openai")
 
 class removecachingRequest(BaseModel):
     id: int = Field(example="34545645645645")

@@ -1,14 +1,12 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
-
+'''
+Copyright 2024-2025 Infosys Ltd.
+ 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
  
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-#------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+'''
 
 
 import json
@@ -24,41 +22,22 @@ from dotenv import load_dotenv
 import tempfile
 
 
-from fastapi.responses import FileResponse, StreamingResponse
+from fastapi.responses import Response, StreamingResponse
 from docProcess.dao.DatabaseConnection import DB
 
 from docProcess.dao.DocProccessDb import docDb
 from docProcess.dao.fileStoreDb import fileStoreDb as fileDb
+sslv={"False":False,"True":True,"None":True}
 load_dotenv()
 
 def customeMask(file_content, maskImage_content,fileName, reqUrl, docid):
-    
-    """
-        Sends a POST request with a video file and a mask image to a specified URL, processes the response, 
-        and updates the document status in the database.
-        Args:
-            file_content (bytes): The content of the video file to be sent.
-            maskImage_content (bytes): The content of the mask image file to be sent.
-            fileName (str): The name of the video file.
-            reqUrl (str): The URL to which the POST request is sent.
-            docid (str): The document ID used to update the database.
-        Raises:
-            requests.HTTPError: If the HTTP request fails.
-            Exception: For any other exceptions that occur during processing.
-        Notes:
-            - The function expects the server to return a JSON response containing a base64-encoded video.
-            - The database is updated with the status "Failed" if an error occurs.
-            - The commented-out code suggests additional functionality for saving the processed video 
-              and updating the database with the result file ID, but it is currently not active.
-        """
-    
     try:
         filetype = "video/mp4"
         post_files = {
             "payload": (fileName, file_content),
             "maskImage": ("mask.png", maskImage_content)
         }
-        response = requests.request("POST", reqUrl, files=post_files)
+        response = requests.request("POST", reqUrl, files=post_files,verify=sslv[os.getenv("VERIFY_SSL","None")])
         response.raise_for_status()
         data = response.json()
         file_content = data.get('video')
@@ -70,8 +49,10 @@ def customeMask(file_content, maskImage_content,fileName, reqUrl, docid):
         # docDb.update(docid, {"resultFileId": rf._id, "status": "Completed"})
         # rf.close()
     except requests.HTTPError as http_err:
+        print(f'HTTP error occurred: {http_err}') 
         docDb.update(docid, {"status": "Failed"})
-    except Exception as err: 
+    except Exception as err:
+        print(f'Other error occurred: {err}') 
         docDb.update(docid, {"status": "Failed"})
         
 class AttributeDict(dict):
@@ -82,22 +63,20 @@ class AttributeDict(dict):
 # localStore="../fileStore/"
 class DocProcess:
     def storeFile(file,filetype,fileName,docid):
+        storage_option = os.getenv("STORAGE_OPTION")
+        print("STORAGE OPTION ->"+storage_option)
+
+        if(storage_option=="azure"):
+             surl=os.getenv("AZURE_STORE_ADD_API")
+             payload={"container_name":filetype}
+        elif(storage_option=="gcp"):
+            surl=os.getenv("GCP_STORE_ADD_API") 
+            payload={"bucket_name":filetype}  
+        elif(storage_option=="aws"):
+             surl=os.getenv("AWS_STORE_ADD_API")
+             container_name =os.getenv("AWS_BUCKET_NAME")
+             payload={"bucket_name":container_name}  
         
-        """
-            Uploads a file to an Azure storage container and updates the document database with the file's storage link.
-            Args:
-                file (file-like object): The file to be uploaded.
-                filetype (str): The type of the file, used as the container name in Azure storage.
-                fileName (str): The name of the file to be stored.
-                docid (str): The document ID to update in the database.
-            Returns:
-                bytes: The response content from the Azure storage API if the upload is successful.
-                bool: False if the upload fails after three attempts.
-            Raises:
-                Exception: If an error occurs during the file upload process.
-            """
-        
-        surl=os.getenv("AZURE_STORE_ADD_API")
         # file=BytesIO(data)
         
         # with open(fileName, "wb") as f:
@@ -105,19 +84,55 @@ class DocProcess:
         # file=open(fileName,"rb")
         print(file)
         file={"file":file}
-        payload={"container_name":filetype}
+
+        
         for i in range(3):
             try:
-                print("==========================================")
-                res=requests.post(url=surl,files=file,data=payload)
-                storageDetails=res.json()
-                print(storageDetails["blob_name"])
-                storelink=os.getenv("AZURE_STORE_GET_API")+"?blob_name="+storageDetails["blob_name"].replace(" ","%20")+"&container_name="+filetype
-              
+                print("====================================================================================")
+                if( storage_option == "mongodb"):
+                    # (_id=time.time(),filename=value.fileName,content_type=value.type)
+                    print("inside mongodb ---------------------------------------------------------->")
+                    fileid= docDb.createForMongo({"fileName":fileName,"file":file['file'],"type":filetype})
+                    res={}
+                    res["object_id"]=fileid
+                    
+                    storageDetails=res
+                else:    
+                    res=requests.post(url=surl,files=file,data=payload,verify=False)
+                    print("=========================================="+str(res)+"==========================================")
+                    storageDetails=res.json()
+                print("storageDetails------------------------------------------------------>",storageDetails)
+                # print("-----------------------------------------------------------------------------"+storageDetails["object_name"])
+                # storelink=os.getenv("AZURE_STORE_GET_API")+"?blob_name="+storageDetails["blob_name"].replace(" ","%20")+"&container_name="+filetype
+                if storage_option == "azure":
+                    print("inside azure ---------------------------------------------------------->")
+                    storelink = os.getenv("AZURE_STORE_GET_API") + "?blob_name=" + storageDetails["blob_name"].replace(" ", "%20") + "&container_name=" + filetype
+                elif storage_option == "gcp":
+                    print("inside gcp ---------------------------------------------------------->")
+                    storelink = os.getenv("GCP_STORE_GET_API") + "?object_name=" + storageDetails["object_name"].replace(" ", "%20") + "&bucket_name=" + filetype
+                elif storage_option == "aws":
+                    print("inside aws ---------------------------------------------------------->")
+                    storelink = os.getenv("AWS_STORE_GET_API") + "?object_key" + storageDetails["object_key"].replace(" ", "%20") + "&bucket_name=" + filetype
+               
+                elif storage_option == "mongodb":
+                    print("inside mongodb ---------------------------------------------------------->")
+                    base_url = os.getenv("BASE_URL")
+                    storelink = docDb.get_download_link_with_base_url(storageDetails['object_id'],base_url)
+                    print("--------------------------------------------------URL PRINT-----------------------------------")
+                    print("storelink for mongodb", storelink)
+
+                    # Update the document to include the file ID reference
+                print("storelink---------------------------------------------------->",storelink)
                 docDb.update(docid,{"documentLink":storelink,"status":"Completed"})
+
+                print("--------------------------------..................................................") 
+                if(storage_option=="mongodb"):
+                    print("mongodb file store")
+                    return {"fileName":fileName,"type":filetype,"data":storageDetails["object_id"]}
                 return res.content
                 # break
             except Exception as e:
+                print(e)
                 continue
         # res=requests.post(url=surl,files=file,data=payload)
         docDb.update(docid,{"status":"Failed"})
@@ -125,42 +140,6 @@ class DocProcess:
        
        
     def uploadFile(payload):
-        """
-        Handles the upload and processing of files based on their type and specified subcategories.
-        Args:
-            payload (dict): A dictionary containing the following keys:
-                - userId (str): The ID of the user uploading the file.
-                - file (object): An object containing the file data, including:
-                    - file (file-like object): The actual file content.
-                    - filename (str): The name of the file.
-                    - size (int): The size of the file in bytes.
-                    - content_type (str): The MIME type of the file.
-                - categories (list): A list of categories associated with the file.
-                - subCategoey (list): A list of subcategories for processing the file.
-                - maskImage (optional, object): An object containing mask image data for video masking.
-        Returns:
-            dict: A dictionary containing the following keys:
-                - fileName (str): The name of the processed file.
-                - type (str): The MIME type of the file.
-                - data (bytes): The base64-encoded content of the processed file.
-        Raises:
-            Exception: If any error occurs during file processing or API requests.
-        Processing Details:
-            - Supports video, Excel, and other file types.
-            - Handles subcategories such as:
-                - CustomMask: Applies masking to videos using a provided mask image.
-                - PIIAnonymize: Anonymizes Personally Identifiable Information (PII) in videos.
-                - FaceAnonymize: Anonymizes faces in videos.
-                - SafetyMasking: Applies safety masking (e.g., NSFW content).
-                - NudityMasking: Masks nudity in videos.
-            - Updates the document database (docDb) with the processing status.
-            - Stores processed files in a specified content type (e.g., "rai-videos", "rai-datasets").
-            - Handles file cleanup and ensures proper resource management.
-        Note:
-            - Environment variables are used for API endpoints (e.g., PRIVACY_FaceVIDEO_IP, SAFETY_NSFW_IP).
-            - The function assumes the existence of external dependencies like `docDb`, `DocProcess`, and `requests`.
-        """
-        
         payload=AttributeDict(payload)
         
         userId=payload.userId
@@ -226,10 +205,13 @@ class DocProcess:
                         }
                         
                         docDb.update(docid,{"status":"PIIAnonymize Processing"})
-                        response = requests.request("POST", reqUrl, data=payload, files=post_files)
+                        print(reqUrl)
+                        response = requests.request("POST", reqUrl, data=payload, files=post_files,verify=sslv[os.getenv("VERIFY_SSL","None")])
                         if(file.closed==False):
                             file.close()
+                        print("Response =====",response)
                         if(len(response.content)>0 or response.status_code==200):
+                                print(response.content)
                                 file_content=base64.b64decode(response.content)
                                 # file=tempfile.NamedTemporaryFile(suffix='.mp4')
                                 # file.write(file_content)
@@ -239,10 +221,12 @@ class DocProcess:
                                 # shutil.copyfileobj(file_content,ff)
                                 file=open(fileName,"rb")
                                 print(file)
+                                print(f"File size: {os.path.getsize(file.name)} bytes")
                         docDb.update(docid,{"status":"PIIAnonymize completed"})
                         
                 if("FaceAnonymize" in subCat):
                         reqUrl = os.getenv("PRIVACY_FaceVIDEO_IP")+"/rai/v1/video/anonymize"
+                        print(reqUrl)
                         post_files = {
                     #   "payload": open("c:\WORK\GIT\responsible-ai-admin\responsible-ai-admin\src\rai_admin\temp\test4.mp4", "rb"),
                         "payload":file
@@ -250,7 +234,7 @@ class DocProcess:
                      
                         payload = {"name":fileName.split(".")[0]}
                         docDb.update(docid,{"status":"FaceAnonymize Processing"})
-                        response = requests.request("POST", reqUrl, data=payload, files=post_files)
+                        response = requests.request("POST", reqUrl, data=payload, files=post_files,verify=sslv[os.getenv("VERIFY_SSL","None")])
                         print(response)
                         print("file",file.closed)
                         if(file.closed==False):
@@ -275,7 +259,7 @@ class DocProcess:
                         }
                        
                         docDb.update(docid,{"status":"SafetyMasking Processing"})
-                        response = requests.request("POST", reqUrl, files=post_files)
+                        response = requests.request("POST", reqUrl, files=post_files,verify=sslv[os.getenv("VERIFY_SSL","None")])
                         if(file.closed==False):
                             file.close()
                         print("Response =====",response)
@@ -296,7 +280,7 @@ class DocProcess:
                         }
                        
                         docDb.update(docid,{"status":"NudityMasking Processing"})
-                        response = requests.request("POST", reqUrl, files=post_files)
+                        response = requests.request("POST", reqUrl, files=post_files,verify=sslv[os.getenv("VERIFY_SSL","None")])
                         if(file.closed==False):
                             file.close()
                         print("Response =====",response)
@@ -330,7 +314,7 @@ class DocProcess:
 
                     payload = ""
 
-                    response = requests.request("POST", reqUrl, data=payload, files=post_files)
+                    response = requests.request("POST", reqUrl, data=payload, files=post_files,verify=sslv[os.getenv("VERIFY_SSL","None")])
                     if(len(response.content)>0 or response.status_code==200):
                         file_content=response.content
                         file_content=base64.b64encode(file_content).decode('utf-8')
@@ -355,7 +339,7 @@ class DocProcess:
  "Content-Type": "multipart/form-data;" 
 }
                 payload ={"exclusionList":payload.exclusionList,"fileName":fileName}
-                response = requests.request("POST", reqUrl, data=payload, files=post_files)
+                response = requests.request("POST", reqUrl, data=payload, files=post_files,verify=sslv[os.getenv("VERIFY_SSL","None")])
                 if(response.status_code==200):
                     data=response.text
                     # print(type(x))
@@ -413,20 +397,6 @@ class DocProcess:
             
             
     def getFiles(username,categories):
-        
-        """
-            Retrieve files from the database based on the provided username and categories.
-            This function connects to the database, retrieves files associated with the 
-            specified username and categories, and processes the files to remove certain 
-            fields before returning them.
-            Args:
-                username (str): The username of the user whose files are to be retrieved.
-                categories (list): A list of categories to filter the files.
-            Returns:
-                list: A list of files matching the specified username and categories, 
-                      with certain fields removed.
-            """
-        
         mydb=DB.connect()
         collist = mydb.list_collection_names()
         print(collist)
@@ -452,22 +422,6 @@ class DocProcess:
         return files
     
     def getFileContent(docId):
-        """
-        Retrieves the content of files associated with a given document ID.
-        This function queries a database to find all files matching the provided
-        document ID. For each file, if it contains a "resultFileId", the corresponding
-        file data is fetched, encoded in base64, and added to a list of contents.
-        Args:
-            docId (float): The ID of the document whose associated files are to be retrieved.
-        Returns:
-            list: A list of dictionaries, where each dictionary represents a file's
-                  data with its content encoded in base64.
-        Note:
-            - The function assumes the existence of `docDb` and `fileDb` as database
-              objects with `findall` and `findOne` methods, respectively.
-            - The `docId` is expected to be convertible to a float.
-        """
-        
         print(docId)
         files=docDb.findall({"docId":float(docId)})
         print(files)
@@ -483,6 +437,38 @@ class DocProcess:
         print("contentList",contentList)
         return contentList
     
-        
-        
-    
+    # def getFileContent(fileId):
+    #     print("Getting file content for ID:", fileId)
+    #     try:
+    #         # Convert string ID to float if it's a timestamp-based ID
+    #         if isinstance(fileId, str) and fileId.replace('.', '', 1).isdigit():
+    #             fileId = float(fileId)
+            
+    #         # Retrieve the file directly from GridFS
+    #         fileData = fileDb.findOne(fileId)
+    #         print("File data retrieved:", fileData)
+    #         if not fileData:
+    #             return {"error": "File not found"}
+                
+    #         # Create a response with the binary data
+    #         content = fileData["data"]
+    #         media_type = fileData["contentType"]
+    #         filename = fileData["fileName"]
+            
+            
+            
+    #         # Return as StreamingResponse with explicit media_type
+    #         return StreamingResponse(
+    #             BytesIO(content),
+    #             media_type=media_type,  # Set the content type explicitly
+    #             headers={
+    #                 "Content-Disposition": f'attachment; filename="{filename}"',
+    #             }
+    #         )
+    #     except Exception as e:
+    #         print(f"Error retrieving file: {e}")
+    #         return {"error": f"Failed to retrieve file: {str(e)}"}
+
+
+
+

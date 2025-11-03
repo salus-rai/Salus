@@ -15,6 +15,7 @@ import os
 import time
 from venv import logger
 from fastapi import Response
+from fastapi.responses import JSONResponse
 
 from rai_backend.service.authenticatetelemetryservice import TelemetryContent
 from rai_backend.config.logger import CustomLogger
@@ -388,7 +389,15 @@ def createNewRole(payload:newRoleCreate):
     res = AuthService.newAuthority(payload.role)
     return res
 
+@router.post('/setUserConsent')
+def set_user_consent(payload: UserConsentCreate):
+    res = UserDb.set_user_consent(payload.userId, payload.userConsentStatus)
+    return res
 
+@router.get('/getUserConsent/{userId}')
+def get_user_consent(userId: str):
+    res = UserDb.get_user_consent(userId)
+    return JSONResponse(content={"userConsentStatus": res})
 
 
 

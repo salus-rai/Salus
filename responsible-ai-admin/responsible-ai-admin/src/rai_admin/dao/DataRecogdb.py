@@ -32,8 +32,8 @@ class RecogDb:
     mycol = mydb["Recog"]
     def findOne(id):
         values=RecogDb.mycol.find({"_id":id},{})[0]
-        # print(values)
         values=AttributeDict(values)
+        log.info(f"valueDB1:{values}")
         return values
     def findall(query):
         value_list=[]
@@ -41,7 +41,8 @@ class RecogDb:
         for v in values:
 
             v=AttributeDict(v)
-            value_list.append(v)
+            value_list.append(v) 
+        log.info(f"value_list:{value_list}") 
         return value_list
     def create(value):
          value=AttributeDict(value)

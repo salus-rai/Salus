@@ -50,8 +50,10 @@ class DB:
     def connect():
         try:
             db_flag=os.getenv("DB_TYPE")
+            print("dbflag",db_flag)
             if os.getenv("DB_TYPE")=="cosmos":
                 log.info("cosmos connection")
+                print(db_flag)
                 myclient = pymongo.MongoClient(os.getenv("COSMOS_PATH")) 
                 # cosmos_client = CosmosClient(os.getenv("COSMOS_PATH"))
                 log.info("cosmos connection")

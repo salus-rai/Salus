@@ -2075,7 +2075,7 @@ def addAWSCreds(payload:AWSReq):
             detail="Please check with administration!!",
             headers={"X-Error": "Please check with administration!!"})
     
-# For updating AWS Creds
+
 @router.patch('/rai/admin/updateAWSCreds', response_model= AWSStatus)
 def updateAWSCreds(payload:CredUpdate):
     id = uuid.uuid4().hex

@@ -1,12 +1,9 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
@@ -98,6 +95,8 @@ export class AddModelComponent {
       taskType:  new FormControl('', [Validators.required]),
     })
   }
+
+  // Initializes the component and sets up the API list
   ngOnInit(): void {
     if(this.data.modelValue == 0){
       this.isCreateModel = true;
@@ -112,6 +111,8 @@ export class AddModelComponent {
   // seting up api list 
   this.setApilist(ip_port);
 }
+
+  // Retrieves API configuration from local storage
 getLocalStoreApi() {
   let ip_port
   if (localStorage.getItem("res") != null) {
@@ -128,25 +129,39 @@ setApilist(ip_port: any) {
 }
 
 // This method will handles file selection, validates the file type, and initiates the file upload process.
-fileBrowseHandler(imgFile: any) {
-  console.log("Called")
-  this.files = []
+fileBrowseHandler(imgFile: any): void {
+  console.log("Called");
+  // Reset files list before adding new files
+  this.files = [];
   this.demoFile = this.files;
-  // to validate file SAST
-  const allowedTypes = ['application/octet-stream'];
-  for(let i =0; i< this.files.length; i++){
-    if (!allowedTypes.includes(this.files[i].type)) {
-     alert('Please upload a valid file');
-      this.files = [];
-      this.demoFile = [];
-      return ;
-    }
-  }
   this.browseFilesLenth = imgFile.target.files.length;
   this.prepareFilesList(imgFile.target.files);
-  this.spinner1 = true
-  this.uploadDocument(this.demoFile[0])
+  this.spinner1 = true;
+  const allowedTypes = ['application/octet-stream', 'application/x-python-code']; // Allowed MIME types
+  const allowedExtensions = ['.pkl'];
+    // Check the file extension (for .pkl)
+    const fileExtension = this.demoFile[0].name.split('.').pop()?.toLowerCase();
+
+    if (this.files.length > 0) {
+      for (let i = 0; i < this.files.length; i++) {
+        const currentFile = this.files[i];
+        // Check the MIME type
+        if (!allowedTypes.includes(currentFile.type) && !allowedExtensions.includes(`.${fileExtension}`)) {
+          alert('Please upload a valid .pkl file');
+            this.files = [];
+            this.demoFile = [];
+            return;
+        }
+    }
+      // If files are valid, upload the first file (or process as needed)
+  if (this.files.length > 0) {
+    this.uploadDocument(this.demoFile[0]);
 }
+    }
+
+}
+
+// Reads and uploads the selected document
 uploadDocument(file:any) {
   let fileReader = new FileReader();
   fileReader.onload = (e) => {
@@ -157,12 +172,15 @@ uploadDocument(file:any) {
   fileReader.readAsText(file);
 }
 
+// Prepares the list of files for upload
 prepareFilesList(files: Array<any>) {
   for (const item of files) {
     this.files.push(item);
   }
   this.uploadFilesSimulator(0)
 }
+
+// Simulates file upload progress
 uploadFilesSimulator(index: number) {
   setTimeout(() => {
     if (index === this.files.length) {
@@ -180,6 +198,8 @@ uploadFilesSimulator(index: number) {
     }
   }, 1000);
 }
+
+// Deletes a file from the list
 deleteFile(index: number) {
   if (this.files[index].progress < 100) {
     console.log("if of deltefile 1.");
@@ -188,6 +208,7 @@ deleteFile(index: number) {
   this.files.splice(index, 1);
 }
 
+// Closes the dialog
 closeDialog(){
   this.dialogRef.close();
 }
@@ -211,7 +232,8 @@ createNew(){
   "useModelApi": mEndPointA,
   "modelEndPoint": mEndPoint,
   "data": requestD,
-  "prediction": predictionD
+  "prediction": predictionD,
+  "imageClassificationTypes":"binary classification"
 }
 const fileData = new FormData();
 fileData.append('userId', this.user);
@@ -293,6 +315,8 @@ this.https.patch(this.updateModels,fileData).subscribe((res:any)=>{
   this.closeDialog();
 })
 }
+
+// Resets the form and clears file uploads
 resetForm(){
   this.SecurityFormModel.reset();
   this.SecurityFormModelUpdate.reset();  
@@ -302,6 +326,8 @@ resetForm(){
     this.demoFile.splice(0, 1);
   }
 }
+
+// Handles changes in the model endpoint availability
 changeModelEndPointAvailable(event: any) {
   //this.selectedRadioBoxVariable.emit(this.selectedRadioBox);
   // this.checkedValue = event.target.value;

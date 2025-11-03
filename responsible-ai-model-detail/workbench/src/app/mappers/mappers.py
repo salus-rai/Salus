@@ -1,31 +1,31 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
+'''
+MIT license https://opensource.org/licenses/MIT Copyright 2024-2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 from typing import Union,List, Optional
-from pydantic import BaseModel,Field
+from pydantic import BaseModel,Field,model_validator
 from fastapi import UploadFile
 import json
+from pydantic.class_validators import root_validator
 
 class TenetDataRequest(BaseModel):
     tenetName : str = "RAI"
     tenetId : float = "0.0"
 
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate_to_json
+    @model_validator(mode='before')
     @classmethod
     def validate_to_json(cls, value):
         if isinstance(value, str):
             return cls(**json.loads(value))
         return value
+    class Config:
+        from_attributes = True
 
 class GetModelPayloadRequest(BaseModel):
     modelName : str = "Cartoonclassification_Model"
@@ -39,14 +39,17 @@ class GetModelPayloadRequest(BaseModel):
     data: Optional[str] = Field(example="data")
     prediction : Optional[str] = Field(example="prediction")
 
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate_to_json
+    @model_validator(mode='before')
     @classmethod
     def validate_to_json(cls, value):
         if isinstance(value, str):
             return cls(**json.loads(value))
         return value
+    class Config:
+        from_attributes = True
+
+
+
     
 
 class GetModelRequest(BaseModel):
@@ -64,14 +67,14 @@ class UpdateModelPayloadRequest(BaseModel):
     prediction : Optional[str] = Field(example="prediction")
 
     
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate_to_json
+    @model_validator(mode='before')
     @classmethod
     def validate_to_json(cls, value):
         if isinstance(value, str):
             return cls(**json.loads(value))
         return value
+    class Config:
+        from_attributes = True
 
 
 class GetDataPayloadRequest(BaseModel):
@@ -81,21 +84,21 @@ class GetDataPayloadRequest(BaseModel):
     groundTruthClassLabel : Optional[Union[str, list]] = Field(example="target") 
     
 
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate_to_json
+    @model_validator(mode='before')
     @classmethod
     def validate_to_json(cls, value):
         if isinstance(value, str):
             return cls(**json.loads(value))
         return value
+    class Config:
+        from_attributes = True
     
 
 class GetDataRequest(BaseModel):
     DataFile: Union[UploadFile] = None
 
-class GetGroundtruthFileRequest(BaseModel):
-    GroundTruthFile: Union[UploadFile] = None
+# class GetGroundtruthFileRequest(BaseModel):
+#     GroundTruthFile: Optional[Union[UploadFile]] = None
 
 
 class UpdateDataPayloadRequest(BaseModel):
@@ -103,21 +106,21 @@ class UpdateDataPayloadRequest(BaseModel):
     groundTruthClassNames : list = [0,1]
     groundTruthClassLabel: Optional[str] = Field(example="target")
 
-    @classmethod
-    def __get_validators__(cls):
-        yield cls.validate_to_json
+    @model_validator(mode='before')
     @classmethod
     def validate_to_json(cls, value):
         if isinstance(value, str):
             return cls(**json.loads(value))
         return value
+    class Config:
+        from_attributes = True
 
 ## FOR BATCH GENERATION MAPPER
 
 class GetBatchPayloadRequest(BaseModel):
     userId:Optional[str] = Field(example="admin")
     title:Optional[str] = Field(example="Preprocessor1")
-    modelId:Optional[float] = Field(example="1.1")
+    modelId:Optional[float] = Field(default=None, example=1.1)
     dataId:Optional[float] = Field(example="2.1")
     tenetName: Optional[List[str]]
     appAttacks: Optional[List[str]] = None

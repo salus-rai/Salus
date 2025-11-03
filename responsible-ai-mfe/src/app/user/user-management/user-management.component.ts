@@ -1,12 +1,9 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { Component, ViewEncapsulation } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { PagingConfig } from 'src/app/_models/paging-config.model';
@@ -48,7 +45,6 @@ export class UserManagementComponent {
     Backend_UpdateUser = ""
     Backend_DeleteUser = ""
 
-    userId: any;
 
 
   edit(i: any,u:any) {
@@ -60,7 +56,6 @@ export class UserManagementComponent {
     }
   }
 
-  // Updates the user's activation status and authorities, then sends the updated data to the backend.
   update(i: any,id:any,activated:any,authorities:any) {
     this.editIndex = this.editIndex.filter(index => index !== i);
     // Here you can also add the logic to update the user in your backend
@@ -87,9 +82,6 @@ export class UserManagementComponent {
   }
   ngOnInit() {
     let ip_port: any
-
-    let user = this.getLogedInUser()
-
     ip_port = this.getLocalStoreApi()
     this.setApilist(ip_port)
     this.getUserData();
@@ -140,25 +132,12 @@ toggleSearch() {
   this.filteredItems = [];
 }
 
-  getLogedInUser() {
-    if (localStorage.getItem("userid") != null) {
-      const x = localStorage.getItem("userid")
-      if (x != null) {
-
-        this.userId = JSON.parse(x)
-        console.log(" userId", this.userId)
-        return JSON.parse(x)
-      }
-
-      console.log("userId", this.userId)
-    }
-  }
   getLocalStoreApi() {
     let ip_port
-    if (localStorage.getItem("res") != null) {
-      const x = localStorage.getItem("res")
-      if (x != null) {
-        return ip_port = JSON.parse(x)
+    if (window && window.localStorage && typeof localStorage !== 'undefined') {
+      const res = localStorage.getItem("res") ? localStorage.getItem("res") : "NA";
+      if(res != null){
+        return ip_port = JSON.parse(res)
       }
     }
   }
@@ -179,6 +158,9 @@ toggleSearch() {
         this.filteredUsers = this.dataSource.userList;
       },
       (error: HttpErrorResponse) => {
+        // Handle error response here
+        console.error(error);
+        // You can display an error message to the user or perform any other error handling logic
       }
     );
   }
@@ -196,8 +178,6 @@ getListofAuthorities() {
     this.options = res;
   })
   }
-
-  // Deletes a user by their ID and refreshes the user list upon success.
   clickDeleteUser(id: any) {
     let x = this.Backend_DeleteUser
     let y = `${x}/delete?id=${id}`
@@ -227,11 +207,11 @@ getListofAuthorities() {
         // Optionally, refresh the list of users or authorities here
       },
       error: (error) => {
+        console.error('Error deleting user', error);
+        // Handle error scenario, maybe show a message to the user
       }
     });
   }
-
-  // Returns and sets the activation status message based on the user's activation state.
   showActivationStatus:any;
   userActivatedValue(value: any) {
     // console.log(value);
@@ -243,8 +223,6 @@ getListofAuthorities() {
       return this.showActivationStatus ="User Deactivated";
     }
   }
-
-  // Logs and updates the activation status message when the activation toggle is changed.
   ontoggleOpen(event: any, value: any) {
     // console.log("event",event);
     console.log("event", event.target.checked);
@@ -263,7 +241,6 @@ getListofAuthorities() {
     console.log(i);
   }
 
-  // Sends updated user data to the backend and refreshes the user list upon success.
   updateUser(header: any) {
     this.https.patch(this.Backend_UpdateUser, header).subscribe({
       next: (response) => {
@@ -271,6 +248,8 @@ getListofAuthorities() {
         console.log('User updated successfully', response);
         this.getUserData();
       },error: (error) => {
+        console.error('Error updating user', error);
+        // Handle the error appropriately here
       }
     });
   }

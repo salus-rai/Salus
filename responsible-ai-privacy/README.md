@@ -10,57 +10,43 @@
 - [Running the Application](#running-the-application)
 - [Features](#features)
 - [License](#license)
-- [Contact](#contact)
+
 
 ## Introduction
-Privacy is application which detects and masks any PII data present in Unstructured, Text, Image, DICOM and returns the processed data.
+Privacy is application which detects and masks any PII data present in Unstructured, Text, Image, DICOM, Video and returns the processed data.
  
-## Prerequistes
-1. Python 3.9 - 3.11
+## Requirements
+1. Python 3.11
 2. VSCode
+3. Mongo DB
 
 # Models
- 1. En_core_wb_lg Model Download and place it lib folder:
-     link:[https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl](https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.7.1/en_core_web_lg-3.7.1-py3-none-any.whl)
+ 1. En_core_wb_lg and en_core_web_trf Model Download and place it lib folder:
+     link:[https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl](https://github.com/explosion/spacy-models/releases/download/en_core_web_lg-3.8.0/en_core_web_lg-3.8.0-py3-none-any.whl) 
+    link:[https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.8.0/en_core_web_trf-3.8.0-py3-none-any.whl](https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.8.0/en_core_web_trf-3.8.0-py3-none-any.whl)
      docs: https://spacy.io/models/en#en_core_web_lg
+    
  2. StarPII Model for code moderation: https://huggingface.co/bigcode/starpii
     Download the model files, paste the model creating folder named as nermodel inside, src\privacy\util\code_detect\ner\pii_inference\nermodel
+    
+ 3. Roberta multilingual ner model : https://huggingface.co/julian-schelb/roberta-ner-multilingual
+    Create a folder named as "multilingual-ner" in responsible-ai-privacy\models directory. Download the files (config.json,special_tokens_map.json,tokenizer.json,tokenizer_config.json,unigram.json,pytorch_model.bin) from the provided link and place them in this folder (responsible-ai-  
+    privacy\models\multilingual-ner).
+    
+ 4. Roberta NER Model": https://huggingface.co/51la5/roberta-large-NER
+   Create a folder named as "roberta" in responsible-ai-privacy\models directory. Download the files (config.json,pytorch_model.bin,sentencepiece.bpe.model,tokenizer.json)from the provided link and place them in this folder (responsible-ai-  
+   privacy\models\roberta).
+   
+ 5. PIIRanha NER Model: https://huggingface.co/iiiorg/piiranha-v1-detect-personal-information
+   Create a folder named as "PIIRanha" in responsible-ai-privacy\models directory. Download the files (added_tokens.json,config.json,model.safetensors,special_tokens_map.json,spm.model,tokenizer.json,tokenizer_config.json,training_args.bin) from the provided link and place them in this folder (responsible-ai-  
+   privacy\models\PIIRanha).
+   
 
-## Building and Distributing the Python Package as a Wheel (WHL) File For Moderation Model
- 
-This section outlines the steps to create a distributable Wheel (WHL) file for the `infosys_responsible_ai_python_package` and integrate it into the `responsible-ai-privacy/lib` directory.
- 
-**Steps:**
- 
-1.  **Install `wheel` and `setuptools`:**
-    ```bash
-    pip install wheel setuptools
-    ```
-2.  **Navigate to the Package Directory:**
-    ```bash
-    cd infosys_responsible_ai_python_package
-    ```
-3.  **Build the Wheel File:**
-    ```bash
-    python setup.py bdist_wheel --universal
-    ```
-4.  **Locate and Copy the Wheel File:**
-    Navigate to `dist` and copy the `.whl` file.
-5.  **Paste the Wheel File into the `lib` Directory:**
-    Navigate to `responsible-ai-privacy/lib` and paste.
-6.  **Update `requirements.txt`:**
-    Replace the package entry with the `.whl` filename.
- 
-**Note:**
-* Ensure `setup.py` version is correct.
-* `--universal` is optional.
-* Update `requirements.txt` with the `.whl` filename.
-* If any code changes are done in responsible AI privacy codebase then you have to make the same changes in RAI privacy packages when you are creating a new whl file.
- 
+
 ## Installation
 To run the application, first we need to install Python and the necessary packages:
  
-1. Install Python (version >= 3.9) from the [official website](https://www.python.org/downloads/) and ensure it is added to your system PATH.
+1. Install Python (version 3.11.x) from the [official website](https://www.python.org/downloads/) and ensure it is added to your system PATH.
  
 2. Install MongoDB by following the instructions on the [official MongoDB website](https://docs.mongodb.com/manual/installation/).
  
@@ -115,14 +101,16 @@ Link provided above will directly download the model version 3.7.1.
       pip install torch==2.3.1
   ```
   Note: If you face any issue with the torch library then uninstall the torch `pip uninstall torch` and then reinstall the latest version `pip install torch` .
-
+  Note:To anonymize PDF file which is part of privacyfiles_main please install PyMuPDF (which is a AGPL Licensed package) using following command:
+  ```sh
+     pip install PyMuPDF
+   ```
 
 Download and install the tesseract in your system. After installation, set the tessaract path in environment variables of account or system : [Tessaract](https://digi.bib.uni-mannheim.de/tesseract/tesseract-ocr-w64-setup-v5.3.0.20221214.exe).
   Different versions of tesseract : [Versions](https://digi.bib.uni-mannheim.de/tesseract/).
   Tesseract Github : [Github](https://github.com/tesseract-ocr/tessdoc).
 
-10. Download the ner model from [StarPII](https://huggingface.co/bigcode/starpii/tree/main), place it in a folder named nermodel and place it in the path : `src/privacy/util/code_detect/ner/pii_inference/nermodel`
-   (Also mentioned in the Models section)
+
 
 ## Set Configuration Variables
 After installing all the required packages, configure the variables necessary to run the APIs.
@@ -148,10 +136,12 @@ After installing all the required packages, configure the variables necessary to
    API_KEY="${api_key}"                    # [Optional] required if using computer vision
    API_ENDPOINT="${api_endpoint}"          # [Optional] required if using computer vision
    GCS_DEVELOPER_KEY="${gcsdeveloperkey}"  # [Optional] required if using computer vision
+   VERIFY_SSL = "${verify_ssl}" #[Optional] If you want to by pass verify SSL check then set the variable    value to False otherwise True
+
    ```
     
     *TELE_FLAG is made true only if user wants to request the response in telemetry. Otherwise for the normal flow it can be set as False.
-    For Telemetry setup, refer this link [responsible-ai-telemetry](https://github.com/Infosys-AI-Cloud-MMS/responsible-ai-telemetry)
+    For Telemetry setup, refer this link [responsible-ai-telemetry](https://github.com/salus-rai/Salus/tree/main/responsible-ai-telemetry)
     set the below env variables for connecting with telemetry alongside Telemetry flag.
    
    ```sh
@@ -159,6 +149,21 @@ After installing all the required packages, configure the variables necessary to
     PRIVACY_TELEMETRY_URL="http://<host:PORT>/path/v1/telemtry/<privacy telemetry api url>"
     PRIVACY_ERROR_URL="http://<host:PORT>/path/v1/telemtry/<privacy error telemetry api url>"
    ```
+
+  ### HTTP Security Headers Configuration
+
+    ```sh
+    allow_methods = "${allow_methods_example}" #[Mandatory] e.g., "*" or "GET, POST, OPTIONS"
+   allow_origin = "${allow_origin_example}"    # [Mandatory]e.g., '["http://localhost:8000/", "https://yourdomain.com"]'
+   content_security_policy = "${csp_example}"  # [Mandatory]e.g., "default-src 'self'; script-src 'self' https://trusted.cdn.com"
+   cache_control = "${cache_control_example}"  # [Mandatory]e.g., "no-cache, no-store, must-revalidate"
+   XSS_header = "${xss_header_example}"  # [Mandatory]e.g., "1; mode=block"
+   Vary_header = "${vary_header_example}"  # [Mandatory]e.g., "Origin"
+   X-Frame-Options = "${x_frame_options_example}" # [Mandatory]e.g., "SAMEORIGIN" or "DENY"
+   X-Content-Type-Options = "${x_content_type_options_example}" #[Mandatory] e.g., "nosniff"
+   Pragma = "${pragma_example}" # [Mandatory]e.g., "no-cache"
+    ```
+
     
     **Admin Module is the supporting module which is used for configuring the main module. User can create recognizer,custome templates, configure Thresholds and map it to created account and portfolio.
 
@@ -167,6 +172,11 @@ After installing all the required packages, configure the variables necessary to
 4. Replace the placeholders with your actual values.
 
 ## Running the Application
+
+Before running the application:
+
+Note: We are currently working on anonymizing PDF content, which will be available in the next release.
+Please comment out the PDF anonymize router (from privacy.service.pdf_service import PDFService) and the privacy file anonymize router (@fileRouter.post('/privacy-files/anonymize')) with its respective import statements (i.e., linenumber 1319-1384 and 1546-1621 in [privacy_router.py](https://github.com/Infosys/salus-rai/blob/master/responsible-ai-privacy/responsible-ai-privacy/src/privacy/routing/privacy_router.py) file), also comment the [pdf_service.py](https://github.com/Infosys/salus-rai/blob/master/responsible-ai-privacy/responsible-ai-privacy/src/privacy/service/pdf_service.py)file.
 
 Once we have completed all the aforementioned steps, we can start the service.
 
@@ -180,15 +190,26 @@ Once we have completed all the aforementioned steps, we can start the service.
     ```sh
     python privacy_main.py
      ```
-   
+    To run privacyfiles_main* :
+    ```sh
+    python privacyfiles_main.py
+     ```
+
+    *Privacyfiles is used for accessing data from files like excel, pdf, video etc.
+
 3. Open the following URL in your browser:
     For privacy_main :
-    `http://localhost:30002/v1/privacy/docs#/`
+    [http://localhost:30002/v1/privacy/docs#/](http://localhost:30002/v1/privacy/docs#/)
         User can also change the port which is mentioned in privacy_main.py file
 
-   Note: We are currently working on anonymizing PDF content, which will be available in the next release.
-     In the meantime, please comment out the PDF anonymize router (from privacy.service.pdf_service import PDFService) and the privacy file anonymize router (@fileRouter.post('/privacy-       files/anonymize')) with its respective import statements (i.e., linenumber 2536-2623 and 2907-2972 in [privacy_router.py](https://github.com/salus-rai/Salus/blob/main/responsible-ai-privacy/responsible-ai-privacy/src/privacy/routing/privacy_router.py) file).
+    For privacyfiles_main :
+    `http://localhost:<portnumber>/rai/v1/privacy-files/docs#/`
+        User can also change the port which is mentioned in privacyfiles_main.py file
+    
+    Note: For the video anonymize endpoint (rai/v1/privacy-files/video/anonymize) use ocr as "Tesseract".
+   
  
+   
 ## Features
 
 **Privacy :** 
@@ -251,7 +272,25 @@ Once we have completed all the aforementioned steps, we can start the service.
   </tr>
 </table>
 
+**Privacy Files :**
+
+<table>
+  <tr>
+    <th>API NAME</th>
+    <th>DESCRIPTION</th>
+  </tr>
+  <tr>
+    <td>Excel Anonymize</td>
+    <td>Anonymize PII entities in excel file.</td>
+  </tr>
+  <tr>
+    <td>Video Anonymize</td>
+    <td>Anonymize PII entities in video.</td>
+  </tr>
+</table>
 
 ## License
 
 The source code for the project is licensed under the MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
+
+

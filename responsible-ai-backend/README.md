@@ -6,7 +6,7 @@
 - [Set Configuration Variables](#set-configuration-variables)
 - [Running the Application](#running-the-application)
 - [License](#license)
-
+- [Issue](#issueUpdate)
 
 
 ## Introduction
@@ -51,10 +51,6 @@ To run the application, first we need to install Python and the necessary packag
 8. Go to the `requirement` directory where the `requirements.txt` file is present and install the requirements:
     ```sh
     pip install -r requirements.txt
-    pip install werkzeug==1.0.1
-
-**Note:** 
-Ensure you install versions of the packages that are compatible with your operating system and python environment.
     ```
 ## Set Configuration Variables
 
@@ -119,4 +115,34 @@ Note: v1/rai/backend/account endpoint is used by frontend module for verifying t
 The source code for the project is licensed under the MIT license, which you can find in the [LICENSE.md](License.md) file.
 
 
+## Issue Update
+Resolving Cosmos DB Error:
+"The index path corresponding to the specified order-by item is excluded."
 
+If you encounter this error while hitting the Register API during backend operations, it typically means the required field (e.g., id) is not included in the indexing policy for ordering results.
+To resolve this in Azure Cosmos DB:
+1. Navigate to the Azure Portal and open your Cosmos DB account.
+
+2. Go to Data Explorer.
+
+3. In the Data Explorer, locate your User Table (Collection).
+
+4. Click on the User Table, then go to "User Settings".
+
+5.  Open the Indexing Policy tab.
+
+6. Under Included Paths:
+
+    Add a new definition:
+
+        Type: Single Field
+
+        Path: /id/?
+
+        Make sure it's included and not excluded.
+
+7. Click Save to apply the changes.
+
+After that:
+Try hitting the Register API again — the error should now be resolved.
+                                                            

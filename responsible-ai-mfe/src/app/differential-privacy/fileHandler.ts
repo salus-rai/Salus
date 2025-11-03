@@ -1,12 +1,10 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
+import { MatSnackBar } from '@angular/material/snack-bar';
 export class FileHandler {
     files: any[] = [];
     demoFile: any[] = [];
@@ -14,7 +12,8 @@ export class FileHandler {
     fileUploadvalid=false
     validationMessage: string = '';
 
-    // handles file selection, validates the file type, and prepares the file list for upload.
+    constructor(public _snackBar: MatSnackBar ){}
+
     fileBrowseHandler(imgFile: any) {
         this.prepareFilesList(imgFile.target.files);
         this.demoFile = this.files;
@@ -23,7 +22,12 @@ export class FileHandler {
         // Validate file type
         const allowedTypes = ['text/csv', 'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'];
         if (!allowedTypes.includes(this.file.type)) {
-            this.validationMessage = 'Only CSV files are allowed';
+           this._snackBar.open('Please select a valid file type', '✖', {
+              horizontalPosition: 'center',
+              verticalPosition: 'top',
+              duration: 3000,
+           }); 
+            //  this.validationMessage = 'Only CSV files are allowed';  
             this.fileUploadvalid=false
             this.reset();
             return;
@@ -33,10 +37,11 @@ export class FileHandler {
         }
 
         // If the file is valid, clear the validation message and handle the file
-        this.validationMessage = '';
+        // this.validationMessage = '';
         // this.fileBrowseHandler(this.file);
     }
 
+    // Prepare the file list for upload
     prepareFilesList(files: Array<any>) {
         this.files = []
         for (const item of files) {
@@ -49,8 +54,7 @@ export class FileHandler {
         this.demoFile = []
         this.files = []
     }
-
-    // Simulates file upload progress for the selected files.
+    // Simulate file upload progress
     uploadFilesSimulator(index: number, files: any) {
         setTimeout(() => {
             if (index === this.files.length) {
@@ -68,7 +72,7 @@ export class FileHandler {
         }, 1000);
     }
 
-    // Validates if a file has been selected and updates the validation message accordingly.
+    // Validate if a file exists
     fileExitsValidator() {
         if(this.demoFile.length ==0){
             this.validationMessage = 'Please select a file';

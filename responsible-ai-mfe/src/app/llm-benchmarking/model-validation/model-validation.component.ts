@@ -1,12 +1,9 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, ViewChild, ViewEncapsulation } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -51,15 +48,17 @@ export class ModelValidationComponent {
 
   constructor(public https: HttpClient,
     private _snackBar: MatSnackBar,
-    private dialog: MatDialog,public nonceService:NonceService
+    private dialog: MatDialog,
+    public nonceService:NonceService
   ) { }
 
+  // Initializes the component and sets up API endpoints
   ngOnInit(): void {
-    let ip_port;
-    if (localStorage.getItem("res") != null) {
-      const x = localStorage.getItem("res")
-      if (x != null) {
-        ip_port = JSON.parse(x)
+    let ip_port
+    if (window && window.localStorage && typeof localStorage !== 'undefined') {
+      const res = localStorage.getItem("res") ? localStorage.getItem("res") : "NA";
+      if(res != null){
+       ip_port = JSON.parse(res)
       }
     }
     this.apiUrlEndpoints.securityLLM_availableDatasets = ip_port.result.Security_llm + ip_port.result.SecurityLLM_availableDataSets;
@@ -80,7 +79,7 @@ export class ModelValidationComponent {
     this.getAvailableModels();
   }
 
-  // Updates the selected prompt and retrieves the dataset length based on the selected dataset.
+  // Handles dataset selection and updates the prompt
   onDataSetSelect(event: any) {
     const selectedOption = event.target.value;
     this.getLengthofDataSet(selectedOption);
@@ -98,7 +97,7 @@ export class ModelValidationComponent {
     }
   }
 
-  // Fetches the length of the selected dataset and updates the placeholder text.
+  // Fetches the length of the selected dataset
   getLengthofDataSet(selectedDataSetValue: any) {
     const fData = new FormData();
     const a2 = '1';
@@ -159,7 +158,7 @@ export class ModelValidationComponent {
     }
   }
 
-  // Processes and maps prompts and labels from the model validation data source.
+  // Validates the model data
   validateModelData(){
     try{
     const a = this.modelValidateDataSource.prompts.length;
@@ -319,20 +318,10 @@ export class ModelValidationComponent {
 
   // ----------Handle File Upload--------------------
   fileBrowseHandler(file: any) {
-    // to validate file SAST
-    const allowedTypes = ['application/zip'];
-    for(let i =0; i< this.file.length; i++){
-      if (!allowedTypes.includes(this.file[i].type)) {
-        this._snackBar.open('Please upload valid file', 'Close', {
-          duration: 2000,
-        });
-        this.file = [];
-        return ;
-      }
-    }
     this.prepareFilesList(file.target.files);
   }
 
+  // Prepares the list of model files
   prepareFilesList(files: Array<any>) {
     this.files = [];
     for (const item of files) {
@@ -341,21 +330,12 @@ export class ModelValidationComponent {
     this.uploadFilesSimulator(0, "modelFile")
   }
 
+  // Handles file upload for dataset files
   fileBrowseHandler2(file: any) {
-    // to validate file SAST
-    const allowedTypes = ['application/zip'];
-    for(let i =0; i< this.file.length; i++){
-      if (!allowedTypes.includes(this.file[i].type)) {
-        this._snackBar.open('Please upload valid file', 'Close', {
-          duration: 2000,
-        });
-        this.file = [];
-        return ;
-      }
-    }
     this.prepareFilesList2(file.target.files);
   }
 
+   // Prepares the list of dataset files
   prepareFilesList2(files: Array<any>) {
     this.files2 = [];
     for (const item of files) {
@@ -364,7 +344,7 @@ export class ModelValidationComponent {
     this.uploadFilesSimulator(0, "dataFile")
   }
 
-  // Simulates file upload progress for model or dataset files.
+   // Simulates file upload progress
   uploadFilesSimulator(index: number, files: any) {
     if (files == 'modelFile') {
       setTimeout(() => {
@@ -406,8 +386,8 @@ export class ModelValidationComponent {
     this.files = [];
     this.files2 = [];
   }
-  // -----------------------------------
-
+  
+  // Handles API errors and displays a snackbar message
   handleError(error: any) {
     console.log(error.status);
     console.log(error.error.detail);
@@ -425,7 +405,7 @@ export class ModelValidationComponent {
     });
   }
 
-  // Fetches the list of available datasets from the API.
+  // Fetches the list of available datasets
   getAvailableDataSets() {
     this.https.get(this.apiUrlEndpoints.securityLLM_availableDatasets).subscribe(
       (res: any) => {
@@ -438,7 +418,7 @@ export class ModelValidationComponent {
     )
   }
 
-  // Extracts and stores dataset names from the fetched dataset list.
+  // Extracts dataset names from the API response
   getListOfDataSets(avaiableDataSetsVariable: any) {
     try {
       for (let i = 0; i < avaiableDataSetsVariable.length; i++) {
@@ -449,7 +429,7 @@ export class ModelValidationComponent {
     }
   }
 
-  // Fetches the list of available models from the API.
+  // Fetches the list of available models
   getAvailableModels() {
     this.https.get(this.apiUrlEndpoints.securityLLM_availableModels).subscribe(
       (res: any) => {
@@ -461,8 +441,7 @@ export class ModelValidationComponent {
       }
     )
   }
-
-  // Extracts and stores model names from the fetched model list.
+  // Extracts model names from the API response
   getListOfModels() {
     try {
       for (let i = 0; i < this.availableModels.length; i++) {
@@ -495,7 +474,7 @@ export class ModelValidationComponent {
     );
   }
 
-  // Deletes a dataset by sending a request to the API and refreshes the dataset list.
+  // Deletes a dataset
   deleteDataSet(dataSet: string) {
     const fData = new FormData();
     fData.append('datasetName', dataSet);

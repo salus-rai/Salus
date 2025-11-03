@@ -1,6 +1,6 @@
-# Contributing to Salus
+# Contributing to salus-rai
 
-🎉 Thank you for your interest in contributing to **Salus!**
+🎉 Thank you for your interest in contributing to **salus-rai**
 
 We appreciate all contributions, whether it's fixing bugs, improving documentation, adding features, or suggesting enhancements.  
 
@@ -9,13 +9,18 @@ Please take a moment to read this guide to ensure a smooth contribution process.
 
 ## 📋 How to Contribute  
 
-There are several ways you can contribute. Please share your contributions via the [Contribution Page](https://github.com/salus-rai/Salus/issues) with the appropriate labels.
+There are several ways you can contribute. Please share your contributions via the [Contribution Page](https://github.com/salus-rai/Salus/issues) with the appropriate labels, tagging `@salus-rai`.
 
-✅ **Report Issues**: Found a bug? Open an [issue](https://github.com/salus-rai/Salus/issues) using the label `bug`.  
-✅ **Suggest Features**: Have a great idea? Share it in the [discussions](https://github.com/salus-rai/Salus/discussions) page with the `suggest` label.  
-✅ **Improve Documentation**: Spotted a typo? Help improve our documentation by opening an issue with the [documentation](https://github.com/salus-rai/Salus/issues) label.   
-✅ **Fix Bugs**: Help us squash bugs by submitting patches.  
-✅ **Add Features**: Implement new functionalities to enhance the project.  
+✅ **Report Issues**: Found a bug? open new issue and select [Bug](https://github.com/salus-rai/Salus/issues) Template and create a bug.
+
+✅ **Suggest Features**: Have a great idea? Share it in the [discussions](https://github.com/salus-rai/Salus/discussions) page with the `suggest` label. 
+
+✅ **Improve Documentation**: Spotted a typo? Help improve our documentation by creating a new issue ith the [documentation](https://github.com/salus-rai/Salus/issues) label.   
+
+✅ **Fix Bugs**: Help us squash bugs by submitting patches. Create new issue by selecting [Blank Issue](https://github.com/salus-rai/Salus/issues) Template and provide the bug fix with appropriate labels.
+
+✅ **Add Features**: Implement new functionalities to enhance the project. Create new issue and select [Feature](https://github.com/salus-rai/Salus/issues) Template to suggest new Feature.
+
 ➡️ Refer to the guidelines in the **Pull Request Process** section to submit any feature or bug fixes.  
 
 ## 🔥 Coding Guidelines
@@ -101,10 +106,13 @@ git push origin <new-branch-name>
 - Be prepared to make changes based on their feedback. You can push additional commits to the same branch, and the PR will automatically update.
 - Once the maintainers are satisfied, your PR will be merged into the main project.
 
+### 9. Contribution:
+ - Ensure that your contribution license is compatible with the MIT license and that there are no copyleft licenses present, such as GPL, AGPL, LGPL 2.1, MPL 1.0, etc. 
+
   
-### 9. Celebrate 🎉
+### 10. Celebrate 🎉
 - Congratulations! You've contributed to an open-source project! 🎉
 
 ## 📜 License
 
-By contributing to this project, you agree that your contributions will be licensed under the project’s [LICENSE](https://github.com/salus-rai/Salus/blob/main/LICENSE) file.
+By contributing to this project, you agree that your contributions will be licensed under the project’s [LICENSE](https://github.com/salus-rai/Salus/blob/main/LICENSE.md) file.

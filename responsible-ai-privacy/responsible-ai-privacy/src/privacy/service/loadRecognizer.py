@@ -1,13 +1,12 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
+# MIT license https://opensource.org/licenses/MIT
+# Copyright 2024 Infosys Ltd
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
 
 import json
 from privacy.config.logger import request_id_var
@@ -18,20 +17,9 @@ from privacy.util.special_recognizers.DataListRecognizer import DataListRecogniz
 log = CustomLogger()
 
 class LoadRecognizer:
-    """
-    A class that handles loading and setting up recognizers.
-    """
+
 
     def set_recognizer(payload):
-        """
-        Sets up the recognizer based on the given payload.
-
-        Args:
-            payload: The payload containing the recognizer configuration.
-
-        Returns:
-            A dictionary with the available recognizers and a special symbol for selecting NLP:ranha.
-        """
         error_dict[request_id_var.get()]=[]
         log.debug("Entering in analyze function")
         # gc.collect()
@@ -83,13 +71,10 @@ class LoadRecognizer:
                 error_dict[request_id_var.get()].append({"UUID":request_id_var.get(),"function":"set_recognizer","msg":str(e.__class__.__name__),"description":str(e)+"Line No:"+str(e.__traceback__.tb_lineno)})
                 # ExceptionDb.create({"UUID":request_id_var.get(),"function":"textAnalyzeMainFunction","msg":str(e.__class__.__name__),"description":str(e)+"Line No:"+str(e.__traceback__.tb_lineno)})
                 raise Exception(e)
+    
+    
     def load_recognizer():
-        """
-        Loads the recognizer.
-
-        Returns:
-            A dictionary with the available recognizers and a special symbol for selecting NLP:ranha.
-        """
+        
         try:
  
             return {"Available Recognizers":registry.get_supported_entities()+[str(i)+"*" for i in set(ranha_recog.get_supported_entities())-set(registry.get_supported_entities())],"*": "select NLP:ranha use the above entities"}

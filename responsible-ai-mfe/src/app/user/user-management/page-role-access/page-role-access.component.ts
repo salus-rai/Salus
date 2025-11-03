@@ -1,12 +1,9 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { Component, Inject, ViewChild } from '@angular/core';
 import { PageRoleAccessService } from './page-role-access.service';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -80,6 +77,7 @@ tabs!: Tab[];
       this.CreateNewRoleForm();
      }
 
+     // Initializes the component and fetches accessible pages
   ngOnInit(): void {
     console.log(this.data.options);
     this.updatedRoles = this.data.options;
@@ -100,15 +98,13 @@ tabs!: Tab[];
           console.log(this.originalPages, "originalPages")
         },
         error => {
+          console.error('There was an error!', error);
         }
       );
 
-
-
-
   }
 
-  // Fetches and processes accessible pages and updates the UI based on the selected role.
+// Handles the selection of a role and updates the accessible pages
   onOptionSelected() {
     // DATA ASSIGNING
     // WORKBENCH TABS
@@ -132,11 +128,12 @@ tabs!: Tab[];
           this.compareAndSetCheckboxes();
         },
         error => {
+          console.error('There was an error!', error);
         }
       );
   }
 
-  // Transforms the pages data into a structured format for UI rendering.
+  // Processes the pages structure into the desired format
 functionForPages(pages: any) {
     this.pagestabs = Object.entries(pages).map(([name, value]: [string, any]) => {
         const tab: Tab = {
@@ -189,7 +186,7 @@ functionForPages(pages: any) {
     console.log(this.pagestabs, "pagestabs");
 }
 
-// Processes the original pages data into a structured format for UI rendering.
+// Processes the original pages structure into the desired format
 functionForOriginalPages(originalPages: any) {
     // Function to process the originalPages structure into the desired format
     this.originalpagestabs = Object.entries(originalPages).map(([name, value]: [string, any]) => {
@@ -243,7 +240,7 @@ functionForOriginalPages(originalPages: any) {
     console.log(this.originalpagestabs, "originalpagestabs");
 }
 
-// Compares original and current pages data to update checkbox states accordingly.
+// Compares original pages and current pages to set checkbox states
 compareAndSetCheckboxes() {
     this.tabs = this.originalpagestabs.map((tab: Tab) => {
         const tabInPages = this.pagestabs.find((t: Tab) => t.name === tab.name);
@@ -289,22 +286,21 @@ compareAndSetCheckboxes() {
     console.log(this.tabs, "tabs");
 }
 
-
-
-
+ // Checks if a tab is active
   isTabActive(tabName: string, active: any): boolean {
     const tabInPages = this.pages[tabName];
     // console.log(tabInPages, "tabInPages")
     return tabInPages ? true : false;
   }
 
+   // Checks if a tab is active
   isSubTabActive(subtabName: string, active: any): boolean {
     const subtabInPages = this.pages[subtabName];
     // console.log(subtabInPages, "subtabInPages")
     return subtabInPages ? true : false;
   }
 
-  // Checks if a specific select type is active based on the pages data.
+   // Checks if a select type is active
   isSelectTypeActive(subtabName: string, selectTypeName: string, selectTypeValue: any): boolean {
     const subtabInPages = this.pages[subtabName];
     // console.log(subtabInPages, "subtabInPages")
@@ -321,7 +317,7 @@ compareAndSetCheckboxes() {
     this.generativeAIEnabled = this.selectAllEnabled;
   }
 
-  // Updates the active state of a select type and its options based on user interaction.
+   // Handles changes in the select type checkboxes
   onSelectTypeChange(event: MatCheckboxChange, tabName: string, subTabName: string, selectTypeName: string) {
     const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
     const subtab = tab?.subtabs.find((st: { name: string; }) => st.name === subTabName);
@@ -334,7 +330,7 @@ compareAndSetCheckboxes() {
     }
 }
 
-// Updates the active state of a specific option within a select type based on user interaction.
+// Handles changes in the options checkboxes
 onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, selectTypeName: string, optionName: string) {
   const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
   const subtab = tab?.subtabs.find((st: { name: string; }) => st.name === subTabName);
@@ -344,8 +340,7 @@ onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, s
       option.active = event.checked;
   }
 }
-
-// Updates the active state of a tab, its subtabs, and their select types and options.
+// Handles changes in the tab checkboxes
   onTabCheckboxChange(event: MatCheckboxChange, tabName: string) {
     const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
     if (tab) {
@@ -362,8 +357,8 @@ onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, s
     }
 }
 
-// Updates the active state of a subtab, its select types, and their options.
-  onSubTabCheckboxChange(event: MatCheckboxChange, tabName: string, subTabName: string) {
+ // Handles changes in the subtab checkboxes
+onSubTabCheckboxChange(event: MatCheckboxChange, tabName: string, subTabName: string) {
     const tab = this.originalpagestabs.find((t: { name: string; }) => t.name === tabName);
     const subtab = tab?.subtabs.find((st: { name: string; }) => st.name === subTabName);
     if (subtab) {
@@ -381,6 +376,7 @@ onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, s
     // Add your logic to close the modal here
   }
 
+  // Submits the updated role access data
   onSubmit() {
     // add your code here
     console.log(this.originalpagestabs, "originalpagestabs before submit");
@@ -395,6 +391,7 @@ onOptionsSelect(event: MatCheckboxChange, tabName: string, subTabName: string, s
         });
       },
       error => {
+        console.error('Error sending data', error);
       }
     );
 
@@ -492,6 +489,7 @@ resetCheckbox(){
 });
 }
 
+// Toggles the popover state
 test(p:any){
   if (this.p.isOpen()) {
     console.log('Popover is open');
@@ -502,13 +500,14 @@ test(p:any){
   }
 }
 
+// Creates the form for adding a new role
 CreateNewRoleForm(){
   this.NewAccPort = new FormGroup({
     role: new FormControl('', [Validators.required]),
   });
 }
 
-// Submits the new role form and creates role-based page access configurations.
+ // Submits the new role form
 submitRoleForm() {
   if (this.NewAccPort.valid) {
     const formData = this.NewAccPort.value;
@@ -524,6 +523,8 @@ submitRoleForm() {
 
       },
       (error: any) => {
+        // Handle error response
+        console.error(error);
       }
     );
     this.https.post(this.createPageAuthUrl, formData).subscribe(
@@ -532,13 +533,15 @@ submitRoleForm() {
         console.log(response);
       },
       (error: any) => {
+        // Handle error response
+        console.error(error);
       }
     );
 
   }
 }
 
-// Fetches the updated list of roles from the server.
+// Fetches the updated list of roles
 getUpdatedRoles(){
   this.https.get(this.getRoleUrl).subscribe(
     (response: any) => {
@@ -548,6 +551,8 @@ getUpdatedRoles(){
       console.log(this.updatedRoles, "updatedRoles")
     },
     (error: any) => {
+      // Handle error response here
+      console.error(error);
     }
   );
 }

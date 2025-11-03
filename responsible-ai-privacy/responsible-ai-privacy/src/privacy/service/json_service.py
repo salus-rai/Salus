@@ -1,14 +1,3 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
-
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
-
 import json
 import logging
 import tempfile
@@ -25,25 +14,10 @@ log = logging.getLogger(__name__)
 class JSONService:
     @staticmethod
     def anonymize_json(payload):
-        """
-        Anonymizes the given JSON payload by redacting specified PII entities and skipping specified keys.
-
-        Args:
-            payload (dict): The JSON payload to be anonymized.
-
-        Returns:
-            str: The anonymized JSON as a string.
-
-        Raises:
-            ValueError: If the data type of the payload is not supported.
-            Exception: If an error occurs during the anonymization process.
-        """
         try:
             log.debug("Entering anonymize_json function")
 
             payload = AttributeDict(payload)
-            analyzer,imageAnalyzerEngine,imageRedactorEngine,imagePiiVerifyEngine,encryptImageEngin=selectNlp(payload.nlp)
-
             if(payload.portfolio!=None or payload.account!=None):
                 response_value=ApiCall.request(AttributeDict({"portfolio":payload.portfolio,"account":payload.account}))
                 if(response_value==None):
@@ -54,9 +28,6 @@ class JSONService:
             piiEntitiesToBeRedacted=[]
             if payload["piiEntitiesToBeRedacted"] is not None:
                piiEntitiesToBeRedacted=payload["piiEntitiesToBeRedacted"].split(',')
-            scoreThreshold=0
-            if payload["scoreThreshold"] is not None:
-                 scoreThreshold=payload["scoreThreshold"]
                  
             accName=None
             if(payload.portfolio!=None):
@@ -80,15 +51,15 @@ class JSONService:
             log.debug("Original JSON: " + str(data))
 
             # Initialize the analyzer and anonymizer engines
-            
+            analyzer = AnalyzerEngine()
             batch_analyzer = BatchAnalyzerEngine(analyzer_engine=analyzer)
             batch_anonymizer = BatchAnonymizerEngine()
 
             # Process the input dynamically based on its type
             if isinstance(data, dict):
-                anonymized_data = JSONService.process_dict(data, batch_analyzer, batch_anonymizer, "en", keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,scoreThreshold,spRecog)
+                anonymized_data = JSONService.process_dict(data, batch_analyzer, batch_anonymizer, "en", keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,spRecog)
             elif isinstance(data, list):
-                anonymized_data = JSONService.process_list(data, batch_analyzer, batch_anonymizer, "en", keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,scoreThreshold,spRecog)
+                anonymized_data = JSONService.process_list(data, batch_analyzer, batch_anonymizer, "en", keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,spRecog)
             else:
                 raise ValueError("Unsupported data type")
 
@@ -108,25 +79,7 @@ class JSONService:
             raise e
 
     @staticmethod
-    def process_dict(data, batch_analyzer, batch_anonymizer, language, keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,scoreThreshold,spRecog):
-        """
-        Process a dictionary of data by analyzing and anonymizing its values.
-
-        Args:
-            data (dict): The dictionary of data to be processed.
-            batch_analyzer (BatchAnalyzer): The batch analyzer object used to analyze the data.
-            batch_anonymizer (BatchAnonymizer): The batch anonymizer object used to anonymize the data.
-            language (str): The language used for analysis.
-            keys_to_skip (list): The list of keys to skip during analysis.
-            accName (str): The account name for API call.
-            exclusion (list): The list of keys to exclude from analysis.
-            piiEntitiesToBeRedacted (list): The list of PII entities to be redacted.
-            scoreThreshold (float): The score threshold for analysis.
-            spRecog (list): The list of ad hoc recognizers for analysis.
-
-        Returns:
-            dict: The processed dictionary with anonymized values.
-        """
+    def process_dict(data, batch_analyzer, batch_anonymizer, language, keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,spRecog):
         anonymized_data = {}
         for key, value in data.items():
             if isinstance(value, list):
@@ -139,10 +92,10 @@ class JSONService:
                         analyzer_results = []
                         if(accName==None):
                             if(piiEntitiesToBeRedacted == None):
-                                analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,return_decision_process = True,score_threshold=scoreThreshold,ad_hoc_recognizers=spRecog)
+                                analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,return_decision_process = True,score_threshold=0.5,ad_hoc_recognizers=spRecog)
                             else:
                                 try:
-                                    analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=piiEntitiesToBeRedacted,return_decision_process = True,score_threshold=scoreThreshold,ad_hoc_recognizers=spRecog)
+                                    analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=piiEntitiesToBeRedacted,return_decision_process = True,score_threshold=0.5,ad_hoc_recognizers=spRecog)
                                 except Exception as e:
                                         log.error(str(e))
                                         raise e
@@ -206,25 +159,7 @@ class JSONService:
         return anonymized_data
 
     @staticmethod
-    def process_list(data, batch_analyzer, batch_anonymizer, language, keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,scoreThreshold,spRecog):
-        """
-        Process a list of data items by analyzing and anonymizing them.
-
-        Args:
-            data (list): The list of data items to be processed.
-            batch_analyzer (BatchAnalyzer): The batch analyzer object used for analyzing the data.
-            batch_anonymizer (BatchAnonymizer): The batch anonymizer object used for anonymizing the data.
-            language (str): The language of the data items.
-            keys_to_skip (list): The list of keys to skip during analysis.
-            accName (str): The account name.
-            exclusion (list): The list of terms to be excluded from analysis.
-            piiEntitiesToBeRedacted (list): The list of PII entities to be redacted.
-            scoreThreshold (float): The score threshold for decision making during analysis.
-            spRecog (list): The list of ad hoc recognizers.
-
-        Returns:
-            list: The list of anonymized data items.
-        """        
+    def process_list(data, batch_analyzer, batch_anonymizer, language, keys_to_skip,accName,exclusion,piiEntitiesToBeRedacted,spRecog):
         anonymized_list = []
         for item in data:
             if isinstance(item, dict):
@@ -234,10 +169,10 @@ class JSONService:
                 analyzer_results = []
                 if(accName==None):
                     if(piiEntitiesToBeRedacted == None):
-                        analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,return_decision_process = True,score_threshold=scoreThreshold,ad_hoc_recognizers=spRecog)
+                        analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,return_decision_process = True,score_threshold=0.5,ad_hoc_recognizers=spRecog)
                     else:
                         try:
-                            analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=piiEntitiesToBeRedacted,return_decision_process = True,score_threshold=scoreThreshold,ad_hoc_recognizers=spRecog)
+                            analyzer_results = batch_analyzer.analyze_dict(flattened_item, language="en", keys_to_skip=keys_to_skip,allow_list=exclusion,entities=piiEntitiesToBeRedacted,return_decision_process = True,score_threshold=0.5,ad_hoc_recognizers=spRecog)
                         except Exception as e:
                                 log.error(str(e))
                                 raise e

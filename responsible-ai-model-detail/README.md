@@ -16,7 +16,7 @@ The `responsible-ai-model-detail` provides us the workbench to add, update or de
 ## Installation
 To run the application, first we need to install Python and the necessary packages:
 
-1. Install Python (version >= 3.9) from the [official website](https://www.python.org/downloads/) and ensure it is added to your system PATH.
+1. Install Python (version == 3.11.4) from the [official website](https://www.python.org/downloads/) and ensure it is added to your system PATH.
 
 2. Clone the repository:`responsible-ai-model-detail` by executing the command in git bash or cmd:
     ```sh
@@ -114,9 +114,10 @@ Once we have completed all the aforementioned steps, we can start the service.
     python main.py
     ```
 
-3. Open the following URL in your browser to access the swagger:
-    `http://localhost:80/v1/workbench/docs`
+3. Use the Port No that is mentioned in main.py file. Open the swagger URL in browser once server is running:`http://localhost:80/v1/workbench/docs`
 
 
 ## License
 The source code for the project is licensed under MIT license, which you can find in the [LICENSE.md](LICENSE.md) file.
+
+

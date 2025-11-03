@@ -1,12 +1,9 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
@@ -21,7 +18,7 @@ import { AccountsConfigurationModalPrivacyComponent } from './accounts-configura
 import { AccountsConfigurationModalSafetyComponent } from './accounts-configuration-modal-safety/accounts-configuration-modal-safety.component';
 import { AccountsConfigurationModalFmComponent } from './accounts-configuration-modal-fm/accounts-configuration-modal-fm.component';
 import { AccountsConfigurationModalCreatePmComponent } from './accounts-configuration-modal-create-pm/accounts-configuration-modal-create-pm.component';
-import { AccountsConfigurationModalCreateTemplateUpdateComponent } from './accounts-configuration-modal-create-template-update/accounts-configuration-modal-create-template-update.component';
+import { AccountsConfigurationModalCreateTemplateUpdateComponent } from './admin-template-update/admin-template-update';
 import { NonceService } from 'src/app/nonce.service';
 
 @Component({
@@ -64,6 +61,12 @@ export class AccountsConfigurationComponent {
   tab="Privacy"
   dataSource: any = []
 
+  isSearchOpen: boolean = false;
+  filteredDataSource:any;
+  searchQuery: string = '';
+  filteredItems: string[] = [];
+  
+
     admin_list_getAccountDetails = ""
     admin_list_AccountMaping_AccMasterList = ""
     admin_pattern_rec_get_list = ""
@@ -94,7 +97,7 @@ export class AccountsConfigurationComponent {
     this.tab=tab;
   }
 
-
+ // Submits the account form data
   submit() {
     console.log(this.AccountForm.value);
     const header = {
@@ -107,7 +110,7 @@ export class AccountsConfigurationComponent {
     this.setPrivacyParameter(header)
   }
 
-  // sends a POST request to set privacy parameters for the account.
+    // Sends privacy parameters to the server
   setPrivacyParameter(header: any) {
     this.https.post(this.Admin_SetPrivacyParameter, header).subscribe
         ((res: any) => {
@@ -123,7 +126,7 @@ export class AccountsConfigurationComponent {
             this.getAccountMasterEntryList()
             // this.getAllAccountData();
           } else if (res.status === "False") {
-            const message = "Recognizer Added Failed"
+            const message = "Parameters have already been Mapped to this Account "
             const action = "Close"
             this.getAccountMasterEntryList()
             this._snackBar.open(message, action, {
@@ -150,7 +153,7 @@ export class AccountsConfigurationComponent {
         })
   }
 
-
+ // Initializes the component and sets up API lists
   ngOnInit(): void {
     let ip_port: any
 
@@ -164,7 +167,7 @@ export class AccountsConfigurationComponent {
     console.log("oninit");
   }
 
-  // retrieves the logged-in user ID from local storage.
+  // Retrieves the logged-in user from local storage
   getLogedInUser() {
     if (localStorage.getItem("userid") != null) {
       const x = localStorage.getItem("userid")
@@ -178,6 +181,8 @@ export class AccountsConfigurationComponent {
       console.log("userId", this.userId)
     }
   }
+
+  // Retrieves API configuration from local storage
   getLocalStoreApi() {
     let ip_port
     if (localStorage.getItem("res") != null) {
@@ -187,6 +192,8 @@ export class AccountsConfigurationComponent {
       }
     }
   }
+
+  // Sets the API list URLs
   setApilist(ip_port: any) {
 
     this.admin_list_getAccountDetails = ip_port.result.Admin + ip_port.result.getAccountDetail;
@@ -215,23 +222,29 @@ export class AccountsConfigurationComponent {
    this.fm_config_topicList = ip_port.result.Admin + ip_port.result.Fm_Config_TopicList
    this.fm_config_outputModCheck = ip_port.result.Admin + ip_port.result.Fm_Config_OutputModCheck
   }
+
+  // Handles table pagination
   onTableDataChange(event: any) {
+    this.currentPage = event;
     this.pagingConfig.currentPage = event;
-    this.pagingConfig.totalItems = this.dataSource.length;
+    this.pagingConfig.totalItems = this.filteredDataSource.length;
   }
+
+  // Handles table size changes
   onTableSizeChange(event: any): void {
     this.pagingConfig.itemsPerPage = event.result.value;
     this.pagingConfig.currentPage = 1;
-    this.pagingConfig.totalItems = this.dataSource.length;
+    this.pagingConfig.totalItems = this.filteredDataSource.length;
   }
 
-// Fetches the list of account master entries.
+   // Fetches account master entry list
   getAccountMasterEntryList(){
     console.log("getAccountMasterEntryList")
     this.https.get(this.admin_list_AccountMaping_AccMasterList).subscribe
       ((res: any) => {
 
         this.dataSource = res.accList
+        this.filteredDataSource = this.dataSource;
         console.log("res", this.dataSource)
         this.pagingConfig.totalItems = this.dataSource.length;
 
@@ -258,7 +271,7 @@ export class AccountsConfigurationComponent {
 
   // portfolioSet: Set<any> = new Set();
   portfolioArr :any =[]
-// Fetches all account and portfolio details.
+// Fetches all account data
   getAllAccountData(){
     this.https.get( this.admin_list_getAccountDetails).subscribe
         ((res: any) => {
@@ -273,7 +286,8 @@ export class AccountsConfigurationComponent {
             // this.accountArr.push(res[0].AccountDetails[i].account)
             this.portfolioArr.push(portfolio)
           }
-          this.Portfolio_options = this.portfolioArr
+          // Sort portfolioArr alphabetically and store it in Portfolio_options
+          this.Portfolio_options = this.portfolioArr.sort((a: string, b: string) => a.localeCompare(b));
           console.log("portfolio",this.portfolioArr)
           // this.dataSource = res.fmList;
           
@@ -296,7 +310,7 @@ export class AccountsConfigurationComponent {
         })
    }
 
-  // Opens the privacy configuration modal for the selected account.
+   // Opens the privacy modal
   openRightSideModal1(a:any,b:any){
     const dialogRef = this.dialog.open(AccountsConfigurationModalPrivacyComponent, {
       data: {
@@ -320,6 +334,7 @@ export class AccountsConfigurationComponent {
     });
   }
 
+  // Opens the safety modal
   openRightSideModal2(a:any){
     const dialogRef = this.dialog.open(AccountsConfigurationModalSafetyComponent, {
       data: {
@@ -341,6 +356,8 @@ export class AccountsConfigurationComponent {
       console.log("CLOSED")
     });
   }
+
+  // Opens the FM configuration modal
   openRightSideModal3(a:any){
     const dialogRef = this.dialog.open(AccountsConfigurationModalFmComponent, {
       data: {
@@ -363,10 +380,14 @@ export class AccountsConfigurationComponent {
       console.log("CLOSED")
     });
   } 
-  openRightSideModal5(a:any){
+
+  // Opens the template update modal
+  openRightSideModal5(a:any,account:any,portfolio:any){
     const dialogRef = this.dialog.open(AccountsConfigurationModalCreateTemplateUpdateComponent, {
       data: {
         id: a,
+        account : account,
+        portfolio: portfolio,
        
       },
 
@@ -385,6 +406,8 @@ export class AccountsConfigurationComponent {
       console.log("CLOSED")
     });
   } 
+
+  // Opens the create PM modal
   openRightSideModal4(a:any){
     console.log("acccount from value",a)
     const dialogRef = this.dialog.open(AccountsConfigurationModalCreatePmComponent, {
@@ -414,6 +437,7 @@ export class AccountsConfigurationComponent {
 
   AccountForm!: FormGroup;
   NewAccPort!: FormGroup;
+   // Initializes the account form
   AccountFormCall(){
 
   this.AccountForm = new FormGroup({
@@ -429,6 +453,8 @@ export class AccountsConfigurationComponent {
   });
 
 }
+
+// Initializes the new account/portfolio form
   CreateNewAccPortForm(){
 
   this.NewAccPort = new FormGroup({
@@ -438,7 +464,7 @@ export class AccountsConfigurationComponent {
 
 }
 callCount: number = 0; 
-// updates the account dropdown options based on the selected portfolio.
+ // Handles account dropdown selection
 accountDropDown(){
   this.callCount++
   this.portfolioSelected=true
@@ -457,7 +483,14 @@ accountDropDown(){
     this.Accountselected = true
   }
 
+  this.isSearchOpen = true;
+  this.searchQuery = this.AccountForm.controls['portfolio'].value;
+
+  this.search();
+
 }
+
+ // Activates subcommands for account and portfolio
 activateSubcommands(){
 
   this.Accountselected = true
@@ -488,7 +521,7 @@ test(p:any){
   
 }
 
-// Creates a new account and portfolio entry by sending a POST request.
+// Creates a new account/portfolio
 createNewAccPot() {
   if (this.NewAccPort.valid) {
     const formData = this.NewAccPort.value;
@@ -499,12 +532,14 @@ createNewAccPot() {
         this.getAllAccountData()
       },
       (error: any) => {
-
+        // Handle error response
+        console.error(error);
       }
     );
   }
 }
 
+// Fetches the list of recognizers
 getadmin_list_rec_get_list(){
   this.https.get(this.admin_list_rec_get_list).subscribe
   ((res: any) => {
@@ -539,7 +574,7 @@ allSelectedInput = false;
 event1: any;
 c1: boolean = false;
 
-// select 1 - Toggles the selection of all options in the first select element.
+// select 1- Toggles all selections for the dropdown
 toggleAllSelection1(event: any) {
   this.event1 = event;
   this.c1 = event.checked;
@@ -577,7 +612,7 @@ selectRecognizertype() {
   });
   this.allSelectedInput = newStatus;
 }
-
+ 
 // Deletes an account group by sending a DELETE request.
 deleteAccounttGroup(id: any) {
   const options = {
@@ -642,8 +677,41 @@ deleteAccounttGroup(id: any) {
     })
 }
 
+search() {
+  if (this.searchQuery) {
+    this.filteredDataSource = this.dataSource.filter((item :any) =>
+      item.portfolio.toLowerCase().includes(this.searchQuery.toLowerCase())
+    );
+
+    this.currentPage = 1;
+    this.pagingConfig.currentPage = 1;
+    this.pagingConfig.totalItems = this.filteredDataSource.length;
+  } else {
+    this.filteredDataSource = this.dataSource;
+    this.currentPage = 1;
+    this.pagingConfig.currentPage = 1;
+    this.pagingConfig.totalItems = this.filteredDataSource.length;
+
+  }
+}
+
+
+
+toggleSearch() {
+this.isSearchOpen = !this.isSearchOpen;
+this.searchQuery = '';
+this.filteredItems = [];
+}
 
 
 
 
+closeSearch() {
+  this.isSearchOpen = false;
+  this.searchQuery = '';
+  this.filteredDataSource = this.dataSource;
+  this.currentPage = 1;
+  this.pagingConfig.currentPage = 1;
+  this.pagingConfig.totalItems = this.filteredDataSource.length;
+}
 }

@@ -1,13 +1,12 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
+'''
+MIT license https://opensource.org/licenses/MIT Copyright 2024-2025 Infosys Ltd.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 
 
@@ -230,9 +229,12 @@ class InfosysRAI:
                     # Extract all files
                     zipf.extractall(path='temp')
 
-                with open('temp/output/explanationreport.html', 'r') as f:
+                with open('temp/output/explanationreport.html', 'r', encoding='utf-8') as f:
                     html_content = f.read()
 
+                has_global_explanation = 'global-explanation' in html_content
+                has_local_explanation = 'local-explanation' in html_content
+              
                 # Add CSS to prevent page breaks inside tables and graphs
                 css = """
                 <style>
@@ -241,9 +243,6 @@ class InfosysRAI:
                     }
                     td {
                         padding-right: 20px;
-                    }
-                    .local-explanation{
-                        page-break-before: always;
                     }
                     td, p {
                         font-size: 20px; /* Adjust font size as needed */
@@ -256,6 +255,15 @@ class InfosysRAI:
                     }
                 </style>
                 """
+                # Add additional CSS if both global and local explanations exist
+                if has_global_explanation and has_local_explanation:
+                    css += """
+                    <style>
+                        .local-explanation {
+                            page-break-before: always;
+                        }
+                    </style>
+                    """
 
                 # Insert the CSS into the HTML content
                 html_content = css + html_content

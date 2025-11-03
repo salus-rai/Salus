@@ -1,13 +1,12 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
+'''
+MIT license https://opensource.org/licenses/MIT Copyright 2024 Infosys Ltd
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 
 
@@ -37,23 +36,7 @@ from privacy.service.api_req import ApiCall
 
 
 class TextPrivacy:
-    """
-    This class provides methods for analyzing and anonymizing text data for privacy protection.
-    """
-
     def analyze(payload: PIIAnalyzeRequest) -> PIIAnalyzeResponse:
-        """
-        Analyzes the given payload for personally identifiable information (PII) entities.
-
-        Args:
-            payload (PIIAnalyzeRequest): The payload containing the input text and other parameters.
-
-        Returns:
-            PIIAnalyzeResponse: The response containing the identified PII entities.
-
-        Raises:
-            Exception: If an error occurs during the analysis process.
-        """
         error_dict[request_id_var.get()]=[]
         log.debug("Entering in analyze function")
         # gc.collect()
@@ -66,7 +49,7 @@ class TextPrivacy:
                 exclusionList=payload.exclusionList
 
             if(payload.portfolio== None):
-                results = TextPrivacy.textAnalyze(text=payload.inputText,piiEntitiesToBeRedacted=piiEntitiesToBeRedacted,exclusion=exclusionList,nlp=payload.nlp,scoreThreshold=payload.scoreThreshold)
+                results = TextPrivacy.textAnalyze(text=payload.inputText,piiEntitiesToBeRedacted=piiEntitiesToBeRedacted,exclusion=exclusionList,nlp=payload.nlp)
             else:
                 results = TextPrivacy.textAnalyze(text=payload.inputText,accName=payload,exclusion=exclusionList,nlp=payload.nlp)
             if results == None:
@@ -104,24 +87,7 @@ class TextPrivacy:
             raise Exception(e)
     # @profile
     
-    def textAnalyze(text: str,accName:any=None,exclusion:any=None,piiEntitiesToBeRedacted:any=None,nlp="basic",scoreThreshold:float =0):
-        """
-        Analyzes the given text for privacy-related information.
-
-        Args:
-            text (str): The text to be analyzed.
-            accName (any, optional): The account name. Defaults to None.
-            exclusion (any, optional): List of entities to be excluded from analysis. Defaults to None.
-            piiEntitiesToBeRedacted (any, optional): List of PII entities to be redacted. Defaults to None.
-            nlp (str, optional): The NLP engine to be used. Defaults to "basic".
-            scoreThreshold (float, optional): The score threshold for privacy analysis. Defaults to 0.
-
-        Returns:
-            list: A list of analysis results.
-
-        Raises:
-            Exception: If an error occurs during the analysis.
-        """
+    def textAnalyze(text: str,accName:any=None,exclusion:any=None,piiEntitiesToBeRedacted:any=None,nlp="basic"):
         result=[]
        
         analyzer,imageAnalyzerEngine,imageRedactorEngine,imagePiiVerifyEngine,encryptImageEngin=selectNlp(nlp)
@@ -136,13 +102,14 @@ class TextPrivacy:
             spRecog=[ranha_recog]
         try:
             if(accName==None):
+                 
                 # ent_pattern=[]
                 if(piiEntitiesToBeRedacted == None):
-                    result = analyzer.analyze(text=text,language="en",allow_list=exclusion,return_decision_process = True,score_threshold=scoreThreshold,ad_hoc_recognizers=spRecog)
+                    result = analyzer.analyze(text=text,language="en",allow_list=exclusion,return_decision_process = True,score_threshold=0.5,ad_hoc_recognizers=spRecog)
                     
                 else:
                     try:
-                        result = analyzer.analyze(text=text,language="en",entities=piiEntitiesToBeRedacted,allow_list=exclusion,return_decision_process = True,score_threshold=scoreThreshold ,ad_hoc_recognizers=spRecog)
+                        result = analyzer.analyze(text=text,language="en",entities=piiEntitiesToBeRedacted,allow_list=exclusion,return_decision_process = True, ad_hoc_recognizers=spRecog)
                          
                     except Exception as e:
                          
@@ -208,7 +175,7 @@ class TextPrivacy:
                      
                  
                  
-                results = analyzer.analyze(text=text, language="en",entities=entityType+preEntity,allow_list=exclusion,score_threshold=admin_par[request_id_var.get()]["scoreTreshold"],return_decision_process = True,ad_hoc_recognizers=spRecog)
+                results = analyzer.analyze(text=text, language="en",entities=entityType+preEntity,allow_list=exclusion,score_threshold=admin_par[request_id_var.get()]["scoreTreshold"],ad_hoc_recognizers=spRecog)
                         # entityType.remove(preEntity)
                 result.extend(results)
                     # preEntity.clear()
@@ -239,19 +206,6 @@ class TextPrivacy:
             raise Exception(e)
   
     def anonymize(payload: PIIAnonymizeRequest):
-        """
-        Anonymizes the given text payload by redacting specified PII entities and applying encryption.
-
-        Args:
-            payload (PIIAnonymizeRequest): The payload containing the text to be anonymized and the anonymization settings.
-
-        Returns:
-            PIIAnonymizeResponse: The response object containing the anonymized text.
-
-        Raises:
-            Exception: If an error occurs during the anonymization process.
-        """
-        
         error_dict[request_id_var.get()]=[]
         log.debug("Entering in anonymize function")
         try:
@@ -262,14 +216,12 @@ class TextPrivacy:
             #     piiEntitiesToBeRedacted = payload.piiEntitiesToBeRedacted
             # else:
             piiEntitiesToBeRedacted = payload.piiEntitiesToBeRedacted 
-                
             if(payload.exclusionList == None):
                 exclusionList=[]
             else:
                 exclusionList=payload.exclusionList
             if(payload.portfolio== None):
-                # For no portfolio, minimum score threshold will be 0.40
-                results = TextPrivacy.textAnalyze(text=payload.inputText,exclusion=exclusionList,piiEntitiesToBeRedacted=piiEntitiesToBeRedacted,nlp=payload.nlp,scoreThreshold=payload.scoreThreshold)
+                results = TextPrivacy.textAnalyze(text=payload.inputText,exclusion=exclusionList,piiEntitiesToBeRedacted=piiEntitiesToBeRedacted,nlp=payload.nlp)
                  
                 
                 # if(len(results)==2):
@@ -294,7 +246,6 @@ class TextPrivacy:
                 
             if(results==482):
                 return results
-          
             dict_operators = {} 
             if payload.fakeData == True:            
                 #  fakeDataGeneration() used for generating fakeData for the entities whcih return dict containg the fake data is replaced with entity....
@@ -335,19 +286,7 @@ class TextPrivacy:
             error_dict[request_id_var.get()].append({"UUID":request_id_var.get(),"function":"textAnonimyzeFunction","msg":str(e.__class__.__name__),"description":str(e)+"Line No:"+str(e.__traceback__.tb_lineno)})
             raise Exception(e)
 
-    def encrypt(payload: PIIEncryptRequest):
-        """
-        Encrypts the input text and returns the encrypted result.
-
-        Args:
-            payload (PIIEncryptRequest): The request object containing the input text and other parameters.
-
-        Returns:
-            PIIEncryptResponse: The response object containing the encrypted text and other information.
-
-        Raises:
-            Exception: If an error occurs during the encryption process.
-        """
+    def encrypt(payload: PIIAnonymizeRequest):
         log.debug("Entering in encrypt function")
         
         try:
@@ -358,7 +297,7 @@ class TextPrivacy:
             else:
                 exclusionList=payload.exclusionList
             if(payload.portfolio== None):
-                results = TextPrivacy.textAnalyze(text=payload.inputText,exclusion=exclusionList,nlp=payload.nlp,scoreThreshold=payload.scoreThreshold)
+                results = TextPrivacy.textAnalyze(text=payload.inputText,exclusion=exclusionList,nlp=payload.nlp)
             else: 
                 results = TextPrivacy.textAnalyze(text=payload.inputText,accName=payload,exclusion=exclusionList,nlp=payload.nlp)
                 
@@ -394,18 +333,6 @@ class TextPrivacy:
             raise Exception(e)
     
     def decryption(payload: PIIDecryptRequest):
-        """
-        Decrypts the given payload using the deanonymizer.
-
-        Args:
-            payload (PIIDecryptRequest): The payload containing the text and anonymized entities.
-
-        Returns:
-            PIIDecryptResponse: The decrypted text.
-
-        Raises:
-            Exception: If an error occurs during the decryption process.
-        """
         log.debug("Entering in decrypt function")
         # payload=AttributeDict(payload)
          
@@ -442,21 +369,7 @@ class TextPrivacy:
             raise Exception(e)
     
 class Shield:
-    """
-    The Shield class represents a privacy shield for protecting sensitive information in text data.
-    """
-
     def privacyShield(payload: PIIPrivacyShieldRequest) -> PIIPrivacyShieldResponse:
-        """
-        Analyzes the privacy of the given text using the PIIPrivacyShieldRequest payload.
-
-        Args:
-            payload (PIIPrivacyShieldRequest): The request payload containing the text to be analyzed.
-
-        Returns:
-            PIIPrivacyShieldResponse: The response containing the privacy analysis results.
-
-        """
         log.debug("Entering in privacyShield function")
         log.debug(f"payload: {payload}")
 
@@ -537,3 +450,4 @@ class Shield:
         log.debug("objPIIAnalyzeResponse="+str(objPIIAnalyzeResponse.privacyCheck))
         log.debug("Returning from privacyShield function")
         return objPIIAnalyzeResponse
+    

@@ -1,13 +1,12 @@
-"""
-# SPDX-License-Identifier: MIT
-# Copyright 2024 - 2025 Infosys Ltd.
+'''
+MIT license https://opensource.org/licenses/MIT Copyright 2024 Infosys Ltd
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
- 
+
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
- 
+
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"""
+'''
 
 from privacy.service.__init__ import *
 from presidio_anonymizer.entities import (RecognizerResult,
@@ -24,12 +23,10 @@ import random
 class FakeDataGenerate:
     def fakeDataGeneration(results,inputText):
         fakeData_Dict = {}
-        
         for i in results:
             if hasattr(FakeData, i.entity_type):
                 ent = getattr(FakeData, i.entity_type)
                 fakeData_Dict.update({i.entity_type: OperatorConfig("replace", {"new_value": ent()})})
-           
             elif i.entity_type in get_session_dict():
                 entValue =get_session_dict()[i.entity_type]
                         #  log.debug("result="
@@ -59,7 +56,6 @@ class FakeDataGenerate:
             else:
                 # Handle the case when ent does not exist
                 decision_process = i.analysis_explanation
-                
                 # log.debug("decision process======"+str(decision_process))
                 if(decision_process==None):        
                     continue

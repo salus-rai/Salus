@@ -1,12 +1,9 @@
-/**
-SPDX-License-Identifier: MIT
+/** SPDX-License-Identifier: MIT
 Copyright 2024 - 2025 Infosys Ltd.
-"
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+"Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-"
-*/ 
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+*/
 import { Component, ViewEncapsulation } from '@angular/core';
 import { PagingConfig } from '../_models/paging-config.model';
 import { MatDialog } from '@angular/material/dialog';
@@ -41,6 +38,8 @@ export class ModelFormComponent {
       totalItems: this.totalItems
     }
   }
+
+  // Initializes the component and sets up API calls
   ngOnInit(): void {
     let ip_port: any
     // user call should happen here
@@ -52,6 +51,8 @@ export class ModelFormComponent {
     this.setApilist(ip_port);
     this.getBatches();
   }
+
+  // Retrieves API configuration from local storage
   getLocalStoreApi() {
     let ip_port
     if (localStorage.getItem("res") != null) {
@@ -67,7 +68,7 @@ export class ModelFormComponent {
     this.deleteModels =ip_port.result.Workbench + ip_port.result.Workbench_DeleteModel
   }
 
-  // Fetches the list of models for the current user and updates the table.
+  // Fetches the list of batches
   getBatches() {
     const formData =new FormData;
     formData.append("userId",this.user)
@@ -93,7 +94,7 @@ export class ModelFormComponent {
     )
   }
 
-  // Deletes a model by its ID and refreshes the model list upon success or failure.
+  // Deletes a model after confirmation
   deleteConfirmationModel(modelId: any){
     const params = new URLSearchParams();
     params.set('userId', this.user);
@@ -138,7 +139,7 @@ export class ModelFormComponent {
     );
   }
 
-  // Opens a modal for adding or updating a model and refreshes the model list after the modal is closed.
+  // Opens the right-side modal for adding or updating a model
   openRightSideModal(val:any) {
     const dialogRef = this.dialog.open(AddModelComponent, {
       width: '52vw',
@@ -158,6 +159,7 @@ export class ModelFormComponent {
       this.getBatches()
     });
   }
+
 
   // ----------------Pagination-----------------
   onTableDataChange(event: any) {

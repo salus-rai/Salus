@@ -30,8 +30,8 @@ class ToxicityThreshold(BaseModel):
 class RestrictedtopicDetail(BaseModel):
     RestrictedtopicThreshold:float = Field(example=0.7)
     Restrictedtopics:List = [
-        "terrorism",
-        "explosives"
+        "Terrorism",
+        "Explosives"
       ]
 class CustomThemeDetail(BaseModel):
     Themename:str = Field(example="String")
@@ -41,6 +41,25 @@ class CustomThemeDetail(BaseModel):
         "Text2",
         "Text3"
       ]
+
+class InvisibleTextCountDetail(BaseModel):
+    InvisibleTextCountThreshold: int = Field(example=1)
+    BannedCategories: List[str] = [
+        "Cf",
+        "Co",
+        "Cn",
+        "So",
+        "Sc"
+    ]
+
+class GibberishDetail(BaseModel):
+    GibberishThreshold: float = Field(example=0.7)
+    GibberishLabels: List[str] = [
+        "word salad",
+        "noise",
+        "mild gibberish",
+        "clean"
+    ]
 
 
 class ModerationCheckThreshold(BaseModel):
@@ -87,12 +106,19 @@ class ModerationCheckThreshold(BaseModel):
     ProfanityCountThreshold:float= Field(example=1)
     RestrictedtopicDetails: Union[RestrictedtopicDetail,None] = None
     CustomTheme: Union[CustomThemeDetail,None] = None
+    SentimentThreshold: float = Field(example=-0.01)
+    InvisibleTextCountDetails: Union[InvisibleTextCountDetail, None] = None
+    GibberishDetails: Union[GibberishDetail, None] = None
+    BanCodeThreshold: float = Field(example=0.7)
 
 
 class FMConfigRequest(BaseModel):
     AccountName:str=Field(example="Infosys")
     PortfolioName:str=Field(example="IMPACT")
-    ModerationChecks:List=["PromptInjection","JailBreak","Piidetct","Refusal","Profanity","RestrictTopic","TextQuality","CustomizedTheme"]
+    ModerationChecks:List=["PromptInjection","JailBreak","Piidetct","Refusal","Profanity","RestrictTopic","TextQuality","CustomizedTheme",        "Sentiment",
+        "InvisibleText",
+        "Gibberish",
+        "BanCode"]
     ModerationCheckThresholds: Union[ModerationCheckThreshold,None] = None
     
 class fmAccountData(BaseModel):
@@ -106,7 +132,10 @@ class FmConfigResponse(BaseModel):
         orm_mode = True
 class FMGrpData(BaseModel):
     accMasterId:float=Field(example=123.1234)
-    ModerationChecks:List=["PromptInjection","JailBreak","Piidetct","Refusal","Profanity","RestrictTopic","TextQuality","CustomizedTheme"]
+    ModerationChecks:List=["PromptInjection","JailBreak","Piidetct","Refusal","Profanity","RestrictTopic","TextQuality","CustomizedTheme",        "Sentiment",
+        "InvisibleText",
+        "Gibberish",
+        "BanCode"]
     ModerationCheckThresholds: Union[ModerationCheckThreshold,None] = None
 
 
@@ -155,50 +184,54 @@ class CustomThemeDetail(BaseModel):
       ]
 
 
-class ModerationCheckThreshold(BaseModel):
-    PromptinjectionThreshold:float=Field(example=0.7)
-    JailbreakThreshold:float=Field(example=0.7)
-    PiientitiesConfiguredToDetect: List =  [
-      "PERSON",
-      "LOCATION",
-      "DATE",
-      "AU_ABN",
-      "AU_ACN",
-      "AADHAR_NUMBER",
-      "AU_MEDICARE",
-      "AU_TFN",
-      "CREDIT_CARD",
-      "CRYPTO",
-      "DATE_TIME",
-      "EMAIL_ADDRESS",
-      "ES_NIF",
-      "IBAN_CODE",
-      "IP_ADDRESS",
-      "IT_DRIVER_LICENSE",
-      "IT_FISCAL_CODE",
-      "IT_IDENTITY_CARD",
-      "IT_PASSPORT",
-      "IT_VAT_CODE",
-      "MEDICAL_LICENSE",
-      "PAN_Number",
-      "PHONE_NUMBER",
-      "SG_NRIC_FIN",
-      "UK_NHS",
-      "URL",
-      "PASSPORT",
-      "US_ITIN",
-      "US_PASSPORT",
-      "US_SSN"
-    ]
-    PiientitiesConfiguredToBlock:List = [
-      "AADHAR_NUMBER",
-      "PAN_Number"
-    ]
-    RefusalThreshold:float= Field(example=0.7)
-    ToxicityThresholds: Union[ToxicityThreshold,None] = None
-    ProfanityCountThreshold:float= Field(example=1)
-    RestrictedtopicDetails: Union[RestrictedtopicDetail,None] = None
-    CustomTheme: Union[CustomThemeDetail,None] = None
+# class ModerationCheckThreshold(BaseModel):
+#     PromptinjectionThreshold:float=Field(example=0.7)
+#     JailbreakThreshold:float=Field(example=0.7)
+#     PiientitiesConfiguredToDetect: List =  [
+#       "PERSON",
+#       "LOCATION",
+#       "DATE",
+#       "AU_ABN",
+#       "AU_ACN",
+#       "AADHAR_NUMBER",
+#       "AU_MEDICARE",
+#       "AU_TFN",
+#       "CREDIT_CARD",
+#       "CRYPTO",
+#       "DATE_TIME",
+#       "EMAIL_ADDRESS",
+#       "ES_NIF",
+#       "IBAN_CODE",
+#       "IP_ADDRESS",
+#       "IT_DRIVER_LICENSE",
+#       "IT_FISCAL_CODE",
+#       "IT_IDENTITY_CARD",
+#       "IT_PASSPORT",
+#       "IT_VAT_CODE",
+#       "MEDICAL_LICENSE",
+#       "PAN_Number",
+#       "PHONE_NUMBER",
+#       "SG_NRIC_FIN",
+#       "UK_NHS",
+#       "URL",
+#       "PASSPORT",
+#       "US_ITIN",
+#       "US_PASSPORT",
+#       "US_SSN"
+#     ]
+#     PiientitiesConfiguredToBlock:List = [
+#       "AADHAR_NUMBER",
+#       "PAN_Number"
+#     ]
+#     RefusalThreshold:float= Field(example=0.7)
+#     ToxicityThresholds: Union[ToxicityThreshold,None] = None
+#     ProfanityCountThreshold:float= Field(example=1)
+#     RestrictedtopicDetails: Union[RestrictedtopicDetail,None] = None
+#     CustomTheme: Union[CustomThemeDetail,None] = None
+#     SentimentThreshold: float = Field(example=-0.01)
+#     InvisibleTextCountDetails: Union[InvisibleTextCountDetail, None] = None
+#     GibberishDetails: Union[GibberishDetail, None] = None
+#     BanCodeThreshold: float = Field(example=0.7)
 
 
 class FMConfigRequest(BaseModel):
