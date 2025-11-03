@@ -20,7 +20,7 @@ The following table lists the modules of the salus-rai.  Installation instructio
 
 ** Endpoints for explainability are located in both the explainability and moderation layer repositories. Refer to the README files in these repositories for more details on specific features.
 
-Please refer [Features and Endpoints](https://github.com/salus-rai/blob/master/Features%20and%20Endpoints.docx) document for more details on endpoints and their usage. 
+Please refer [Features and Endpoints](https://github.com/salus-rai/blob/main/Features%20and%20Endpoints.docx) document for more details on endpoints and their usage. 
 
 
 ### Modules for the Responsible AI Toolkit Interface
@@ -59,10 +59,10 @@ We appreciate your feedback and aim to keep you updated on our plans regularly. 
 
 [Explore the roadmap »](https://github.com/users/salus-rai/projects/2/views/1) 
 
-[Contribute to our roadmap »](https://github.com/salus-rai/blob/Release-2.1.0/CONTRIBUTING.md)
+[Contribute to our roadmap »](https://github.com/salus-rai/Salus/blob/main/CONTRIBUTING.md)
 
 Note: These API-based guardrails are optimized for Azure OpenAI. Users employing alternative LLMs should make the necessary client configuration adjustments. For Azure OpenAI api subscription, follow instructions provided in the [Microsoft Azure website](https://azure.microsoft.com/en-us/pricing/purchase-options/azure-account?icid=ai-services&azure-portal=true).
 
-Please check out the [contribution](https://github.com/salus-rai/blob/master/CONTRIBUTING.md) page to share your feedback or suggest improvements. 
+Please check out the [contribution](https://github.com/salus-rai/blob/main/CONTRIBUTING.md) page to share your feedback or suggest improvements. 
 
 
