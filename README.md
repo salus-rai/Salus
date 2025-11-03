@@ -57,7 +57,7 @@ The Responsible AI toolkit provides a user-friendly interface for seamless exper
 
 We appreciate your feedback and aim to keep you updated on our plans regularly. This approach ensures we're prioritizing the right tasks and enables you to make informed decisions based on our development roadmap.
 
-[Explore the roadmap »](https://github.com/users/salus-rai/projects/2/views/1) 
+[Explore the roadmap »](https://github.com/users/thenmozhi-krishnan/projects/1/views/3) 
 
 [Contribute to our roadmap »](https://github.com/salus-rai/Salus/blob/main/CONTRIBUTING.md)
 
